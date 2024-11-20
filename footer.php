@@ -1,12 +1,20 @@
-<footer class="text-center text-lg-start text-light fixed-bottom" style="color: #ffffff; background: #ec008c;">
+<footer class="text-center text-lg-start text-light fixed-bottom bg-indigo-dark text-white">
     <!-- Copyright -->
     <div class="text-center p-2">
 
-        <b>SIVP</b> &copy; Copyright <?php echo date("Y"); ?> Todos los derechos de uso permitidos by |
-        <a class="text-light " href="https://agenciaeaglesoftware.com/">Agencia de Desarrollo Eagle Software</a>
-        <a href="https://www.linkedin.com/company/89372098/admin/feed/posts/" target="_blank" class="linkEagle"><i class="fa-brands fa-linkedin linkEagle"></i></a>
-        <a href="https://www.instagram.com/eaglesoftwares/" target="_blank" class="linkEagle"><i class="fa-brands fa-instagram linkEagle"></i></a>
-        <a href="https://www.facebook.com/eaglesoftwares/" target="_blank" class="linkEagle"><i class="fa-brands fa-facebook linkEagle"></i></a>
+        <?php
+
+        $queryCompany = mysqli_query($conn, "SELECT nombre,nit FROM company");
+        while ($empresaLog = mysqli_fetch_array($queryCompany)) {
+            $empresa = $empresaLog['nombre'] . '</label>';
+        }
+        ?>
+        <br>
+        <b>SICA</b> &copy; Copyright <?php echo date("Y"); ?> Todos los derechos de uso para <label class="text-lime-dark"><b><?php echo $empresa ?> </b></label>|
+        <a class="text-light" href="https://agenciaeaglesoftware.com/" target="_blank">Agencia de Desarrollo Eagle Software</a>
+        <a href="https://www.linkedin.com/company/89372098/admin/feed/posts/" target="_blank" class="linkFooter"><i class="fa-brands fa-linkedin redes"></i></a>
+        <a href="https://www.instagram.com/eaglesoftwares/" target="_blank" class="linkFooter"><i class="fa-brands fa-instagram redes"></i></a>
+        <a href="https://www.facebook.com/eaglesoftwares/" target="_blank" class="linkFooter"><i class="fa-brands fa-facebook redes"></i></a>
 
     </div>
     <!-- Copyright -->

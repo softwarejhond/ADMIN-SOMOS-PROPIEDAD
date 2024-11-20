@@ -35,7 +35,7 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
 <form id="filterForm">
     <div class="mt-3">
         <div class="card rounded-bottom ">
-            <div class=" card-header boton bg-magenta-dark text-white ">
+            <div class=" card-header boton bg-indigo-dark text-white ">
                 <i class=" fa-solid fa-filter"></i> REALIZAR CONSULTA PERSONALIZADA
             </div>
             <br>
@@ -315,14 +315,14 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
 
             const cardContent = `
 <div class="card" style="width: 100%;">
-  <img src="../fotos/${item.foto1}" class="card-img-top" alt="...">
+  <img src="fotos/${item.url_foto_principal}" class="card-img-top" alt="..." style="height:300px">
   <div class="card-body ">
      <button class="btn bg-amber-dark text-left text-white m-1 " type="button"">
             <span class="spinner-grow spinner-grow-sm text-lime-dark " role="status" aria-hidden="true"></span>
             ${item.condicion}
         </button>
   <button 
-    class="btn bg-magenta-dark text-left text-white m-1" type="button" data-bs-toggle="modal" 
+    class="btn bg-teal-dark text-left text-white m-1" type="button" data-bs-toggle="modal" 
     data-bs-target="#modalInfo${item.codigo}" title="Ver características">
     <i class="fa-solid fa-circle-info"></i> Características
   </button>
@@ -335,7 +335,7 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
     <li class="list-group-item"><h5 class="text-magenta-dark"><b>$ ${valorCanonFormatted}</b></h5></li>
   </ul>
   <div class="card-body">
-    <a href="#" class=" btn bg-magenta-dark text-white w-100"><i class="bi bi-eye-fill"></i> <b>VER MÁS</b></a>
+    <a href="#" class=" btn bg-indigo-dark text-white w-100"><i class="bi bi-eye-fill"></i> <b>VER MÁS</b></a>
   
   </div>
 </div>
