@@ -8,14 +8,16 @@
 
               <!-- Botones e íconos organizados horizontalmente -->
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Añadir propiedad">
-                  <label class="checkbox-wrapper" data-bs-target="#exampleModalNuevoAdmin" data-bs-toggle="modal">
-                      <span class="checkbox-tile">
-                          <span class="checkbox-icon">
-                              <i class="bi bi-house-add-fill icono text-indigo-dark "></i>
+                  <a href="nuevaPropiedad.php">
+                      <label class="checkbox-wrapper">
+                          <span class="checkbox-tile">
+                              <span class="checkbox-icon">
+                                  <i class="bi bi-house-add-fill icono text-indigo-dark "></i>
+                              </span>
+                              <span class="checkbox-label">Añadir</span>
                           </span>
-                          <span class="checkbox-label">Añadir</span>
-                      </span>
-                  </label>
+                      </label>
+                  </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles retirados">
                   <label class="checkbox-wrapper">

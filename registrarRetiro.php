@@ -58,14 +58,14 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
 
                 <hr>
 
-                <div class="card border-magenta-dark shadow p-3 mb-5 bg-white rounded">
+                <div class="card border-indigo-dark shadow p-3 mb-5 bg-white rounded">
 
 
                     <div class="p-3">
                         <div class="row">
                             <div class="col col-lg-12 col-md-12 col-sm-12 px-2 mt-1">
                                 <div class="card text-center">
-                                    <div class="card-header bg-magenta-dark text-white">
+                                    <div class="card-header bg-indigo-dark text-white">
                                         <i class="fas fa-home"></i> BUSCAR PROPIEDAD <i class="fas fa-home"></i>
                                     </div>
                                     <!-- Mostrar la imagen solo si no se ha hecho una búsqueda -->
@@ -79,7 +79,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
                                             <input type="number" name="search" required value="<?php if (isset($_GET['search'])) {
                                                                                                     echo $_GET['search'];
                                                                                                 } ?>" class="form-control text-center " placeholder="CODIGO DE LA PROPIEDAD"><br>
-                                            <button type="submit" class="btn bg-magenta-dark text-white" title="Buscar propiedad"><i class="bi bi-search"></i></button>
+                                            <button type="submit" class="btn bg-lime-dark text-black" title="Buscar propiedad"><i class="bi bi-search"></i></button>
                                         </div>
                                     </form>
                                 </div>
@@ -108,15 +108,15 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
 
                                                 echo '
                  
-                                                <div class="card" style="border:0; color:#ec008c;   border: 2px solid #ec008c;">
+                                                <div class="card border-indigo-dark" style=" border: 2px solid #ec008c;">
                                                   <div class="row">
-                                                     <div class="col col-md-12 col-sm-12 col-lg-6 text-center">
-                                                        <img src="' . $items['foto1'] . '" alt="avatar" style="width:400px; height:400px"> 
+                                                     <div class=" col-md-12 col-sm-12 col-lg-6 text-center">
+                                                        <img src="fotos/' . $items['url_foto_principal'] . '" alt="avatar" style="width:100%; height:400px"> 
                                                      </div>
-                                                     <div class="col col-md-12 col-sm-12 col-lg-6">
+                                                     <div class=" col-md-12 col-sm-12 col-lg-6">
                                                        <div class="card-body text-left">
                                                        <ul class="list-group list-group-flush">
-                                                        <li class="list-group-item"><h3><b>Código propiedad: ' . $codigo . '</b></h3></li>
+                                                        <li class="list-group-item text-magenta-dark"><h3><b>Código propiedad: ' . $codigo . '</b></h3></li>
                                                         <li class="list-group-item"><h6>Propietario: ' . $propietario . '</h6></li>
                                                         <li class="list-group-item"><h6>Identificación inquilino: ' . $docInquilinos . '</h6></li>
                                                         <li class="list-group-item"><h6>Nombre inquilino: ' . $nombreInquilinos . '</h6></li>
@@ -125,7 +125,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
                                                             <h5 class="text-center">Acciones a realizar</h5>
                                                          <label class="text-center">Selecciona la futura fecha de retiro del inquilino</label>
                                                         <li class="list-group-item"><input type="date" name="fechaRetiro" class="form-control text-center" min="' . $fecha_actual . '"></li>
-                                                        <li class="list-group-item"><button type="submit" name="btnAddRetido"  title="Retirar Inquilino" onclick="return confirm(\'Esta seguro de retirar el inquilino ' . $nombreInquilinos . '?\')" class="btn bg-magenta-dark w-100"><i class="fa-solid fa-floppy-disk"></i> REGISTRAR LOS DATOS PARA PROGRAMAR EL RETIRO DEL INQUILINO</button></li>
+                                                        <li class="list-group-item"><button type="submit" name="btnAddRetido"  title="Retirar Inquilino" onclick="return confirm(\'Esta seguro de retirar el inquilino ' . $nombreInquilinos . '?\')" class="btn bg-magenta-dark w-100"><i class="bi bi-pen-fill"></i> REGISTRAR LOS DATOS PARA PROGRAMAR EL RETIRO DEL INQUILINO</button></li>
                                                         <li class="list-group-item"><h6>Fecha actual para el registro: ' . $fecha_actual . '</h6></li>
                                                        </ul>
                                                        </div>
