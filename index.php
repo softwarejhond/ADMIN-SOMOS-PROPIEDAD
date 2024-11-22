@@ -65,6 +65,8 @@ $rol = $infoUsuario['rol'];
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <?php include("carousel.php"); ?>
+                        <br>
+                        <?php include("controller/mapaRealTime.php"); ?>
                     </div>
 
 
@@ -74,7 +76,7 @@ $rol = $infoUsuario['rol'];
         </div>
     </div>
     <?php include("controller/botonFlotanteDerecho.php"); ?>
-   
+
     <?php include("sliderBarBotton.php"); ?>
     <ul class="circles">
         <li></li>
