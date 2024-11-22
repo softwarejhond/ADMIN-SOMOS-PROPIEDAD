@@ -36,7 +36,7 @@
                     </label>
                 </div>
                 <div class="checkbox">
-                    <label class="checkbox-wrapper">
+                    <label class="checkbox-wrapper" data-bs-target="#exampleModalNuevoReparador" data-bs-toggle="modal">
                         <span class="checkbox-tile">
                             <span class="checkbox-icon">
                                 <i class="bi bi-tools icono"></i>

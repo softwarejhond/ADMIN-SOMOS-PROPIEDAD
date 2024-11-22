@@ -46,7 +46,7 @@ $rol = $infoUsuario['rol'];
     <?php include("slidebar.php"); ?>
     <?php include("modals/nuevoTipoPropiedad.php"); ?>
     <?php include("modals/nuevoUsuarioAdministrador.php"); ?>
-
+    <?php include("modals/nuevoReparador.php"); ?>
     <div id="mt-3">
         <div class="mt-3">
             <br><br>
