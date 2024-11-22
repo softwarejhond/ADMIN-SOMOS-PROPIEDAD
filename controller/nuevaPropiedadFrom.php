@@ -125,8 +125,8 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         // Foto principal
         $ruta1 = '';
         if (isset($_FILES['url_foto_principal']) && $_FILES['url_foto_principal']['error'] == 0) {
-            $ruta1 = 'fotos/' . basename($_FILES['url_foto_principal']['name']);
-            move_uploaded_file($_FILES['url_foto_principal']['tmp_name'], $ruta1);
+            $ruta1 =  basename($_FILES['url_foto_principal']['name']);
+            move_uploaded_file($_FILES['url_foto_principal']['tmp_name'], 'fotos/'.$ruta1);
         }
 
         // Verificar si la propiedad ya existe

@@ -1,17 +1,19 @@
  <?php
     // Consulta para obtener latitud, longitud y otros datos de las propiedades
-    $sqlUbicaciones = "SELECT latitud, longitud, tipoInmueble, direccion, valor_canon FROM proprieter";
+    $sqlUbicaciones = "SELECT codigo,latitud, longitud, tipoInmueble, direccion, valor_canon,url_foto_principal FROM proprieter WHERE codigo LIKE '%$buscar%' AND nombre_inquilino = '' AND estadoPropietario = 'ACTIVO'";
     $resultado = $conn->query($sqlUbicaciones);
 
     $locations = [];
     if ($resultado->num_rows > 0) {
         while ($row = $resultado->fetch_assoc()) {
             $locations[] = [
+                'codigo' => $row['codigo'],
                 'lat' => (float)$row['latitud'],
                 'lng' => (float)$row['longitud'],
                 'tipoInmueble' => $row['tipoInmueble'],
                 'direccion' => $row['direccion'],
-                'valorCanon' => $row['valor_canon']
+                'valorCanon' => $row['valor_canon'],
+                'foto' => $row['url_foto_principal']
             ];
         }
     }
@@ -64,7 +66,8 @@
              const infoWindow = new google.maps.InfoWindow({
                  content: `
                     <div>
-                        <h3>${location.tipoInmueble || 'Inmueble'}</h3>
+                      <img src="fotos/${location.foto || 'Inmueble'}" alt="foto" width="300px">
+                        <h3 class="text-indigo-dark">${location.tipoInmueble || 'Inmueble'} | ${location.codigo || 'codigo'}</h3>
                         <p><strong>Dirección:</strong> ${location.direccion || 'No disponible'}</p>
                         <p><strong>Precio:</strong> $${location.valorCanon || 'No disponible'}</p>
                     </div>
