@@ -1,9 +1,9 @@
 <?php
 session_start();
+    // Habilitar la visualización de errores
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);  // Mostrar todos los errores
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     // Si no está logueado, redirigir a la página de inicio de sesión
@@ -47,6 +47,7 @@ $rol = $infoUsuario['rol'];
     <?php include("modals/nuevoTipoPropiedad.php"); ?>
     <?php include("modals/nuevoUsuarioAdministrador.php"); ?>
     <?php include("modals/nuevoReparador.php"); ?>
+   <?php include("modals/nuevaReporteReparacion.php"); ?>
     <div id="mt-3">
         <div class="mt-3">
             <br><br>

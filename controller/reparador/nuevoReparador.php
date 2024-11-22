@@ -49,53 +49,55 @@ $includeFields = isset($formConfig['include_fields']) ? $formConfig['include_fie
     <?php
     // Comprobar si el formulario ha sido enviado mediante POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Recoger los datos de los campos del formulario y escapar los valores para evitar inyecciones SQL
-        $formData = [];
-        foreach ($includeFields as $fieldName) {
-            if (isset($_POST[$fieldName])) {
-                $formData[$fieldName] = $conn->real_escape_string($_POST[$fieldName]); // Escapar cada campo
+        if (isset($_POST['guardarReparador'])) {
+            // Recoger los datos de los campos del formulario y escapar los valores para evitar inyecciones SQL
+            $formData = [];
+            foreach ($includeFields as $fieldName) {
+                if (isset($_POST[$fieldName])) {
+                    $formData[$fieldName] = $conn->real_escape_string($_POST[$fieldName]); // Escapar cada campo
+                }
             }
-        }
 
-        // Agregar estado y fecha de creación a los datos del formulario
-        $formData['estado'] = 'ACTIVO'; // Valor predeterminado para el campo 'estado'
-        $formData['fecha_creacion'] = date('Y-m-d H:i:s'); // Fecha y hora actual para el campo 'fecha_creacion'
+            // Agregar estado y fecha de creación a los datos del formulario
+            $formData['estado'] = 'ACTIVO'; // Valor predeterminado para el campo 'estado'
+            $formData['fecha_creacion'] = date('Y-m-d H:i:s'); // Fecha y hora actual para el campo 'fecha_creacion'
 
-        // Verificar si el reparador ya existe en la base de datos usando la identificación
-        $identificacion = $formData['identificacion'];
-        $queryCheck = "SELECT * FROM $tableName WHERE identificacion = '$identificacion'"; // Consulta para verificar existencia
-        $result = $conn->query($queryCheck); // Ejecutar la consulta
+            // Verificar si el reparador ya existe en la base de datos usando la identificación
+            $identificacion = $formData['identificacion'];
+            $queryCheck = "SELECT * FROM $tableName WHERE identificacion = '$identificacion'"; // Consulta para verificar existencia
+            $result = $conn->query($queryCheck); // Ejecutar la consulta
 
-        // Si el reparador ya existe, mostrar una alerta
-        if ($result->num_rows > 0) {
-            echo "<script>
+            // Si el reparador ya existe, mostrar una alerta
+            if ($result->num_rows > 0) {
+                echo "<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     alert('El reparador ya existe.'); // Alerta si ya existe
                 });
             </script>";
-        } else {
-            // Si el reparador no existe, generar la consulta de inserción
-            $columns = implode(", ", array_keys($formData)); // Unir los nombres de las columnas
-            $values = "'" . implode("', '", array_values($formData)) . "'"; // Unir los valores con comillas simples
+            } else {
+                // Si el reparador no existe, generar la consulta de inserción
+                $columns = implode(", ", array_keys($formData)); // Unir los nombres de las columnas
+                $values = "'" . implode("', '", array_values($formData)) . "'"; // Unir los valores con comillas simples
 
-            // Consulta de inserción para guardar los datos en la base de datos
-            $queryInsert = "INSERT INTO $tableName ($columns) VALUES ($values)";
+                // Consulta de inserción para guardar los datos en la base de datos
+                $queryInsert = "INSERT INTO $tableName ($columns) VALUES ($values)";
 
-            // Ejecutar la consulta de inserción
-            if ($conn->query($queryInsert) === TRUE) {
-                // Si la inserción es exitosa, mostrar una alerta
-                echo "<script>
+                // Ejecutar la consulta de inserción
+                if ($conn->query($queryInsert) === TRUE) {
+                    // Si la inserción es exitosa, mostrar una alerta
+                    echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         alert('Registro exitoso.'); // Alerta de éxito
                     });
                 </script>";
-            } else {
-                // Si hay un error al insertar, mostrar un mensaje de error
-                echo "<script>
+                } else {
+                    // Si hay un error al insertar, mostrar un mensaje de error
+                    echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         alert('Error al registrar: " . $conn->error . "'); // Alerta de error
                     });
                 </script>";
+                }
             }
         }
     }
@@ -146,7 +148,7 @@ $includeFields = isset($formConfig['include_fields']) ? $formConfig['include_fie
         </div>
         <div class="mt-3">
             <!-- Botón para enviar el formulario -->
-            <button type="submit" class="btn bg-magenta-dark text-white">Guardar</button>
+            <button type="submit" class="btn bg-magenta-dark text-white" name="guardarReparador">Guardar</button>
         </div>
     </form>
 </div>
