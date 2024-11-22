@@ -48,7 +48,7 @@ $rol = $infoUsuario['rol'];
                     <h2 class="position-absolute top-0 start-0 "><i class="bi bi-house-add-fill"></i> Nueva propiedad</h2>
 
                     <?php include("controller/notificacioRetiroInquilino.php"); ?>
-                    </h2>
+
                 </div>
                 <h6 class="text-aling-rigth"></h6>
                 <hr>
@@ -77,6 +77,7 @@ $rol = $infoUsuario['rol'];
         <script>
             $('#link-dashboard').addClass('pagina-activa');
         </script>
+        <script src="js/real-time-inquilino-proximo-retiro.js?v=0.1"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
