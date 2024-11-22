@@ -26,6 +26,8 @@ return [
         'servicios_publicos',
         'otras_caracteristicas',
         'direccion',
+        'latitud',
+        'longitud',
         'TelefonoInmueble',
         'valor_canon',
         'doc_propietario',

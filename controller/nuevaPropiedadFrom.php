@@ -106,6 +106,8 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         $servicios_publicos = $_POST['servicios_selected']; // Array de servicios seleccionados
         $otras_caracteristicas = $_POST['otras_caracteristicas'];
         $direccion = $_POST['direccion'];
+        $latitud = $_POST['latitud'];
+        $longitud = $_POST['longitud'];
         $telefonoInmueble = $_POST['TelefonoInmueble'];
         $valor_canon = $_POST['valor_canon'];
         $doc_propietario = $_POST['doc_propietario'];
@@ -142,13 +144,13 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             // Insertar la propiedad
             $queryInsert = "INSERT INTO proprieter (
             codigo, tipoInmueble, nivel_piso, area, estrato, departamento, Municipio, terraza, ascensor, patio, parqueadero, cuarto_util, alcobas,
-            closet, sala, sala_comedor, comedor, cocina, servicios, CuartoServicios, ZonaRopa, vista, servicios_publicos, otras_caracteristicas, direccion,
+            closet, sala, sala_comedor, comedor, cocina, servicios, CuartoServicios, ZonaRopa, vista, servicios_publicos, otras_caracteristicas, direccion, latitud, longitud,
             TelefonoInmueble, valor_canon, doc_propietario, nombre_propietario, telefono_propietario, email_propietario, banco, tipoCuenta, numeroCuenta, diaPago,
             fecha, contrato_EPM, url_foto_principal, condicion, fecha_creacion
         ) VALUES (
             '$codigo', '$tipoInmueble', '$nivel_piso', '$area', '$estrato', '$departamento', '$municipios', '$terraza', '$ascensor', '$patio', '$parqueadero',
             '$cuarto_util', '$habitaciones', '$closet', '$sala', '$sala_comedor', '$comedor', '$cocina', '$servicios', '$cuartoServicios', '$zonaRopa', '$vista',
-            '$servicios_publicos', '$otras_caracteristicas', '$direccion', '$telefonoInmueble', '$valor_canon', '$doc_propietario', '$nombre_propietario', 
+            '$servicios_publicos', '$otras_caracteristicas', '$direccion', '$latitud','$longitud', '$telefonoInmueble', '$valor_canon', '$doc_propietario', '$nombre_propietario', 
             '$telefono_propietario', '$email_propietario', '$banco', '$tipoCuenta', '$numeroCuenta', '$diaPago', '$fecha', '$contrato_EPM', '$ruta1', 
             '$condicion', NOW()
         )";
@@ -704,6 +706,9 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             }
         }
         ?>
+        <!-- CAMPOS OCULTOS PARA CAPTURAR ESTOS CAMPOS -->
+        <input type="hidden" id="latitud" name="latitud">
+        <input type="hidden" id="longitud" name="longitud">
 
         <!-- Botones de navegación -->
         <div class="form-navigation">
@@ -772,6 +777,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA98OpvjlfBwdRXdIVsGCyNM2ak5o-WYYs&libraries=places&callback=initAutocomplete" async defer></script>
+
 <script>
     let autocomplete;
 
@@ -783,10 +789,27 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         // Inicializar Autocomplete con la API de Places
         autocomplete = new google.maps.places.Autocomplete(input);
 
-        // Opcionalmente, se puede añadir un listener para manejar eventos, como el de selección de una dirección.
+        // Añadir un listener para manejar eventos, como el de selección de una dirección
         autocomplete.addListener('place_changed', function() {
             const place = autocomplete.getPlace();
-            console.log(place); // Aquí obtienes los detalles de la dirección seleccionada.
+
+            if (!place.geometry || !place.geometry.location) {
+                alert("No se encontró información de la ubicación.");
+                return;
+            }
+
+            // Obtener latitud y longitud
+            const latitud = place.geometry.location.lat();
+            const longitud = place.geometry.location.lng();
+
+            console.log("Latitud:", latitud);
+            console.log("Longitud:", longitud);
+
+            // Asignar valores a campos ocultos (o variables si prefieres)
+            document.getElementById('latitud').value = latitud;
+            document.getElementById('longitud').value = longitud;
+
+            // Puedes usar estas variables para enviar al servidor o realizar otras acciones
         });
     }
 </script>
