@@ -3,6 +3,6 @@
 # AGREGAR NUEVA PROPIEDAD
 Para agregar una propiedad debemos tener en cuenta 
 que los siguiente arvicos de requieren entre si
-# archivo nuevaPropiedadFrom.php
-# procesar_formulario
-# Carpeta microConsultas/tipoViviendas.pho
+1) archivo nuevaPropiedadFrom.php
+2) procesar_formulario
+3) Carpeta microConsultas/tipoViviendas.pho
