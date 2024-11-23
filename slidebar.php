@@ -10,7 +10,7 @@
                     <?php
                     foreach ($empresas as $empresa) {
                         //echo '<label class="card-text">' . $empresa['nombre'] . '</label><br>'; // Mostrar el nombre
-                        echo '<img src="img/' . $empresa['logo'] . '" alt="Logo de ' . $empresa['nombre'] . '" width="100px" >'; // Mostrar el logo
+                        echo '<img src="img/icons/' . $empresa['logo'] . '" alt="Logo de ' . $empresa['nombre'] . '" width="100px" >'; // Mostrar el logo
                     }
                     ?>
                 </legend>

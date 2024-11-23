@@ -36,7 +36,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="css/estilo.css?v=0.0.1">
     <link rel="stylesheet" href="css/slidebar.css?v=0.0.2">
-    <link rel="stylesheet" href="css/contadores.css?v=0.6">
+    <link rel="stylesheet" href="css/contadores.css?v=0.7">
     <title>SIVP - Admin</title>
     <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
 </head>
@@ -45,6 +45,8 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
 <?php include("slidebar.php"); ?>
 <?php include("modals/nuevoTipoPropiedad.php"); ?>
 <?php include("modals/nuevoUsuarioAdministrador.php"); ?>
+<?php include("modals/nuevoReparador.php"); ?>
+<?php include("modals/nuevaReporteReparacion.php"); ?>
 
 
 <div id="mt-3 ">
@@ -239,7 +241,8 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
     </div>
 </div>
 
-
+<?php include("controller/botonFlotanteDerecho.php"); ?>
+<?php include("sliderBarBotton.php"); ?>
 <?php include("footer.php"); ?>
 
 <script src="js/real-time-inquilino-proximo-retiro.js?v=0.1"></script>

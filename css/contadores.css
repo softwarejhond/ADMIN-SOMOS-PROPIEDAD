@@ -146,4 +146,11 @@
         color: rgba(255, 255, 255, 0.8);
         /* Color del icono */
     }
-   
+     .modal {
+            z-index: 1056 !important;
+            /* Bootstrap usa 1055 para el backdrop */
+        }
+
+        .modal-backdrop {
+            z-index: 1055 !important;
+        }

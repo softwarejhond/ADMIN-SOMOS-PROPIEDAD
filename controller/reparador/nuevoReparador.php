@@ -148,7 +148,7 @@ $includeFields = isset($formConfig['include_fields']) ? $formConfig['include_fie
         </div>
         <div class="mt-3">
             <!-- Botón para enviar el formulario -->
-            <button type="submit" class="btn bg-magenta-dark text-white" name="guardarReparador">Guardar</button>
+            <button type="submit" class="btn bg-magenta-dark text-white" name="guardarReparador"><i class="bi bi-floppy-fill"></i> Guardar</button>
         </div>
     </form>
 </div>

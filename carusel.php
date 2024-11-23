@@ -29,7 +29,7 @@ $rol = $infoUsuario['rol'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="css/estilo.css?v=0.0.1">
     <link rel="stylesheet" href="css/slidebar.css?v=0.0.2">
-    <link rel="stylesheet" href="css/contadores.css?v=0.6">
+    <link rel="stylesheet" href="css/contadores.css?v=0.7">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>SIVP - Admin</title>
@@ -41,6 +41,8 @@ $rol = $infoUsuario['rol'];
     <?php include("slidebar.php"); ?>
     <?php include("modals/nuevoTipoPropiedad.php"); ?>
     <?php include("modals/nuevoUsuarioAdministrador.php"); ?>
+    <?php include("modals/nuevoReparador.php"); ?>
+    <?php include("modals/nuevaReporteReparacion.php"); ?>
     <div id="mt-3">
         <div class="mt-3">
             <br><br>
@@ -77,6 +79,8 @@ $rol = $infoUsuario['rol'];
 
             </div>
         </div>
+        <?php include("controller/botonFlotanteDerecho.php"); ?>
+        <?php include("sliderBarBotton.php"); ?>
         <?php include("footer.php"); ?>
         <script src="js/real-time-inquilino-proximo-retiro.js?v=0.2"></script>
         <script>

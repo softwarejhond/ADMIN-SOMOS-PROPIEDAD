@@ -128,7 +128,7 @@ $includeFieldsReport = isset($formConfigReport['include_fields']) ? $formConfigR
             ?>
         </div>
         <div class="mt-3">
-            <button type="submit" class="btn bg-magenta-dark text-white" name="guardarReporte">Guardar</button>
+            <button type="submit" class="btn bg-magenta-dark text-white" name="guardarReporte"><i class="bi bi-floppy-fill"></i> Guardar</button>
         </div>
     </form>
 </div>
