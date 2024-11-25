@@ -14,7 +14,7 @@
                     }
                     ?>
                 </legend>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Añadir usuario">
                     <label class="checkbox-wrapper" data-bs-target="#exampleModalNuevoAdmin" data-bs-toggle="modal">
 
                         <span class="checkbox-tile">
@@ -25,7 +25,7 @@
                         </span>
                     </label>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Registrar daño">
                     <label class="checkbox-wrapper" data-bs-target="#exampleModalNuevoReporte" data-bs-toggle="modal">
                         <span class="checkbox-tile">
                             <span class="checkbox-icon">
@@ -35,7 +35,7 @@
                         </span>
                     </label>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Añadir reparador">
                     <label class="checkbox-wrapper" data-bs-target="#exampleModalNuevoReparador" data-bs-toggle="modal">
                         <span class="checkbox-tile">
                             <span class="checkbox-icon">
@@ -45,19 +45,19 @@
                         </span>
                     </label>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Agenda">
 
                     <label class="checkbox-wrapper">
                         <span class="checkbox-tile">
                             <span class="checkbox-icon">
-                                <i class="bi bi-pencil icono"></i>
+                                <i class="bi bi-journal-bookmark-fill icono"></i>
                             </span>
                             <span class="checkbox-label">Registrar</span>
                         </span>
                     </label>
 
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Carousel de imagenes">
 
                     <a href="carusel.php">
                         <label class="checkbox-wrapper">
@@ -70,7 +70,7 @@
                         </label>
                     </a>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Programar retiro">
                     <a href="registrarRetiro.php">
                         <label class="checkbox-wrapper">
                             <span class="checkbox-tile">
@@ -82,7 +82,7 @@
                         </label>
                     </a>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Perfil">
                     <a href="perfil.php"> <label class="checkbox-wrapper">
                             <span class="checkbox-tile">
                                 <span class="checkbox-icon">
@@ -93,7 +93,7 @@
                         </label>
                     </a>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Configuracion">
                     <a href="actualizar-smtp.php"><label class="checkbox-wrapper">
                             <span class="checkbox-tile">
                                 <span class="checkbox-icon">
@@ -104,7 +104,7 @@
                         </label>
                     </a>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Añadir tipo de propiedad">
                     <label class="checkbox-wrapper" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">
                         <span class="checkbox-tile">
                             <span class="checkbox-icon">
@@ -114,7 +114,7 @@
                         </span>
                     </label>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Visítanos">
                     <a href="https://agenciaeaglesoftware.com/" target="_blank">
                         <label class="checkbox-wrapper">
                             <span class="checkbox-tile">
