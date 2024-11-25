@@ -46,16 +46,16 @@
                     </label>
                 </div>
                 <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Agenda">
-
-                    <label class="checkbox-wrapper">
-                        <span class="checkbox-tile">
-                            <span class="checkbox-icon">
-                                <i class="bi bi-journal-bookmark-fill icono"></i>
+                    <a href="agenda.php">
+                        <label class="checkbox-wrapper">
+                            <span class="checkbox-tile">
+                                <span class="checkbox-icon">
+                                    <i class="bi bi-journal-bookmark-fill icono"></i>
+                                </span>
+                                <span class="checkbox-label">Registrar</span>
                             </span>
-                            <span class="checkbox-label">Registrar</span>
-                        </span>
-                    </label>
-
+                        </label>
+                    </a>
                 </div>
                 <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Carousel de imagenes">
 
