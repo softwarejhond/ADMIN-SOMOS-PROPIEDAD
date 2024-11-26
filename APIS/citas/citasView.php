@@ -42,7 +42,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
         // Si la diferencia es menor o igual a 10 minutos, marcar la cita para cambio de estado
         if ($diferenciaMinutos <= 10) {
-            $row['estado'] = '<button class="btn pink p-1 w-100"><i class="fa-solid fa-arrows-rotate fa-spin"></i> 
+            $row['estado'] = '<button class="btn bg-magenta-dark text-white p-1 w-100"><i class="fa-solid fa-arrows-rotate fa-spin"></i> 
             <br><small>Tiene 10 minutos para actualizar</small></button>';
         }
     }

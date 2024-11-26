@@ -33,8 +33,107 @@ $rol = $infoUsuario['rol'];
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>SIVP - Admin</title>
     <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
+    <style>
+        .tooltip-warning .tooltip-inner {
+            background-color: #e67300 !important;
+            color: #fff !important;
+            text-align: left;
+        }
 
+        .tooltip-success .tooltip-inner {
+            background-color: #66cc00 !important;
+            color: #000 !important;
+            text-align: left;
+        }
+
+        .tooltip-danger .tooltip-inner {
+            background-color: #ec008c !important;
+            color: #fff !important;
+            text-align: left;
+        }
+
+        .tooltip-info .tooltip-inner {
+            background-color: #30336b !important;
+            color: #fff !important;
+            text-align: left;
+        }
+
+        .tooltip-inner {
+            min-width: 150px;
+            /* Ancho mínimo */
+            max-width: 300px;
+            /* Ancho máximo */
+            white-space: pre-wrap;
+            /* Asegura que el texto largo se ajuste en varias líneas */
+            padding: 10px;
+
+        }
+    </style>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'es',
+                initialView: 'dayGridMonth', // Ajusta esto a la vista que prefieras
+                events: 'APIS/citas/verCitasCalendar.php', // URL para obtener los eventos
+                eventDidMount: function(info) {
+                    var estado = info.event.extendedProps.estado;
+                    var colorTooltip = '';
+
+                    // Determinar el color de fondo del tooltip según el estado
+                    switch (estado) {
+                        case 'Sin Atender':
+                            colorTooltip = 'tooltip-warning'; // Amarillo para "Sin Atender"
+                            break;
+                        case 'Atendido':
+                            colorTooltip = 'tooltip-success'; // Verde para "Atendido"
+                            break;
+                        case 'Cancelado':
+                            colorTooltip = 'tooltip-danger'; // Rojo para "Cancelado"
+                            break;
+                        default:
+                            colorTooltip = 'tooltip-info'; // Azul para otros estados
+                    }
+
+                    // Crear el tooltip con estilo
+                    var tooltip = new bootstrap.Tooltip(info.el, {
+                        title: `
+       
+        <ul class="list-group" style="padding-left: 20px;">
+         <li class="list-group-item text-capitalize"><h2 class="text-left"><i class="bi bi-caret-right-fill"></i> ${info.event.title}</h2></li>
+            <li class="list-group-item text-capitalize"> <i class="bi bi-person-circle"></i> Nombre: <b>${info.event.extendedProps.nombre}</b></li>
+            <li class="list-group-item"> <i class="bi bi-houses-fill"></i> Propiedad: <b>${info.event.extendedProps.propiedad}</b> </li>
+            <li class="list-group-item"> <i class="bi bi-telephone-fill"></i> Teléfono: <b>${info.event.extendedProps.telefono}</b> </li>
+            <li class="list-group-item"> <i class="bi bi-question-diamond-fill"></i> Estado: <b>${estado}</b> </li>
+        </ul>
+    `,
+                        html: true,
+                        placement: 'top',
+                        trigger: 'hover',
+                        template: `
+        <div class="tooltip ${colorTooltip}" role="tooltip">
+            <div class="tooltip-arrow"></div>
+            <div class="tooltip-inner" style="white-space: normal; word-wrap: break-word; min-width: 150px;"></div>
+        </div>
+    `
+                    });
+
+
+                }
+            });
+
+            calendar.render();
+
+            // Actualiza los eventos sin interrumpir la vista actual
+            setInterval(function() {
+                calendar.refetchEvents(); // Solo recarga los eventos
+            }, 50000); // Cada 50 segundos (ajustar según necesidad)
+        });
+    </script>
+
+
 
 
 </head>
@@ -103,7 +202,10 @@ $rol = $infoUsuario['rol'];
 
                                     <br>
                                     <div class="row">
-                                        <div class="col col-lg-8 col-md-12 col-sm-12 px-2 mt-1 p-1">
+                                        <div class="col col-lg-4 col-md-12 col-sm-12 px-2 mt-1 p-1">
+                                            <div id='calendar'></div>
+                                        </div>
+                                        <div class="col col-lg-4 col-md-12 col-sm-12 px-2 mt-1 p-1">
                                             <div class="table-responsive">
                                                 <table id="citas-table" class="display">
                                                     <thead>
@@ -174,6 +276,7 @@ $rol = $infoUsuario['rol'];
                                                 <input type="reset" class="btn bg-indigo-dark text-white" value="Cancelar">
                                             </form>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +301,7 @@ $rol = $infoUsuario['rol'];
         <!--MUY IMPORTANTE PARA EL TIEMPO REAL DE LAS CONSULTAS-->
         <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"> </script>
         <script src="js/gestionAgenda.js?v=0.1"></script>
-      
+
 </body>
 
 </html>
