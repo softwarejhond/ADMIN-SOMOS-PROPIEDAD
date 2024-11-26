@@ -1,4 +1,10 @@
 # ADMIN-SOMOS-PROPIEDAD
+## MODULOS DE LA APLICACIÓN
+1) Agenda
+2) Carousel
+3) Añadir propiedad
+4) SMTP
+5) Configuracion
 
 ## AGREGAR NUEVA PROPIEDAD
 Para agregar una propiedad debemos tener en cuenta 
