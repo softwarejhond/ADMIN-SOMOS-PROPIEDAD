@@ -1,17 +1,17 @@
 <?php
 require_once "conexion.php";
 
+// Definir que la respuesta será en JSON
 header('Content-Type: application/json');
 
-// Consulta a la base de datos
+// Consulta para obtener las citas
 $sql = "SELECT id, fecha, hora, tipoCita, nombre, codigoPropiedad, telefono, estado FROM citas";
 $result = $conn->query($sql);
 
 $citas = [];
 
-// Procesar los resultados
+// Mapeo de las citas
 while ($row = $result->fetch_assoc()) {
-    // Mapear el estado a un valor legible
     switch ($row['estado']) {
         case 0:
             $estadoTexto = 'Sin Atender';
@@ -26,17 +26,16 @@ while ($row = $result->fetch_assoc()) {
             $estadoTexto = 'Desconocido';
     }
 
-    // Añadir cada cita al array
     $citas[] = [
         'id' => $row['id'],
         'title' => $row['tipoCita'],
-        'nombre' =>  $row['nombre'],
-        'start' => $row['fecha'] . 'T' . $row['hora'], // Formato ISO 8601 requerido por FullCalendar
-        'estado' => $estadoTexto, // Estado legible
-        'propiedad' => $row['codigoPropiedad'], // Código de propiedad
-        'telefono' => $row['telefono'], // Teléfono
+        'name' =>  $row['nombre'],
+        'start' => $row['fecha'] . 'T' . $row['hora'], // Formato ISO 8601
+        'estado' => $estadoTexto,
+        'propiedad' => $row['codigoPropiedad'],
+        'telefono' => $row['telefono'],
     ];
 }
 
-// Devolver los datos en formato JSON
+// Devolver las citas como JSON
 echo json_encode($citas);
