@@ -100,38 +100,49 @@ $rol = $infoUsuario['rol'];
                     // Crear el tooltip con estilo
                     var tooltip = new bootstrap.Tooltip(info.el, {
                         title: `
-       
-        <ul class="list-group" style="padding-left: 20px;">
-         <li class="list-group-item text-capitalize"><h2 class="text-left"><i class="bi bi-caret-right-fill"></i> ${info.event.title}</h2></li>
-            <li class="list-group-item text-capitalize"> <i class="bi bi-person-circle"></i> Nombre: <b>${info.event.extendedProps.nombre}</b></li>
-            <li class="list-group-item"> <i class="bi bi-houses-fill"></i> Propiedad: <b>${info.event.extendedProps.propiedad}</b> </li>
-            <li class="list-group-item"> <i class="bi bi-telephone-fill"></i> Teléfono: <b>${info.event.extendedProps.telefono}</b> </li>
-            <li class="list-group-item"> <i class="bi bi-question-diamond-fill"></i> Estado: <b>${estado}</b> </li>
-        </ul>
-    `,
+                        <ul class="list-group" style="padding-left: 20px;">
+                            <li class="list-group-item text-capitalize"><h2 class="text-left"><i class="bi bi-caret-right-fill"></i> ${info.event.title}</h2></li>
+                            <li class="list-group-item text-capitalize"> <i class="bi bi-person-circle"></i> Nombre: <b>${info.event.extendedProps.nombre}</b></li>
+                            <li class="list-group-item"> <i class="bi bi-houses-fill"></i> Propiedad: <b>${info.event.extendedProps.propiedad}</b> </li>
+                            <li class="list-group-item"> <i class="bi bi-telephone-fill"></i> Teléfono: <b>${info.event.extendedProps.telefono}</b> </li>
+                            <li class="list-group-item"> <i class="bi bi-question-diamond-fill"></i> Estado: <b>${estado}</b> </li>
+                        </ul>
+                    `,
                         html: true,
                         placement: 'top',
                         trigger: 'hover',
                         template: `
-        <div class="tooltip ${colorTooltip}" role="tooltip">
-            <div class="tooltip-arrow"></div>
-            <div class="tooltip-inner" style="white-space: normal; word-wrap: break-word; min-width: 150px;"></div>
-        </div>
-    `
+                        <div class="tooltip ${colorTooltip}" role="tooltip">
+                            <div class="tooltip-arrow"></div>
+                            <div class="tooltip-inner" style="white-space: normal; word-wrap: break-word; min-width: 150px;"></div>
+                        </div>
+                    `
                     });
-
-
                 }
             });
 
             calendar.render();
 
+            // Función que destruye tooltips abiertos
+            function destroyTooltips() {
+                var tooltips = document.querySelectorAll('.tooltip');
+                tooltips.forEach(function(tooltip) {
+                    var tooltipInstance = bootstrap.Tooltip.getInstance(tooltip); // Obtener la instancia del tooltip
+                    if (tooltipInstance) {
+                        tooltipInstance.hide(); // Cerrar el tooltip
+                        tooltipInstance.dispose(); // Destruir la instancia para que no se quede bloqueado
+                    }
+                });
+            }
+
             // Actualiza los eventos sin interrumpir la vista actual
             setInterval(function() {
+                destroyTooltips(); // Cierra y destruye todos los tooltips abiertos
                 calendar.refetchEvents(); // Solo recarga los eventos
-            }, 5000); // Cada 50 segundos (ajustar según necesidad)
+            }, 5000); // Cada 5 segundos (ajustar según necesidad)
         });
     </script>
+
 
 
 
