@@ -129,7 +129,7 @@ $rol = $infoUsuario['rol'];
             // Actualiza los eventos sin interrumpir la vista actual
             setInterval(function() {
                 calendar.refetchEvents(); // Solo recarga los eventos
-            }, 50000); // Cada 50 segundos (ajustar según necesidad)
+            }, 5000); // Cada 50 segundos (ajustar según necesidad)
         });
     </script>
 

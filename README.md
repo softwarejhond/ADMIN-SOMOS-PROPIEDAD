@@ -1,6 +1,6 @@
 # ADMIN-SOMOS-PROPIEDAD
 
-# AGREGAR NUEVA PROPIEDAD
+## AGREGAR NUEVA PROPIEDAD
 Para agregar una propiedad debemos tener en cuenta 
 que los siguiente arvicos de requieren entre si
 1) archivo nuevaPropiedadFrom.php
