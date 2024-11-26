@@ -14,3 +14,5 @@ la API citas que se encuenrtra en la carpeta APIS
 1) CARPETA APIS/citas/
 2) Archivo agenda.php
 3) CARPETA js/gestionAgenda.js
+4) js/fullCalendar.js
+5) js/real-time-calendar.js
