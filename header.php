@@ -3,12 +3,10 @@
         <button class="btn btn-tertiary mr-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
             <i class="bi bi-list"></i>
         </button>
-
         <a class="navbar-brand" href="#"><img src="img/somosLogo.png" alt="logo" width="50px"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -49,7 +47,6 @@
                     <a class="nav-link" href="#">SMTP</a>
                 </li>
             </ul>
-
             <!-- Mostrar el nombre del usuario logueado -->
             <div class="dropdown">
                 <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,9 +58,7 @@
                     <button type="button" class="btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Usuario: <?php echo htmlspecialchars($infoUsuario['rol']); ?>">
                         <i class="bi bi-info-circle-fill colorVerde" style="color: #00976a;"></i>
                     </button>
-
                 </button>
-
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="perfil.php">Perfil</a></li>
                     <li><a class="dropdown-item" href="cerrar-sesion.php">Cerrar sesión</a></li>
