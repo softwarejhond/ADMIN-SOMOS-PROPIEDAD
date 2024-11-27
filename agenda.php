@@ -150,7 +150,7 @@ $rol = $infoUsuario['rol'];
         <!-- Incluir Bootstrap JS importante para los TOAST -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <!--MUY IMPORTANTE PARA EL TIEMPO REAL DE LAS CONSULTAS-->
-        <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"> </script>
+        <script src="js/dataTables.js?v=0.1"> </script>
         <script src="js/gestionAgenda.js?v=0.1"></script>
         <script src='js/fullCalendar.js?v=0.1'></script>
         <script src="js/real-time-calendar.js?v=0.1"></script>

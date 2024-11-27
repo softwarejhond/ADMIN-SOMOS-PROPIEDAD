@@ -24,3 +24,15 @@ la API citas que se encuenrtra en la carpeta APIS
 5) js/real-time-calendar.js
 6) CARPETA controller/agenda/agendaForm.php
 7) CARPETA controller/microConsultas/addCitas.php
+
+## MODULO RENOVACIÓN
+Este modulo funciona para enviar notificación a los inquilinos de la 
+renovacion del contrato y lo encontramos con
+
+1) renovaciones.php
+2) CARPETA controller/renovaciones/listaRenovaciones
+
+Estamos implementando allí DataTable lo que ayuda a que se vea correctamente la 
+información este modulo esta conectado a 2 hojas más las cuales son:
+- actualizacionPropiedad.php
+- actualizarPorcentajeLocal.php

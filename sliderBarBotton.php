@@ -60,14 +60,16 @@
                   </label>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Renovaciones">
-                  <label class="checkbox-wrapper">
-                      <span class="checkbox-tile">
-                          <span class="checkbox-icon">
-                              <i class="bi bi-cake2-fill icono text-indigo-dark "></i>
+                  <a href="renovaciones.php">
+                      <label class="checkbox-wrapper">
+                          <span class="checkbox-tile">
+                              <span class="checkbox-icon">
+                                  <i class="bi bi-cake2-fill icono text-indigo-dark "></i>
+                              </span>
+                              <span class="checkbox-label">Ingresar</span>
                           </span>
-                          <span class="checkbox-label">Ingresar</span>
-                      </span>
-                  </label>
+                      </label>
+                  </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Exportar todo">
                   <label class="checkbox-wrapper">
