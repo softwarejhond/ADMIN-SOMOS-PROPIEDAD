@@ -36,3 +36,4 @@ Estamos implementando allí DataTable lo que ayuda a que se vea correctamente la
 información este modulo esta conectado a 2 hojas más las cuales son:
 - actualizacionPropiedad.php
 - actualizarPorcentajeLocal.php
+- enviarRecordatorio.php
