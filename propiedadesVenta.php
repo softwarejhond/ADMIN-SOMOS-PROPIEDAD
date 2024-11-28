@@ -49,7 +49,7 @@ $rol = $infoUsuario['rol'];
             <br><br>
             <div id="dashboard">
                 <div class="position-relative">
-                    <h2 class="position-absolute top-0 start-0 "><i class="bi bi-cake2-fill"></i> Renovaciones</h2>
+                    <h2 class="position-absolute top-0 start-0 "><i class="bi bi-currency-dollar"></i> Propiedades en venta</h2>
 
                     <?php include("controller/notificacioRetiroInquilino.php"); ?>
                     </h2>
@@ -59,7 +59,7 @@ $rol = $infoUsuario['rol'];
                 <div class="row">
 
                     <div class="col col-sm-12 col-md-12 col-lg-12">
-                        <?php include("controller/renovaciones/listaRenovaciones.php"); ?>
+                        <?php include("controller/propiedades/listaPropiedadesVenta.php"); ?>
                     </div>
                 </div>
 
@@ -77,7 +77,7 @@ $rol = $infoUsuario['rol'];
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="js/dataTables.js?v=0.1"> </script>
-      
+   
 
 </body>
 

@@ -37,3 +37,11 @@ información este modulo esta conectado a 2 hojas más las cuales son:
 - actualizacionPropiedad.php
 - actualizarPorcentajeLocal.php
 - enviarRecordatorio.php
+
+## MODULO GESTIÓN DE PROPIEDADES
+Este modulo nos periitra organizar todas las propiedades, editarlas, eliminarlas y visualizar todo
+incluso hasta tendremos el modulo de aceptar la propiedad cuando un usuario ingresa
+### Propiedades en venta
+Estas propiedades cuentan con los siguientes archivos
+1) propiedadesVenta.php 
+2) La CARPETA controller/propiedades/listaPropiedadesVenta.php

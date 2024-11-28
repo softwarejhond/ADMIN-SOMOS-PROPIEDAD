@@ -12,11 +12,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 include("funciones.php");
 
-// Obtiene el total de registros de las tablas
-$totalPropiedades = obtenerTotalRegistros('propiedades');
-$totalTipos = obtenerTotalRegistros('tipos');
-$totalPaises = obtenerTotalRegistros('paises');
-$totaCiudades = obtenerTotalRegistros(tabla: 'ciudades');
 $empresas = obtenerEmpresas();
 $infoUsuario = obtenerInformacionUsuario(); // Obtén la información del usuario
 $rol = $infoUsuario['rol'];

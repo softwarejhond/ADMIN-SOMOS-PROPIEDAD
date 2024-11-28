@@ -17,7 +17,7 @@ function obtenerProporcionesPropiedades()
     ];
 
     // Consulta para contar propiedades en venta
-    $queryEnVenta = "SELECT COUNT(*) as total_en_venta FROM proprieter WHERE condicion = 'en venta'";
+    $queryEnVenta = "SELECT COUNT(*) as total_en_venta FROM proprieter WHERE condicion = 'en venta' AND estadoPropietario='ACTIVO'";
     $resultEnVenta = mysqli_query($conn, $queryEnVenta);
     if ($resultEnVenta) {
         $dataEnVenta = mysqli_fetch_assoc($resultEnVenta);
@@ -25,7 +25,7 @@ function obtenerProporcionesPropiedades()
     }
 
     // Consulta para contar propiedades en arriendo
-    $queryEnArriendo = "SELECT COUNT(*) as total_en_arriendo FROM proprieter WHERE condicion = 'en alquiler'";
+    $queryEnArriendo = "SELECT COUNT(*) as total_en_arriendo FROM proprieter WHERE condicion = 'en alquiler' AND estadoPropietario='ACTIVO'";
     $resultEnArriendo = mysqli_query($conn, $queryEnArriendo);
     if ($resultEnArriendo) {
         $dataEnArriendo = mysqli_fetch_assoc($resultEnArriendo);
@@ -33,7 +33,7 @@ function obtenerProporcionesPropiedades()
     }
 
     // Consulta para contar propiedades en alquiler o venta
-    $queryAlquilerOVenta = "SELECT COUNT(*) as total_alquiler_o_venta FROM proprieter WHERE condicion = 'alquiler o venta'";
+    $queryAlquilerOVenta = "SELECT COUNT(*) as total_alquiler_o_venta FROM proprieter WHERE condicion = 'alquiler o venta' AND estadoPropietario='ACTIVO'";
     $resultAlquilerOVenta = mysqli_query($conn, $queryAlquilerOVenta);
     if ($resultAlquilerOVenta) {
         $dataAlquilerOVenta = mysqli_fetch_assoc($resultAlquilerOVenta);
@@ -41,7 +41,7 @@ function obtenerProporcionesPropiedades()
     }
 
     // Consulta para contar el total de propiedades
-    $queryTotal = "SELECT COUNT(*) as total_propiedades FROM proprieter";
+    $queryTotal = "SELECT COUNT(*) as total_propiedades FROM proprieter WHERE estadoPropietario='ACTIVO'";
     $resultTotal = mysqli_query($conn, $queryTotal);
     if ($resultTotal) {
         $dataTotal = mysqli_fetch_assoc($resultTotal);
