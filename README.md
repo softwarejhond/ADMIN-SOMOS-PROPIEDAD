@@ -46,3 +46,10 @@ incluso hasta tendremos el modulo de aceptar la propiedad cuando un usuario ingr
 Estas propiedades cuentan con los siguientes archivos
 1) propiedadesVenta.php 
 2) La CARPETA controller/propiedades/listaPropiedadesVenta.php
+
+## MODULO CONTADORES
+Este es el que nos permite ver los porcentajes de las propiedades en la pantalla inicial
+y continiene las siguientes carpetas y archivos
+
+1) contadores.php
+2) CARPETA controller/obtener_proporciones.php
