@@ -269,7 +269,7 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
         const offset = (currentPage - 1) * limit;
 
         const url =
-            `https://adminweb.somospropiedad.com/admin/APIS/get_properties.php?limit=${limit}&offset=${offset}&tipoInmueble=${tipoInmueble}&estado=${estado}&habitaciones=${habitaciones}&piso=${piso}&codigo=${codigo}&municipios=${encodeURIComponent(municipios)}`;
+            `https://somospropiedad.com/admin/APIS/get_properties.php?limit=${limit}&offset=${offset}&tipoInmueble=${tipoInmueble}&estado=${estado}&habitaciones=${habitaciones}&piso=${piso}&codigo=${codigo}&municipios=${encodeURIComponent(municipios)}`;
         fetch(url)
             .then(response => {
                 if (!response.ok) {
