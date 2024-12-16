@@ -30,7 +30,8 @@
                   </label>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles disponibles">
-                  <label class="checkbox-wrapper">
+              <a href="propiedadesDisponibles.php">
+                 <label class="checkbox-wrapper">
                       <span class="checkbox-tile">
                           <span class="checkbox-icon">
                               <i class="bi bi-house-check-fill icono text-indigo-dark "></i>
@@ -38,9 +39,11 @@
                           <span class="checkbox-label">Ingresar</span>
                       </span>
                   </label>
+              </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles en alquiler">
-                  <label class="checkbox-wrapper">
+              <a href="propiedadesRenta.php">
+                <label class="checkbox-wrapper">
                       <span class="checkbox-tile">
                           <span class="checkbox-icon">
                               <i class="bi bi-house-up-fill icono text-indigo-dark "></i>
@@ -48,6 +51,7 @@
                           <span class="checkbox-label">Ingresar</span>
                       </span>
                   </label>
+              </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles en venta">
                   <a href="propiedadesVenta.php">
