@@ -23,13 +23,13 @@
                         Filtros
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Lista de reparaciones</a></li>
+                        <li><a class="dropdown-item" href="listaReparaciones.php">Lista de reparaciones</a></li>
                         <li><a class="dropdown-item" href="#">Lista de reparadores</a></li>
                         <li><a class="dropdown-item" href="#">Lista de retiros programados</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Lista de administradores</a></li>
+                        <li><a class="dropdown-item" href="administradores.php">Lista de administradores</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
