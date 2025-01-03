@@ -1,4 +1,4 @@
-  <footer class="text-center text-lg-start text-light fixed-bottom bg-indigo-dark text-white">
+    <footer class="text-center text-lg-start text-light fixed-bottom bg-indigo-dark text-white">
       <!-- Copyright -->
       <div class="text-center p-2">
 

@@ -16,19 +16,20 @@
                     <a class="nav-link" href="empresa.php">Institución</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Perfil</a>
+                    <a class="nav-link" href="perfil.php">Perfil</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Filtros
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Lista de reparaciones</a></li>
+                        <li><a class="dropdown-item" href="#">Lista de reparadores</a></li>
+                        <li><a class="dropdown-item" href="#">Lista de retiros programados</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item" href="#">Lista de administradores</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -36,15 +37,15 @@
                         IPC
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">IPC</a></li>
-                        <li><a class="dropdown-item" href="#">IPC LOCALES</a></li>
+                        <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#actualizarIPC">IPC</a></li>
+                        <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#actualizarIPCLocales">IPC LOCALES</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Agenda</a>
+                    <a class="nav-link" href="agenda.php">Agenda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">SMTP</a>
+                    <a class="nav-link" href="actualizar-smtp.php">SMTP</a>
                 </li>
             </ul>
             <!-- Mostrar el nombre del usuario logueado -->

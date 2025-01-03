@@ -47,6 +47,8 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
 <?php include("modals/nuevoTipoPropiedad.php"); ?>
 <?php include("modals/nuevoUsuarioAdministrador.php"); ?>
 <?php include("modals/nuevoReparador.php"); ?>
+<?php include("modals/actualizarIPC.php"); ?>
+<?php include("modals/actualizarIPC_locales.php"); ?>
 
 <div id="mt-3 ">
     <div class="mt-3 ">
