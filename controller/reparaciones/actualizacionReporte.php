@@ -87,7 +87,7 @@ if ($query && mysqli_num_rows($query) > 0) {
     $id_reparador = $datoReparacionActuralizar['id_reparador'];
     $fechaActualizacion = $datoReparacionActuralizar['fechaActualizacion'];
     $fotoReporte = $datoReparacionActuralizar['fotoReporte']; // Ruta de la foto reportada
-    
+
 } else {
     die('<div class="alert alert-danger">Error: Datos no encontrados.</div>');
 }
@@ -134,7 +134,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="bi bi-regex"></i></span>
                         </div>
-                        <input type="number" name="codigo_propietario" id="codigo_propietario" class="form-control" placeholder="Código propietario" value="<?php echo htmlspecialchars($codigo_propietario); ?>" required>
+                        <input type="number" name="codigo_propietario" id="codigo_propietario" class="form-control" placeholder="Código propietario" value="<?php echo htmlspecialchars($codigo_propietario); ?>" required readonly>
                     </div>
                 </div>
 
@@ -168,57 +168,6 @@ if ($query && mysqli_num_rows($query) > 0) {
                         <input type="number" name="totalPagar" id="totalPagar" class="form-control" value="<?php echo htmlspecialchars($totalPagar); ?>" placeholder="Total a pagar" readonly>
                     </div>
                 </div>
-            </div>
-
-            <!-- Columna derecha -->
-            <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label for="situacionReportada">Situación reportada *</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="bi bi-chat-left-text-fill"></i></span>
-                        </div>
-                        <textarea name="situacionReportada" id="situacionReportada" class="form-control" placeholder="Situación reportada" required><?php echo htmlspecialchars($situacionReportada); ?></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-    <label for="fotoReporte">Foto reportada *</label>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="bi bi-image-fill"></i></span>
-        </div>
-        <!-- Mostrar la imagen actual si existe -->
-        <?php if (!empty($fotoReporte)): ?>
-            <div class="mb-2">
-                <img src="<?php echo htmlspecialchars($fotoReporte); ?>" alt="Foto reportada" class="img-fluid" style="max-width: 30%; height: auto; border: 1px solid #ccc; padding: 5px;">
-            </div>
-        <?php else: ?>
-            <p class="text-muted">No hay foto reportada disponible.</p>
-        <?php endif; ?>
-    </div>
-</div>
-
-                <div class="form-group">
-                    <label for="solucion">Solución *</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="bi bi-chat-left-text-fill"></i></span>
-                        </div>
-                        <textarea name="solucion" id="solucion" class="form-control" placeholder="Solución" required><?php echo htmlspecialchars($solucion); ?></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label style="color:#000" class="text-left">Foto de la solución</label><br>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-camera-fill"></i>
-                            </span>
-                        </div>
-                        <input type="file" name="fotoSolucion" class="form-control" accept="image/*" required>
-                    </div>
-                </div>
                 <div class="form-group">
                     <label for="EstadoReporte">Estado del reporte *</label>
                     <select name="EstadoReporte" id="EstadoReporte" class="form-control" required>
@@ -228,11 +177,71 @@ if ($query && mysqli_num_rows($query) > 0) {
                     </select>
                 </div>
             </div>
+
+            <!-- Columna derecha -->
+            <div class="col-md-6 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label for="situacionReportada">Situación reportada *</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="bi bi-chat-left-text-fill"></i></span>
+                                </div>
+                                <textarea name="situacionReportada" id="situacionReportada" class="form-control" placeholder="Situación reportada" required readonly><?php echo htmlspecialchars($situacionReportada); ?></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fotoReporte">Foto reportada *</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="bi bi-image-fill"></i></span>
+                                </div>
+                                <!-- Mostrar la imagen actual si existe -->
+                                <?php if (!empty($fotoReporte)): ?>
+                                    <div class="mb-2">
+                                        <img src="<?php echo htmlspecialchars($fotoReporte); ?>" alt="Foto reportada" class="img-fluid" style="max-width: 100%; height: auto; border: 1px solid #ccc; padding: 5px;">
+                                    </div>
+                                <?php else: ?>
+                                    <p class="text-muted">No hay foto reportada disponible.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label for="solucion">Solución *</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="bi bi-chat-left-text-fill"></i></span>
+                                </div>
+                                <textarea name="solucion" id="solucion" class="form-control" placeholder="Solución" required><?php echo htmlspecialchars($solucion); ?></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="color:#000" class="text-left">Foto de la solución</label><br>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </span>
+                                </div>
+                                <input type="file" name="fotoSolucion" id="fotoSolucion" class="form-control" accept="image/*" required onchange="mostrarVistaPrevia(event)">
+                            </div>
+                            <!-- Vista previa -->
+                            <div id="vistaPrevia" class="mt-3">
+                                <img id="imgVistaPrevia" src="#" alt="Vista previa" style="max-width: 100%; height: auto; display: none; border: 1px solid #ccc; padding: 5px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="form-group text-center mt-3">
             <button type="submit" class="btn bg-magenta-dark text-white" name="btnUpdateReparacion">Actualizar reparación</button>
-            <a href="viewReparaciones.php" class="btn bg-indigo-dark text-white">Cancelar</a>
+            <a href="listaReparaciones.php" class="btn bg-indigo-dark text-white">Cancelar</a>
         </div>
     </div>
 </form>
@@ -242,5 +251,25 @@ if ($query && mysqli_num_rows($query) > 0) {
         let valorFactura = parseFloat(document.getElementById('valorFactura').value) || 0;
         let valorServicio = parseFloat(document.getElementById('valorServicio').value) || 0;
         document.getElementById('totalPagar').value = valorFactura + valorServicio;
+    }
+</script>
+<script>
+    function mostrarVistaPrevia(event) {
+        const input = event.target;
+        const imgPreview = document.getElementById('imgVistaPrevia');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block'; // Mostrar la imagen
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            imgPreview.style.display = 'none'; // Ocultar la imagen si no hay archivo seleccionado
+            imgPreview.src = '';
+        }
     }
 </script>
