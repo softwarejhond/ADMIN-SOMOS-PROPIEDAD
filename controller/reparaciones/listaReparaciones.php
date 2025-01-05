@@ -4,18 +4,17 @@
         <table id="tableReparaciones" class="table table-hover table-bordered table-lg table-responsive">
             <thead class="thead-dark">
                 <tr class="align-middle">
-                    <th class="w-20"><i class="fa-solid fa-qrcode" title="Código"></i> Código</th>
-                    <th style="width: 100px;"><i class="fa-solid fa-calendar-days" title="Fecha"></i> Fecha</th>
+                    <th class="w-20">Código</th>
+                    <th style="width: 100px;">Fecha</th>
                     <th style="width: 300px;">Propietario</th>
                     <th style="width: 300px;">Dirección</th>
                     <th style="width: 200px;">Teléfono Propietario</th>
                     <th style="width: 300px;">Inquilino</th>
                     <th style="width: 200px;">Teléfono Inquilino</th>
-                    <th style="width: 100px;"><i class="fa-solid fa-dollar-sign"></i> Valor factura</th>
-                    <th style="width: 100px;"><i class="fa-solid fa-dollar-sign"></i> Valor Servicio</th>
-                    <th style="width: 100px;"><i class="fa-solid fa-dollar-sign"></i> Total</th>
-                    <th style="width: 100px;"><i class="fa-solid fa-triangle-exclamation"></i> Estado</th>
-                    <th style="width: 70px;"><i class="bi bi-eye-fill"></i></th>
+                    <th style="width: 100px;">Valor factura</th>
+                    <th style="width: 100px;">Valor Servicio</th>
+                    <th style="width: 100px;">Total</th>
+                    <th style="width: 100px;">Estado</th>
                     <th style="width: 70px;"><i class="fa-solid fa-print" title="Imprimir certificado"></i></th>
                     <th style="width: 70px;"><i class="fa-solid fa-pen-to-square" title="Editar reparación"></i></th>
                 </tr>
@@ -28,8 +27,7 @@
                 // Query SQL basada en el filtro
                 $sqlQuery = "SELECT * FROM report 
                             INNER JOIN proprieter ON report.codigo_propietario = proprieter.codigo 
-                            INNER JOIN repairmen ON report.id_reparador = repairmen.identificacion 
-                            WHERE EstadoReporte = 'SIN ATENDER'";
+                            INNER JOIN repairmen ON report.id_reparador = repairmen.identificacion";
                 $sql = mysqli_query($conn, $sqlQuery);
 
                 // Verificar si hay resultados
@@ -50,9 +48,8 @@
                                 <td>' . htmlspecialchars($row['valorServicio'], ENT_QUOTES, 'UTF-8') . '</td>
                                 <td>' . htmlspecialchars($row['totalPagar'], ENT_QUOTES, 'UTF-8') . '</td>
                                 <td>' . htmlspecialchars($row['EstadoReporte'], ENT_QUOTES, 'UTF-8') . '</td>
-                                <td><a href="verReparador.php?nik=' . $row['id_reparador'] . '" class="btn bg-magenta-dark text-white btn-sm"><i class="bi bi-eye-fill"></i></a></td>
                                 <td><a href="printReporteReparaciones.php?nik=' . $row['id'] . '&code=' . $row['codigo_propietario'] . '&repairmen=' . $row['id_reparador'] . '&reparacion=' . $row['codigoReporte'] . '" class="btn bg-indigo-dark text-white btn-sm"><span class="fa fa-print"></span></a></td>
-                                <td><a href="updateReparacion.php?niks=' . $row['codigoReporte'] . '" class="btn btn-warning btn-sm"><span class="fa fa-edit"></span></a></td>
+                                <td><a href="actualizarReporte.php?niks=' . $row['codigoReporte'] . '" class="btn btn-warning btn-sm"><span class="fa fa-edit"></span></a></td>
                             </tr>';
                     }
                 }
