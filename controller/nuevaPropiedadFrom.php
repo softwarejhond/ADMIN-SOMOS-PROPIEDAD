@@ -146,13 +146,13 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             codigo, tipoInmueble, nivel_piso, area, estrato, departamento, Municipio, terraza, ascensor, patio, parqueadero, cuarto_util, alcobas,
             closet, sala, sala_comedor, comedor, cocina, servicios, CuartoServicios, ZonaRopa, vista, servicios_publicos, otras_caracteristicas, direccion, latitud, longitud,
             TelefonoInmueble, valor_canon, doc_propietario, nombre_propietario, telefono_propietario, email_propietario, banco, tipoCuenta, numeroCuenta, diaPago,
-            fecha, contrato_EPM, url_foto_principal, condicion, fecha_creacion
+            fecha, contrato_EPM,estadoPropietario, url_foto_principal, condicion, fecha_creacion
         ) VALUES (
             '$codigo', '$tipoInmueble', '$nivel_piso', '$area', '$estrato', '$departamento', '$municipios', '$terraza', '$ascensor', '$patio', '$parqueadero',
             '$cuarto_util', '$habitaciones', '$closet', '$sala', '$sala_comedor', '$comedor', '$cocina', '$servicios', '$cuartoServicios', '$zonaRopa', '$vista',
             '$servicios_publicos', '$otras_caracteristicas', '$direccion', '$latitud','$longitud', '$telefonoInmueble', '$valor_canon', '$doc_propietario', '$nombre_propietario', 
-            '$telefono_propietario', '$email_propietario', '$banco', '$tipoCuenta', '$numeroCuenta', '$diaPago', '$fecha', '$contrato_EPM', '$ruta1', 
-            '$condicion', NOW()
+            '$telefono_propietario', '$email_propietario', '$banco', '$tipoCuenta', '$numeroCuenta', '$diaPago', '$fecha', '$contrato_EPM','NUEVO', '$ruta1', 
+            'NUEVO', NOW()
         )";
 
             if ($conn->query($queryInsert) === TRUE) {

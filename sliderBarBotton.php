@@ -19,22 +19,24 @@
                       </label>
                   </a>
               </div>
-              <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles retirados">
+              <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Aceptar propiedad">
+              <a href="propiedadesAceptacion.php">
                   <label class="checkbox-wrapper">
                       <span class="checkbox-tile">
                           <span class="checkbox-icon">
-                              <i class="bi bi-house-lock-fill icono text-indigo-dark "></i>
+                              <i class="bi bi-house-check-fill icono text-indigo-dark "></i>
                           </span>
                           <span class="checkbox-label">Ingresar</span>
                       </span>
                   </label>
+                  </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles disponibles">
               <a href="propiedadesDisponibles.php">
                  <label class="checkbox-wrapper">
                       <span class="checkbox-tile">
                           <span class="checkbox-icon">
-                              <i class="bi bi-house-check-fill icono text-indigo-dark "></i>
+                              <i class="bi bi-house-up-fill icono text-indigo-dark "></i>
                           </span>
                           <span class="checkbox-label">Ingresar</span>
                       </span>
@@ -46,7 +48,7 @@
                 <label class="checkbox-wrapper">
                       <span class="checkbox-tile">
                           <span class="checkbox-icon">
-                              <i class="bi bi-house-up-fill icono text-indigo-dark "></i>
+                              <i class="bi bi-house-heart-fill icono text-indigo-dark "></i>
                           </span>
                           <span class="checkbox-label">Ingresar</span>
                       </span>
