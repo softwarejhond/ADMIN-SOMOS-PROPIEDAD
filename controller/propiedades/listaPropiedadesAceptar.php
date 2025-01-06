@@ -50,20 +50,28 @@ if ($result && $result->num_rows > 0) {
         <td><button class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></button></td>
         <td>
             <form method="POST" class="d-inline" onsubmit="return confirmarActualizacion();">
-                <input type="hidden" name="codigo" value="' . htmlspecialchars($row["codigo"]) . '">
-                <select class="form-control" name="nuevoEstado" required>
-                    <option value="NUEVO" ' . ($row["estadoPropietario"] == 'NUEVO' ? 'selected' : '') . '>NUEVO</option>
-                    <option value="EN ALQUILER" ' . ($row["estadoPropietario"] == 'EN ALQUILER' ? 'selected' : '') . '>EN ALQUILER</option>
-                    <option value="EN VENTA" ' . ($row["estadoPropietario"] == 'EN VENTA' ? 'selected' : '') . '>EN VENTA</option>
-                    <option value="ALQUILER O VENTA" ' . ($row["estadoPropietario"] == 'ALQUILER O VENTA' ? 'selected' : '') . '>ALQUILER O VENTA</option>
-                    <option value="DENEGADO" ' . ($row["estadoPropietario"] == 'DENEGADO' ? 'selected' : '') . '>DENEGADO</option>
-                </select>
-                <button type="submit" name="btnActualizarEstado" class="btn bg-indigo-dark text-white btn-sm">
-                    <i class="bi bi-pencil-fill"></i>
-                </button>
-            </form>
-        </td>
-        <td><button class="btn btn-danger btn-sm"><i class="bi bi-trash3-fill"></i></button></td>';
+    <input type="hidden" name="codigo" value="' . htmlspecialchars($row["codigo"]) . '">
+    
+    <!-- Contenedor de grupo de input y botón -->
+    <div class="input-group">
+        <select class="form-control" name="nuevoEstado" required>
+            <option value="NUEVO" ' . ($row["estadoPropietario"] == 'NUEVO' ? 'selected' : '') . '>NUEVO</option>
+            <option value="EN ALQUILER" ' . ($row["estadoPropietario"] == 'EN ALQUILER' ? 'selected' : '') . '>EN ALQUILER</option>
+            <option value="EN VENTA" ' . ($row["estadoPropietario"] == 'EN VENTA' ? 'selected' : '') . '>EN VENTA</option>
+            <option value="ALQUILER O VENTA" ' . ($row["estadoPropietario"] == 'ALQUILER O VENTA' ? 'selected' : '') . '>ALQUILER O VENTA</option>
+            <option value="DENEGADO" ' . ($row["estadoPropietario"] == 'DENEGADO' ? 'selected' : '') . '>DENEGADO</option>
+        </select>
+        
+        <!-- Botón dentro del grupo de input -->
+        <div class="input-group-append">
+            <button type="submit" name="btnActualizarEstado" class="btn bg-indigo-dark text-white btn-sm">
+                <i class="bi bi-pencil-fill"></i>
+            </button>
+        </div>
+    </div>
+</form>
+
+        </td>';
         
 
         // Guardar fila de datos
@@ -87,7 +95,6 @@ if ($result && $result->num_rows > 0) {
             <th>Dirección</th>
             <th>Estado</th>
             <th>Condición</th>
-            <th></th>
             <th></th>
             <th></th>
         </tr>
