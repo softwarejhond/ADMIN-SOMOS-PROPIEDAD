@@ -53,3 +53,27 @@ y continiene las siguientes carpetas y archivos
 
 1) contadores.php
 2) CARPETA controller/obtener_proporciones.php
+
+## MODULO VER DETALLE DE REGISTROS
+Este es el que nos permite ver los detalles de cada registro de manera dinamica y con codigo reutilizable para otras vistas
+
+1) vistaBase.php
+2) verDetalle.php
+3) funciones.php
+
+## Características principales
+
+- [x] 🔎 Consulta de detalles de registros
+- [x] 👮 Codigo reutilizable
+
+## MODULO EDITAR REGISTROS
+Este es el que nos permite editar los registros dinamicamente desde el boton de **bi bi-pencil-fill** y al actualizar el registro redirecciona al index.php
+
+1) editarPropiedad.php
+2) funciones.php
+
+## Características principales
+
+- [x]  ✏️ Actualizar información
+
+

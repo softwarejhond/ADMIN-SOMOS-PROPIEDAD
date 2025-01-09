@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include("conexion.php"); // Conexión a la base de datos
+include("../controller/conexion.php"); // Conexión a la base de datos include("conexion.php");
 
 // Inicializa el mensaje vacío
 $mensaje = '';
