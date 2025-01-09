@@ -60,6 +60,7 @@ Este es el que nos permite ver los detalles de cada registro de manera dinamica 
 1) vistaBase.php
 2) verDetalle.php
 3) funciones.php
+4) propiedades/detalles.php
 
 ## Características principales
 
