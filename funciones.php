@@ -478,5 +478,20 @@ function actualizarPassword($conn, $usuario, $new_password_hash) {
         return ['success' => false, 'message' => 'Error al actualizar la contraseña.'];
     }
 }
+//ESTA FUNCION MANEJA VER LOS DETALLES DE LAS TABLAS DINAMICAS
+function obtenerRegistroPorId($tabla, $id) {
+    global $conn;
+    $sql = "SELECT * FROM `$tabla` WHERE codigo = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+      return $result->fetch_assoc();
+    } else {
+      return null;
+    }
+  }
 
 

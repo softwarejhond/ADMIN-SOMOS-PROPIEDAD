@@ -19,7 +19,7 @@ $data = [];
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $row['acciones'] = '
-            <td><button class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></button></td>
+            <td><a href="verDetalle.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></a></td>
             <td><button class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-pencil-fill"></i></button></td>
             <td><button class="btn btn-danger btn-sm"><i class="bi bi-trash3-fill"></i></button></td>';
         $data[] = $row;
@@ -30,31 +30,27 @@ if ($result->num_rows > 0) {
 <table id="propiedadesVenta" class="table table-hover table-bordered">
     <thead class="thead-dark">
         <tr>
-            <th>Código</th>
-            <th>Inmueble</th>
-            <th>Propietario</th>
-            <th>Teléfono</th>
-            <th>Municipio</th>
-            <th>Dirección</th>
-            <th>Estado</th>
-            <th>Condición</th>
-            <th></th>
-            <th></th>
-            <th></th>
+           <?php if (!empty($data)): ?>
+                    <?php foreach(array_keys($data[0]) as $key): ?>
+                        <?php if($key != 'acciones'):?>
+                            <th><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $key)));?></th>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                <?php endif; ?>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($data as $row): ?>
             <tr>
-                <td><?php echo htmlspecialchars($row['codigo']); ?></td>
-                <td><?php echo htmlspecialchars($row['tipoInmueble']); ?></td>
-                <td><?php echo htmlspecialchars($row['nombre_propietario']); ?></td>
-                <td><?php echo htmlspecialchars($row['telefono_propietario']); ?></td>
-                <td><?php echo htmlspecialchars($row['municipio']); ?></td>
-                <td><?php echo htmlspecialchars($row['direccion']); ?></td>
-                <td><?php echo htmlspecialchars($row['estadoPropietario']); ?></td>
-                <td><?php echo htmlspecialchars($row['condicion']); ?></td>
-                <?php echo $row['acciones']; ?>
+                <?php foreach ($row as $key => $value): ?>
+                    <?php if($key != 'acciones'):?>
+                        <td><?php echo htmlspecialchars($value); ?></td>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+               <?php echo $row['acciones']; ?>
             </tr>
         <?php endforeach; ?>
     </tbody>
