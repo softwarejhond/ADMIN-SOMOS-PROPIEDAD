@@ -219,12 +219,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 break;
 
+            case 'obtenerRegistro':
+                if (isset($_POST['tabla']) && isset($_POST['id'])) {
+                    $registro = obtenerRegistroPorId($_POST['tabla'], $_POST['id']);
+                    echo json_encode($registro);
+                } else {
+                    echo json_encode(null);
+                }
+                break;
+            case 'actualizarRegistro':
+                $resultado = actualizarRegistro($conn, $_POST);
+                echo json_encode($resultado);
+                break;
+
             default:
                 echo json_encode(['error' => 'Tipo de formulario no reconocido.']);
                 break;
         }
     } else {
-        echo json_encode(['error' => 'El tipo de formulario no está definido.']);
+        if (isset($_POST['action'])) {
+            switch ($_POST['action']) {
+                case 'obtenerRegistro':
+                    if (isset($_POST['tabla']) && isset($_POST['id'])) {
+                        $registro = obtenerRegistroPorId($_POST['tabla'], $_POST['id']);
+                        echo json_encode($registro);
+                    } else {
+                        echo json_encode(null);
+                    }
+                    break;
+                case 'actualizarRegistro':
+                    $resultado = actualizarRegistro($conn, $_POST);
+                    echo json_encode($resultado);
+                    break;
+            }
+        } else {
+            echo json_encode(['error' => 'El tipo de formulario no está definido.']);
+        }
     }
 }
 
@@ -341,13 +371,21 @@ include("conexion.php");
 
 // Función para actualizar los datos del usuario
 // Verifica si el usuario está logueado
+if (session_status() === PHP_SESSION_NONE) {
+     session_start();
+}
+
+// Para depuración
+//var_dump($_SESSION);
+
+// Función para actualizar los datos del usuario
+// Verifica si el usuario está logueado
 if (isset($_SESSION['username'])) {
     $usaurios = $_SESSION['username']; // Asegúrate de que esta es la clave correcta
 } else {
     echo '<div class="alert alert-danger alert-dismissable">Error: No se ha encontrado el usuario.</div>';
     exit; // Salir si no hay usuario
 }
-
 function actualizarUsuario($conn, $usaurios)
 {
     // Verifica si se ha enviado el formulario
@@ -467,11 +505,12 @@ unset($_SESSION['new_password_err'], $_SESSION['confirm_password_err']);
 
 
 // Función para actualizar la contraseña en la base de datos
-function actualizarPassword($conn, $usuario, $new_password_hash) {
+function actualizarPassword($conn, $usuario, $new_password_hash)
+{
     $sql = "UPDATE users SET password = ? WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $new_password_hash, $usuario);
-    
+
     if ($stmt->execute()) {
         return ['success' => true, 'message' => 'Contraseña actualizada exitosamente.'];
     } else {
@@ -479,7 +518,8 @@ function actualizarPassword($conn, $usuario, $new_password_hash) {
     }
 }
 //ESTA FUNCION MANEJA VER LOS DETALLES DE LAS TABLAS DINAMICAS
-function obtenerRegistroPorId($tabla, $id) {
+function obtenerRegistroPorId($tabla, $id)
+{
     global $conn;
     $sql = "SELECT * FROM `$tabla` WHERE codigo = ?";
     $stmt = $conn->prepare($sql);
@@ -488,10 +528,49 @@ function obtenerRegistroPorId($tabla, $id) {
     $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
-      return $result->fetch_assoc();
+        return $result->fetch_assoc();
     } else {
-      return null;
+        return null;
     }
-  }
+}
 
+//ESTA FUNCION ACTUALIZA LOS REGISTROS POR EL ID
+function actualizarRegistro($conn, $datos)
+{
+    $codigo = $datos['codigo'];
+    $tabla = $datos['tabla'];
 
+    $setClauses = [];
+    $types = '';
+    $bindParams = [];
+
+    foreach ($datos as $key => $value) {
+        if ($key != 'codigo' && $key != 'tabla' && $key != 'action') {
+            $setClauses[] = "$key = ?";
+            $types .= 's';
+            $bindParams[] = $value;
+        }
+    }
+    $setString = implode(", ", $setClauses);
+    $sql = "UPDATE `$tabla` SET $setString WHERE codigo = ?";
+
+    $bindParams[] = $codigo;
+    $types .= 's';
+
+  
+
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        return ['success' => false, 'message' => 'Error en la preparación de la consulta: ' . $conn->error];
+    }
+
+    $stmt->bind_param($types, ...$bindParams);
+
+    if ($stmt->execute()) {
+        return ['success' => true];
+    } else {
+        return ['success' => false, 'message' => 'Error en la ejecución de la consulta: ' . $stmt->error];
+    }
+}
+?>

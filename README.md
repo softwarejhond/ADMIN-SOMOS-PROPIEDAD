@@ -66,4 +66,14 @@ Este es el que nos permite ver los detalles de cada registro de manera dinamica 
 - [x] 🔎 Consulta de detalles de registros
 - [x] 👮 Codigo reutilizable
 
+## MODULO EDITAR REGISTROS
+Este es el que nos permite editar los registros dinamicamente desde el boton de **bi bi-pencil-fill** y al actualizar el registro redirecciona al index.php
+
+1) editarPropiedad.php
+2) funciones.php
+
+## Características principales
+
+- [x]  ✏️ Actualizar información
+
 
