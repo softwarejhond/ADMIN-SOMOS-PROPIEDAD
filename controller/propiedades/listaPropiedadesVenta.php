@@ -38,7 +38,6 @@ if ($result->num_rows > 0) {
                 <?php endforeach; ?>
                 <th></th>
                 <th></th>
-                <th></th>
             <?php endif; ?>
         </tr>
     </thead>
