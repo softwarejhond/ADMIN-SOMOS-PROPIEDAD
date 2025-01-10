@@ -518,10 +518,17 @@ function actualizarPassword($conn, $usuario, $new_password_hash)
     }
 }
 //ESTA FUNCION MANEJA VER LOS DETALLES DE LAS TABLAS DINAMICAS
+
 function obtenerRegistroPorId($tabla, $id)
 {
     global $conn;
-    $sql = "SELECT * FROM `$tabla` WHERE codigo = ?";
+
+    $sql = "SELECT *
+            FROM proprieter
+            INNER JOIN municipios ON proprieter.Municipio = municipios.id_municipio
+            INNER JOIN departamentos ON municipios.departamento_id = departamentos.id_departamento
+            WHERE proprieter.codigo = ?";
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $id);
     $stmt->execute();
@@ -533,6 +540,7 @@ function obtenerRegistroPorId($tabla, $id)
         return null;
     }
 }
+
 
 //ESTA FUNCION ACTUALIZA LOS REGISTROS POR EL ID
 function actualizarRegistro($conn, $datos)

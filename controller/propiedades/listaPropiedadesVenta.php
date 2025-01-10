@@ -21,7 +21,7 @@ if ($result->num_rows > 0) {
         $row['acciones'] = '
             <td><a href="verDetalle.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></a></td>
             <td><a href="editarPropiedad.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-pencil-fill"></i></a></td>
-            <td><button class="btn btn-danger btn-sm"><i class="bi bi-trash3-fill"></i></button></td>';
+            ';
         $data[] = $row;
     }
 }
