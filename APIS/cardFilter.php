@@ -315,18 +315,43 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
 
             const cardContent = `
 <div class="card" style="width: 100%;">
-  <img src="fotos/${item.url_foto_principal}" class="card-img-top" alt="..." style="height:300px">
-  <div class="card-body ">
-     <button class="btn bg-amber-dark text-left text-white m-1 " type="button"">
-            <span class="spinner-grow spinner-grow-sm text-lime-dark " role="status" aria-hidden="true"></span>
-            ${item.condicion}
-        </button>
-  <button 
-    class="btn bg-teal-dark text-left text-white m-1" type="button" data-bs-toggle="modal" 
-    data-bs-target="#modalInfo${item.codigo}" title="Ver características">
-    <i class="fa-solid fa-circle-info"></i> Características
-  </button>
+  <!-- Inicio del Carrusel -->
+  <div id="carousel${item.codigo}" class="carousel slide" data-bs-ride="carousel">
+ <div class="carousel-inner">
+${item.fotos.map((foto, index) => {
+  // Verificar la ruta completa antes de usarla
+  const rutaImagen = `fotos/${item.codigo}/${foto}`;
+  console.log(rutaImagen); // Verifica si la ruta construida es correcta
+  return `
+    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+      <img src="${rutaImagen}" class="d-block w-100" alt="Foto de la propiedad" style="height:300px;" onerror="this.onerror=null; this.src='ruta_a_imagen_defecto.jpg';">
     </div>
+  `;
+}).join('')}
+
+
+  </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel${item.codigo}" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel${item.codigo}" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+  <!-- Fin del Carrusel -->
+  <div class="card-body">
+     <button class="btn bg-amber-dark text-left text-white m-1 " type="button"">
+        <span class="spinner-grow spinner-grow-sm text-lime-dark " role="status" aria-hidden="true"></span>
+        ${item.condicion}
+    </button>
+    <button 
+      class="btn bg-teal-dark text-left text-white m-1" type="button" data-bs-toggle="modal" 
+      data-bs-target="#modalInfo${item.codigo}" title="Ver características">
+      <i class="fa-solid fa-circle-info"></i> Características
+    </button>
+  </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item"> <h5 class="prop-title text-left text-uppercase text-magenta-dark "><b>${item.tipoInmueble} - ${item.codigo}</b></h5></li>
     <li class="list-group-item"><i class="bi bi-geo-alt-fill"></i> ${item.municipio}</li>
@@ -336,10 +361,9 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
   </ul>
   <div class="card-body">
     <a href="#" class=" btn bg-indigo-dark text-white w-100"><i class="bi bi-eye-fill"></i> <b>VER MÁS</b></a>
-  
   </div>
 </div>
-
+<!-- Modal -->
 <div class="modal fade" id="modalInfo${item.codigo}" tabindex="-1" aria-labelledby="propertyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -411,7 +435,6 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
     </div>
 </div>
 `;
-
 
             function openPropertyModal(propertyId) {
                 $(`#modalInfo${propertyId}`).modal('show'); // Abre el modal una vez se ha cargado la información
