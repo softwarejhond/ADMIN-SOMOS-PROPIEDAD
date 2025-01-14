@@ -20,7 +20,7 @@ if (isset($_SESSION["timeout"])) {
     }
 }
 
-// El siguiente key se crea cuando se inicia sesión
+// Actualizar el tiempo de la sesión
 $_SESSION["timeout"] = time();
 
 // Incluir el archivo de conexión
@@ -71,13 +71,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     if (mysqli_stmt_fetch($stmt)) {
                         if (password_verify($password, $hashed_password)) {
                             // La contraseña es correcta, iniciar una nueva sesión
-                            // Ya hemos comenzado la sesión anteriormente
-
-                            // Almacenar datos del usuario en la sesión
                             $_SESSION['loggedin'] = true; // Indica que el usuario ha iniciado sesión
-                            $_SESSION['nombre'] = htmlspecialchars($nombre); // Establecer el nombre real del usuario
-                            $_SESSION['rol'] = $rol; // Asignar un rol real basado en tu base de datos
-                            $_SESSION['username'] = htmlspecialchars($username); // Asignar nombre de usuario
+                            $_SESSION['nombre'] = htmlspecialchars($nombre); // Nombre del usuario
+                            $_SESSION['rol'] = $rol; // Rol del usuario
+                            $_SESSION['username'] = htmlspecialchars($username); // Nombre de usuario
                             $_SESSION['foto'] = htmlspecialchars($foto); // Ruta de la foto del usuario
 
                             // Redirigir al usuario a la página principal
@@ -137,14 +134,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="password-container">
                         <input type="password" placeholder="Contraseña" name="password" required class="input-login" id="passwordInput">
                         <span class="toggle-password" onclick="togglePassword()">
-                            👁️
+                            🔍
                         </span>
                     </div>
                     <input type="submit" value="Iniciar Sesión" name="iniciar" class="btn">
 
-                    <!-- Mensaje que se mostrará´cuando se haya procesado la solicitud en el servidor -->
-                    <?php if (isset($_POST['iniciar'])) : ?>
-                        <span class="msj-error-input"> <?php echo $password_err ?></span>
+                    <!-- Mensaje que se mostrará cuando se haya procesado la solicitud en el servidor -->
+                    <?php if (!empty($username_err) || !empty($password_err)): ?>
+                        <span class="msj-error-input"> <?php echo $username_err ?: $password_err; ?></span>
                     <?php endif ?>
                 </form>
             </div>
@@ -164,6 +161,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </ul>
     <script src="js/tooglePassword.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        }
+    </script>
 </body>
 
 </html>
