@@ -72,9 +72,23 @@ Este es el que nos permite editar los registros dinamicamente desde el boton de 
 
 1) editarPropiedad.php
 2) funciones.php
+3) editarPropiedadForm.php
 
 ## Características principales
 
 - [x]  ✏️ Actualizar información
+
+## MODULO SUBIR FOTOS
+Este es el que nos permite subir las imagenes con el id de la propiedad elegida  el boton de **Gestionar fotos** para acceder a la vista
+
+1) propiedad_fotos.php
+2) funciones.php
+3) subir_fotos.php
+4) dropzone.js
+5) estilo.css
+
+## Características principales
+
+- [x]  ✏️ Actualizar fotos
 
 

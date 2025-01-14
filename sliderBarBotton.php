@@ -20,40 +20,40 @@
                   </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Aceptar propiedad">
-              <a href="propiedadesAceptacion.php">
-                  <label class="checkbox-wrapper">
-                      <span class="checkbox-tile">
-                          <span class="checkbox-icon">
-                              <i class="bi bi-house-check-fill icono text-indigo-dark "></i>
+                  <a href="propiedadesAceptacion.php">
+                      <label class="checkbox-wrapper">
+                          <span class="checkbox-tile">
+                              <span class="checkbox-icon">
+                                  <i class="bi bi-house-check-fill icono text-indigo-dark "></i>
+                              </span>
+                              <span class="checkbox-label">Ingresar</span>
                           </span>
-                          <span class="checkbox-label">Ingresar</span>
-                      </span>
-                  </label>
+                      </label>
                   </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles disponibles">
-              <a href="propiedadesDisponibles.php">
-                 <label class="checkbox-wrapper">
-                      <span class="checkbox-tile">
-                          <span class="checkbox-icon">
-                              <i class="bi bi-house-up-fill icono text-indigo-dark "></i>
+                  <a href="propiedadesDisponibles.php">
+                      <label class="checkbox-wrapper">
+                          <span class="checkbox-tile">
+                              <span class="checkbox-icon">
+                                  <i class="bi bi-house-up-fill icono text-indigo-dark "></i>
+                              </span>
+                              <span class="checkbox-label">Ingresar</span>
                           </span>
-                          <span class="checkbox-label">Ingresar</span>
-                      </span>
-                  </label>
-              </a>
+                      </label>
+                  </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles en alquiler">
-              <a href="propiedadesRenta.php">
-                <label class="checkbox-wrapper">
-                      <span class="checkbox-tile">
-                          <span class="checkbox-icon">
-                              <i class="bi bi-house-heart-fill icono text-indigo-dark "></i>
+                  <a href="propiedadesRenta.php">
+                      <label class="checkbox-wrapper">
+                          <span class="checkbox-tile">
+                              <span class="checkbox-icon">
+                                  <i class="bi bi-house-heart-fill icono text-indigo-dark "></i>
+                              </span>
+                              <span class="checkbox-label">Ingresar</span>
                           </span>
-                          <span class="checkbox-label">Ingresar</span>
-                      </span>
-                  </label>
-              </a>
+                      </label>
+                  </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Inmuebles en venta">
                   <a href="propiedadesVenta.php">
@@ -65,7 +65,7 @@
                               <span class="checkbox-label">Ingresar</span>
                           </span>
                       </label>
-                      </a>
+                  </a>
               </div>
               <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Renovaciones">
                   <a href="renovaciones.php">
@@ -88,6 +88,19 @@
                           <span class="checkbox-label">Ingresar</span>
                       </span>
                   </label>
+              </div>
+              <!-- boton para agregar las fotos a una propiedad -->
+              <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Gestionar fotos">
+                  <a href="propiedad_fotos.php">
+                      <label class="checkbox-wrapper">
+                          <span class="checkbox-tile">
+                              <span class="checkbox-icon">
+                                  <i class="bi bi-card-image icono text-indigo-dark"></i>
+                              </span>
+                              <span class="checkbox-label">Gestionar Fotos</span>
+                          </span>
+                      </label>
+                  </a>
               </div>
 
 

@@ -893,3 +893,22 @@ th {
 #configuracion .box-configuracion #personalizada {
   display: none;
 }
+
+.dropzone {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.dropzone.dragover {
+  border-color: #563d7c;
+  background-color: #f0f0f0;
+}
+
+.preview-image {
+max-width: 150px;
+max-height: 150px;
+margin: 5px;
+border: 1px solid #ccc;
+}
