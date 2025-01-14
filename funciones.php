@@ -573,4 +573,65 @@ function actualizarRegistro($conn, $datos)
         return ['success' => false, 'message' => 'Error en la ejecución de la consulta: ' . $stmt->error];
     }
 }
+
+//FUNCIONES PARA GESTIONAR LAS IMAGENES 
+
+  function guardarImagenPropiedad($propiedadId, $imagePath) {
+    global $conn;
+      $sql = "INSERT INTO fotos (id_propiedad, nombre_foto) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("is", $propiedadId, $imagePath);
+     return $stmt->execute();
+}
+function obtenerPropiedadPorId($id) {
+    global $conn;
+      $sql = "SELECT * FROM proprieter WHERE codigo = ?";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("i", $id);
+     $stmt->execute();
+    $result = $stmt->get_result();
+      if ($result->num_rows > 0) {
+          return $result->fetch_assoc();
+      } else {
+         return null;
+     }
+  }
+ function obtenerImagenesPropiedad($propiedadId) {
+  global $conn;
+   $sql = "SELECT * FROM fotos WHERE id_propiedad = ?";
+     $stmt = $conn->prepare($sql);
+      $stmt->bind_param("i", $propiedadId);
+      $stmt->execute();
+    $result = $stmt->get_result();
+       if ($result->num_rows > 0) {
+          $imagenes = [];
+         while ($row = $result->fetch_assoc()) {
+               $imagenes[] = $row;
+           }
+             return $imagenes;
+       } else {
+          return null;
+     }
+ }
+  function obtenerImagenPropiedadPorId($imagenId) {
+       global $conn;
+      $sql = "SELECT * FROM fotos WHERE id = ?";
+       $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $imagenId);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      if ($result->num_rows > 0) {
+         return $result->fetch_assoc();
+     } else {
+        return null;
+      }
+  }
+  function eliminarImagenPropiedad($imagenId) {
+    global $conn;
+    $sql = "DELETE FROM fotos WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $imagenId);
+    return $stmt->execute();
+  }
+ 
 ?>

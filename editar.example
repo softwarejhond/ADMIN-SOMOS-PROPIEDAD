@@ -1,0 +1,89 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include("funciones.php");
+include("conexion.php");
+
+if (isset($_GET['id']) && isset($_GET['tabla'])) {
+    $id = $_GET['id'];
+    $tabla = $_GET['tabla'];
+
+    // Obtener los datos del registro
+    $registro = obtenerRegistroPorId($tabla, $id);
+
+    if (!$registro) {
+        echo "<div class='alert alert-danger'>No se encontró el registro.</div>";
+        exit;
+    }
+} else {
+    echo "<div class='alert alert-danger'>No se proporcionó el ID o la tabla.</div>";
+    exit;
+}
+
+// Procesar la actualización del registro
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'actualizarRegistro') {
+    // Validación simple
+    $validarCampos = ['codigo', 'tabla'];
+    foreach ($validarCampos as $campo) {
+        if (empty($_POST[$campo])) {
+            echo '<div class="alert alert-danger">Faltan campos obligatorios.</div>';
+            exit;
+        }
+    }
+
+    if ($resultado['success']) {
+        echo '<div class="alert alert-success">Registro actualizado correctamente.</div>';
+         header("Location: index.php"); 
+         exit;
+    } else {
+        echo '<div class="alert alert-danger">Error al actualizar el registro: '. $resultado['message'] .'</div>';
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Propiedad</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/estilo.css?v=0.0.1">
+    <link rel="stylesheet" href="css/slidebar.css?v=0.0.2">
+    <link rel="stylesheet" href="css/contadores.css?v=0.7">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>SIVP - Edit</title>
+    <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
+</head>
+
+<body>
+    <div id="actualizar-propiedad">
+        <h2>Editar Propiedad</h2>
+        <form id="formEditar" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] . "?id=" . $id . "&tabla=" . $tabla); ?>">
+            <input type="hidden" name="codigo" value="<?php echo $registro['codigo']; ?>">
+            <input type="hidden" name="tabla" value="<?php echo $tabla; ?>">
+            <input type="hidden" name="action" value="actualizarRegistro">
+           
+            <?php foreach ($registro as $key => $value): ?>
+                <?php if ($key != 'acciones' && $key != 'codigo'): ?>
+                    <div class="fila-una-columna">
+                        <label for="edit_<?php echo $key; ?>"><?php echo ucfirst(str_replace('_', ' ', $key)); ?></label>
+                        <input type="text" class="input-entrada-texto" id="edit_<?php echo $key; ?>"
+                            name="<?php echo $key; ?>" value="<?php echo htmlspecialchars($value); ?>" required>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <button type="submit" class="btn-accion">Guardar Cambios</button>
+            <a href="index.php" class="btn-accion">Cancelar</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+
+</html>
