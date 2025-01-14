@@ -89,19 +89,7 @@
                       </span>
                   </label>
               </div>
-              <!-- boton para agregar las fotos a una propiedad -->
-              <div class="checkbox me-3 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Gestionar fotos">
-                  <a href="propiedad_fotos.php">
-                      <label class="checkbox-wrapper">
-                          <span class="checkbox-tile">
-                              <span class="checkbox-icon">
-                                  <i class="bi bi-card-image icono text-indigo-dark"></i>
-                              </span>
-                              <span class="checkbox-label">Gestionar Fotos</span>
-                          </span>
-                      </label>
-                  </a>
-              </div>
+            
 
 
           </fieldset>

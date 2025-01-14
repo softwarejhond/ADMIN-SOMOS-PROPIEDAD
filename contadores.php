@@ -8,7 +8,6 @@
                 <div class="text-container">
                     <h5 class="card-title">Total Propiedades</h5>
                     <h2><span id="total"></span></h2>
-                    <a href="listado-propiedades.php" class="btn btn-light">Ver detalles</a>
                 </div>
             </div>
         </div>
@@ -23,7 +22,6 @@
                 <div class="text-container">
                     <h5 class="card-title">Prop. en Arriendo</h5>
                     <h2><span id="arriendo"></span> | <span id="porc_arriendo"></span>%</h2>
-                    <a href="listado-tipo-propiedades.php" class="btn btn-dark">Ver detalles</a>
                 </div>
             </div>
         </div>
@@ -38,7 +36,6 @@
                 <div class="text-container">
                     <h5 class="card-title">Prop.en Venta</h5>
                     <h2><span id="venta"></span> | <span id="porc_venta"></span>%</h2>
-                    <a href="listado-paises.php" class="btn btn-light">Ver detalles</a>
                 </div>
             </div>
         </div>
@@ -53,7 +50,6 @@
                 <div class="text-container">
                     <h5 class="card-title">Alquiler o Venta</h5>
                     <h2><span id="alquiler_venta"></span> | <span id="porc_alquiler_venta"></span>%</h2>
-                    <a href="listado-ciudades.php" class="btn btn-light">Ver detalles</a>
                 </div>
             </div>
         </div>

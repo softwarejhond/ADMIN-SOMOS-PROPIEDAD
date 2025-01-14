@@ -52,7 +52,6 @@ $rol = $infoUsuario['rol'];
             <div id="dashboard">
                 <div class="position-relative">
                     <h2 class="position-absolute top-0 start-0 "><i class="bi bi-door-open-fill"></i> Propiedades para aceptar</h2>
-
                     <?php include("controller/notificacioRetiroInquilino.php"); ?>
                     </h2>
                 </div>

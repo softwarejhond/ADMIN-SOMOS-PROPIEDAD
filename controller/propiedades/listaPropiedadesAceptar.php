@@ -47,8 +47,8 @@ if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         // Agregar acciones a cada fila
           $row['acciones'] = '
-                <td><a href="verDetalle.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></a></td>
-                <td>
+                <td><a href="verDetalle.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></a>
+                
                     <form method="POST" class="d-inline" onsubmit="return confirmarActualizacion();">
             <input type="hidden" name="codigo" value="' . htmlspecialchars($row["codigo"]) . '">
             

@@ -122,6 +122,10 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         $contrato_EPM = $_POST['contrato_EPM'];
         $condicion = $_POST['condicion'];
 
+          // Procesar 'closet'
+    $closetSeleccionadoTexto = isset($_POST['closet']) && is_array($_POST['closet']) 
+    ? implode(', ', $_POST['closet']) 
+    : '';
         // Foto principal
         $ruta1 = '';
         if (isset($_FILES['url_foto_principal']) && $_FILES['url_foto_principal']['error'] == 0) {
@@ -149,7 +153,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             fecha, contrato_EPM,estadoPropietario, url_foto_principal, condicion, fecha_creacion
         ) VALUES (
             '$codigo', '$tipoInmueble', '$nivel_piso', '$area', '$estrato', '$departamento', '$municipios', '$terraza', '$ascensor', '$patio', '$parqueadero',
-            '$cuarto_util', '$habitaciones', '$closet', '$sala', '$sala_comedor', '$comedor', '$cocina', '$servicios', '$cuartoServicios', '$zonaRopa', '$vista',
+            '$cuarto_util', '$habitaciones', '$closetSeleccionadoTexto', '$sala', '$sala_comedor', '$comedor', '$cocina', '$servicios', '$cuartoServicios', '$zonaRopa', '$vista',
             '$servicios_publicos', '$otras_caracteristicas', '$direccion', '$latitud','$longitud', '$telefonoInmueble', '$valor_canon', '$doc_propietario', '$nombre_propietario', 
             '$telefono_propietario', '$email_propietario', '$banco', '$tipoCuenta', '$numeroCuenta', '$diaPago', '$fecha', '$contrato_EPM','NUEVO', '$ruta1', 
             'NUEVO', NOW()
@@ -174,7 +178,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
 
-    <form id="multi-step-form" method="POST" enctype="multipart/form-data">
+    <form id="multi-step-form was-validated"  method="POST" enctype="multipart/form-data">
 
         <?php
         // Dividir los campos por pasos
@@ -338,7 +342,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             } else if ($fieldName == 'habitaciones') {
                 echo "<div class='form-group'>";
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
-                $habitaciones = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Lista de opciones para habitaciones
+                $habitaciones = [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Lista de opciones para habitaciones
                 foreach ($habitaciones as $value) {
                     echo "<div class='form-check-inline'>";
                     echo "<input type='radio' class='form-check-input' name='$fieldName' id='habitaciones_$value' value='$value' required>";
@@ -346,22 +350,30 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
                     echo "</div>";
                 }
                 echo "</div>";
-            } else if ($fieldName == 'closet') {
+            }else if ($fieldName == 'closet') {
                 echo "<div class='form-group'>";
-                echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
-
-                // Lista de opciones para closet de 0 a 10
-                $closetOpciones = range(0, 10); // Genera un array del 0 al 10
-
+                echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
+            
+                // Opción 'vestier'
+                echo "<div class='form-check form-check-inline'>";
+                echo "<input type='checkbox' class='form-check-input' name='{$fieldName}[]' id='closet_vestier' value='vestier'>";
+                echo "<label class='form-check-label' for='closet_vestier'> Vestier</label>";
+                echo "</div>";
+            
+                // Opciones numéricas
+                $closetOpciones = range(0, 10);
                 foreach ($closetOpciones as $value) {
-                    echo "<div class='form-check-inline'>";
-                    echo "<input type='radio' class='form-check-input' name='$fieldName' id='closet_$value' value='$value' required>";
+                    echo "<div class='form-check form-check-inline'>";
+                    echo "<input type='checkbox' class='form-check-input' name='{$fieldName}[]' id='closet_$value' value='$value'>";
                     echo "<label class='form-check-label' for='closet_$value'> $value</label>";
                     echo "</div>";
                 }
-
+            
                 echo "</div>";
-            } else if ($fieldName == 'sala') {
+            }
+                   
+            
+            else if ($fieldName == 'sala') {
                 echo "<div class='form-group'>";
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
                 // Campo oculto para el valor "no"
@@ -413,7 +425,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
 
                 // Lista de opciones para vista
-                $opcionesVista = ['venta', 'ventanal', 'balcon', 'apartamento interno', 'sotano', 'finca', 'lote', 'puerta garage', 'puerta enrollable'];
+                $opcionesVista = ['venta', 'ventanal', 'balcon', 'apartamento interno', 'sotano', 'finca', 'lote', 'puerta garage', 'puerta enrollable','duplex'];
 
                 foreach ($opcionesVista as $value) {
                     echo "<div class='form-check-inline'>";
