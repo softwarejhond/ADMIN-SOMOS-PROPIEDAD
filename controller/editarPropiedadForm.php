@@ -1,6 +1,6 @@
 <?php
 include 'conexion.php'; // Asegura que la ruta al archivo conexion.php sea correcta
-$formConfig = include 'procesar_formulario.php'; // Asegúrate de que el archivo de configuración esté correcto.
+$formConfig = include 'procesar_formulario_editar.php'; // Asegúrate de que el archivo de configuración esté correcto.
 $tableName = "proprieter";
 $columnsQuery = "SHOW COLUMNS FROM $tableName";
 $columnsResult = $conn->query($columnsQuery);
@@ -84,7 +84,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         // Generar cada paso
         for ($step = 1; $step <= $steps; $step++) {
             echo "<div class='step p-1' id='step-$step'>";
-            echo "<h2><i class='bi bi-clipboard-data-fill'></i> Datos de la propiedad $step</h2>";
+            echo "<h2><i class='bi bi-clipboard-data-fill'></i> Actualizar datos de la propiedad $step</h2>";
             echo "<span class='form-label text-indigo-dark'>Modifica los campos que necesites <i class='bi bi-exclamation-octagon-fill'></i></span>";
             echo "<br>";
 
@@ -243,7 +243,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
                 echo "<label class='form-check-label' for='cuarto_util_switch'> Sí (Si su propiedad cuenta con cuarto útil, márquelo aquí)</label>";
                 echo "</div>";
                 echo "</div>";
-            } else if ($fieldName == 'habitaciones') {
+            } else if ($fieldName == 'alcobas') {
                 echo "<div class='form-group'>";
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
                 $habitaciones = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Lista de opciones para habitaciones
@@ -439,7 +439,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
                 echo "<div class='form-group'>";
                 echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Dirección')) . "</label>";
                 // Campo para la dirección
-                echo "<input type='text' id='direccion' name='$fieldName' class='form-control' placeholder='Escriba la dirección' autocomplete='off' value='" . htmlspecialchars($valor) . "'>";
+                echo "<input type='text' id='direccion' name='$fieldName' class='form-control' placeholder='Escriba la dirección' autocomplete='off' value='" . htmlspecialchars($valor) . "' readonly>";
                 echo "</div>";
             } else if ($fieldName == 'TelefonoInmueble') {
                 echo "<div class='form-group'>";
