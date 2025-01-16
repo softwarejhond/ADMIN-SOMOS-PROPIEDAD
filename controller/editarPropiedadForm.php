@@ -1,5 +1,11 @@
 <?php
 include 'conexion.php'; // Asegura que la ruta al archivo conexion.php sea correcta
+
+error_reporting(E_ALL); // Reporta todos los errores y advertencias
+ini_set('display_errors', 1); // Muestra los errores en pantalla
+ini_set('display_startup_errors', 1); // Muestra errores durante la inicialización de PHP
+
+
 $formConfig = include 'procesar_formulario_editar.php'; // Asegúrate de que el archivo de configuración esté correcto.
 $tableName = "proprieter";
 $columnsQuery = "SHOW COLUMNS FROM $tableName";
@@ -18,7 +24,12 @@ function generateAttributes($attributes)
 }
 $includeFields = isset($formConfig['include_fields']) ? $formConfig['include_fields'] : [];
 $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
-
+// Verifica si el parámetro 'id' está presente en la URL
+if (isset($_GET['codigo'])) {
+    $codigoGet = $_GET['codigo']; // Captura el valor del parámetro
+} else {
+    echo "El parámetro 'codigo' de la propiedad no esta presente, no podras actualizar la propiedad.";
+}
 ?>
 <style>
     .step {
@@ -74,6 +85,117 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
     <div id="progress" class="progress-bar"></div>
 </div>
 <div class="card p-3">
+<?php
+if (isset($_POST['update'])) {
+    // Variables del formulario
+    
+    $tipoInmueble = $_POST['tipoInmueble'];
+    $nivel_piso = $_POST['nivel_piso'];
+    $area = $_POST['area'];
+    $estrato = $_POST['estrato'];
+    $terraza = $_POST['terraza'];
+    $ascensor = $_POST['ascensor'];
+    $patio = $_POST['patio'];
+    $parqueadero = $_POST['parqueadero'];
+    $cuarto_util = $_POST['cuarto_util'];
+    $alcobas = $_POST['alcobas'];
+    $closet = $_POST['closet'];
+    $sala = $_POST['sala'];
+    $sala_comedor = $_POST['sala_comedor'];
+    $comedor = $_POST['comedor'];
+    $cocina = $_POST['cocina'];
+    $servicios = $_POST['servicios'];
+    $cuartoServicios = $_POST['CuartoServicios'];
+    $zonaRopa = $_POST['ZonaRopa'];
+    $vista = $_POST['vista'];
+    $servicios_publicos = $_POST['servicios_selected']; // Array de servicios seleccionados
+    $otras_caracteristicas = $_POST['otras_caracteristicas'];
+    $direccion = $_POST['direccion'];
+    $latitud = $_POST['latitud'];
+    $longitud = $_POST['longitud'];
+    $telefonoInmueble = $_POST['TelefonoInmueble'];
+    $valor_canon = $_POST['valor_canon'];
+    $doc_propietario = $_POST['doc_propietario'];
+    $nombre_propietario = $_POST['nombre_propietario'];
+    $telefono_propietario = $_POST['telefono_propietario'];
+    $email_propietario = $_POST['email_propietario'];
+    $banco = $_POST['banco'];
+    $tipoCuenta = $_POST['tipoCuenta'];
+    $numeroCuenta = $_POST['numeroCuenta'];
+    $diaPago = $_POST['diaPago'];
+    $contrato_EPM = $_POST['contrato_EPM'];
+    $condicion = $_POST['condicion'];
+
+ 
+    // Procesar 'closet'
+    $closetSeleccionadoTexto = isset($_POST['closet']) && is_array($_POST['closet']) 
+        ? implode(', ', $_POST['closet']) 
+        : '';
+
+    // Foto principal
+    $ruta1 = '';
+    if (isset($_FILES['url_foto_principal']) && $_FILES['url_foto_principal']['error'] == 0) {
+        $ruta1 = basename($_FILES['url_foto_principal']['name']);
+        move_uploaded_file($_FILES['url_foto_principal']['tmp_name'], 'fotos/'.$ruta1);
+    }
+
+    // Actualizar la propiedad
+    $queryUpdate = "UPDATE proprieter SET 
+        tipoInmueble = '$tipoInmueble',
+        nivel_piso = '$nivel_piso',
+        area = '$area',
+        estrato = '$estrato',
+        terraza = '$terraza',
+        ascensor = '$ascensor',
+        patio = '$patio',
+        parqueadero = '$parqueadero',
+        cuarto_util = '$cuarto_util',
+        alcobas = '$alcobas',
+        closet = '$closetSeleccionadoTexto',
+        sala = '$sala',
+        sala_comedor = '$sala_comedor',
+        comedor = '$comedor',
+        cocina = '$cocina',
+        servicios = '$servicios',
+        CuartoServicios = '$cuartoServicios',
+        ZonaRopa = '$zonaRopa',
+        vista = '$vista',
+        servicios_publicos = '$servicios_publicos',
+        otras_caracteristicas = '$otras_caracteristicas',
+        direccion = '$direccion',
+        latitud = '$latitud',
+        longitud = '$longitud',
+        TelefonoInmueble = '$telefonoInmueble',
+        valor_canon = '$valor_canon',
+        doc_propietario = '$doc_propietario',
+        nombre_propietario = '$nombre_propietario',
+        telefono_propietario = '$telefono_propietario',
+        email_propietario = '$email_propietario',
+        banco = '$banco',
+        tipoCuenta = '$tipoCuenta',
+        numeroCuenta = '$numeroCuenta',
+        diaPago = '$diaPago',
+        contrato_EPM = '$contrato_EPM',
+        url_foto_principal = IF('$ruta1' != '', '$ruta1', url_foto_principal),
+        condicion = '$condicion'
+        WHERE codigo = $codigoGet";
+
+    if ($conn->query($queryUpdate) === TRUE) {
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('success', 'Actualización exitosa.');
+            });
+        </script>";
+    } else {
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('error', 'Error: " . $conn->error . "');
+            });
+        </script>";
+    }
+}
+?>
+
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
     <form id="multi-step-form" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="codigo" value="<?php echo $registro['codigo']; ?>">
@@ -246,12 +368,12 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             } else if ($fieldName == 'alcobas') {
                 echo "<div class='form-group'>";
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
-                $habitaciones = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Lista de opciones para habitaciones
-                foreach ($habitaciones as $value) {
+                $alcobas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Lista de opciones para alcobas
+                foreach ($alcobas as $value) {
                     $checked = ($value == $valor) ? 'checked' : '';
                     echo "<div class='form-check-inline'>";
-                    echo "<input type='radio' class='form-check-input' name='$fieldName' id='habitaciones_$value' value='$value'  $checked>";
-                    echo "<label class='form-check-label' for='habitaciones_$value'> $value</label>";
+                    echo "<input type='radio' class='form-check-input' name='$fieldName' id='alcobas_$value' value='$value'  $checked>";
+                    echo "<label class='form-check-label' for='alcobas_$value'> $value</label>";
                     echo "</div>";
                 }
                 echo "</div>";
@@ -552,14 +674,6 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
 
                 echo "</select>";
                 echo "</div>";
-            } else if ($fieldName == 'fecha') {
-                echo "<div class='form-group'>";
-                echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Fecha de ingreso')) . "</label>";
-
-                // Input de fecha
-                echo "<input type='date' id='fechaIngreso' name='$fieldName' class='form-control'  value='" . htmlspecialchars($valor) . "'>";
-
-                echo "</div>";
             } else if ($fieldName == 'contrato_EPM') {
                 echo "<div class='form-group'>";
                 echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Contrato EPM')) . "</label>";
@@ -636,7 +750,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             <button type="button" class="btn bg-indigo-dark text-white" id="prevBtn" style="display:none;"><i class="bi bi-chevron-double-left"></i> Anterior</button>
             <button type="button" class="btn bg-magenta-dark text-white" id="nextBtn">Siguiente <i class="bi bi-chevron-double-right"></i></button>
         </div>
-        <button type="submit" id="submit-form" name="submit" class="btn btn-success" style="display:none;">Guardar</button>
+        <button type="submit" id="submit-form" name="update" class="btn btn-success" style="display:none;">Guardar</button>
     </form>
 </div>
 
@@ -670,7 +784,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         // Manejo del botón "Siguiente"/"Guardar"
         if (currentStep == steps.length) {
             // Cambiar el botón de "Siguiente" por el de "Enviar"
-            document.getElementById('nextBtn').innerHTML = '<button type="submit" id="submit-form" name="submit" class="bg-transparent text-white border-0"><i class="bi bi-floppy-fill"></i> Guardar</button>';
+            document.getElementById('nextBtn').innerHTML = '<button type="submit" id="submit-form" name="update" class="bg-transparent text-white border-0"><i class="bi bi-floppy-fill"></i> Guardar</button>';
         } else {
             // Mostrar el botón de "Siguiente"
             document.getElementById('nextBtn').innerHTML = 'Siguiente <i class="bi bi-chevron-double-right"></i>';

@@ -34,7 +34,6 @@ return [
         'tipoCuenta',
         'numeroCuenta',
         'diaPago',
-        'fecha',
         'contrato_EPM',
         'url_foto_principal',
         'condicion',
