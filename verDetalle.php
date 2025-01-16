@@ -37,6 +37,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
     <link rel="stylesheet" href="css/estilo.css?v=0.0.1">
     <link rel="stylesheet" href="css/slidebar.css?v=0.0.2">
     <link rel="stylesheet" href="css/contadores.css?v=0.7">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>SIVP - Admin</title>
     <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
 
@@ -62,7 +63,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
                 <hr>
                 <div class="row bg-transparent">
 
-                    <div class="col-lg-12 col-md-12 col-sm-12 px-2 mt- bg-transparent">
+                    <div class="">
                         <div class="container">
 
                             <?php include("controller/propiedades/detalles.php"); ?>
@@ -87,9 +88,13 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const toastPas = document.getElementById('toastPas');
-        if (toastPas.style.display === 'block') {
-            const toastBootstrap = new bootstrap.Toast(toastPas);
-            toastBootstrap.show();
+        if (toastPas) { // Verifica que toastPas no sea null
+            if (toastPas.style.display === 'block') {
+                const toastBootstrap = new bootstrap.Toast(toastPas);
+                toastBootstrap.show();
+            }
+        } else {
+            console.error("No se encontró el elemento con el ID 'toastPas'.");
         }
     });
 </script>
