@@ -7,7 +7,7 @@ return [
         'area',
         'estrato',
         'departamento',
-        'municipios',
+        'municipio',
         'terraza',
         'ascensor',
         'patio',

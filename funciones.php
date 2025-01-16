@@ -188,23 +188,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             case 'smtpConfig':
                 $resultado = actualizarSmtpConfig($conn, $_POST, $_FILES);
                 echo json_encode($resultado);
+                exit;
                 break;
 
             case 'updateUser':
                 if (isset($_POST['usaurio'])) {
                     $resultado = actualizarUsuario($conn, $_POST['usaurio']);
-                    echo json_encode($resultado);
+                     echo json_encode($resultado);
+                       exit;
                 } else {
                     echo json_encode(['error' => 'El usuario no está definido.']);
+                     exit;
                 }
                 break;
 
             case 'updatePassword':
                 if (isset($_POST['usaurio']) && isset($_POST['newPassword'])) {
                     $resultado = actualizarPassword($conn, $_POST['usaurio'], $_POST['newPassword']);
-                    echo json_encode($resultado);
+                   echo json_encode($resultado);
+                     exit;
                 } else {
-                    echo json_encode(['error' => 'El usuario o la nueva contraseña no están definidos.']);
+                     echo json_encode(['error' => 'El usuario o la nueva contraseña no están definidos.']);
+                     exit;
                 }
                 break;
 
@@ -214,8 +219,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Almacena el mensaje para mostrarlo en el frontend
                     $_SESSION['resultado_foto'] = $resultado;
                     echo json_encode($resultado); // Opcional: puedes devolver el resultado como JSON
+                    exit;
                 } else {
                     echo json_encode(['error' => 'El usuario o la imagen no están definidos.']);
+                     exit;
                 }
                 break;
 
@@ -223,17 +230,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (isset($_POST['tabla']) && isset($_POST['id'])) {
                     $registro = obtenerRegistroPorId($_POST['tabla'], $_POST['id']);
                     echo json_encode($registro);
+                     exit;
                 } else {
                     echo json_encode(null);
+                     exit;
                 }
                 break;
             case 'actualizarRegistro':
-                $resultado = actualizarRegistro($conn, $_POST);
+                 $resultado = actualizarRegistro($conn, $_POST, $_POST['tabla']);
                 echo json_encode($resultado);
+                exit;
                 break;
 
             default:
                 echo json_encode(['error' => 'Tipo de formulario no reconocido.']);
+                 exit;
                 break;
         }
     } else {
@@ -243,17 +254,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if (isset($_POST['tabla']) && isset($_POST['id'])) {
                         $registro = obtenerRegistroPorId($_POST['tabla'], $_POST['id']);
                         echo json_encode($registro);
+                         exit;
                     } else {
                         echo json_encode(null);
+                         exit;
                     }
                     break;
                 case 'actualizarRegistro':
-                    $resultado = actualizarRegistro($conn, $_POST);
-                    echo json_encode($resultado);
+                     $resultado = actualizarRegistro($conn, $_POST, $_POST['tabla']);
+                   echo json_encode($resultado);
+                     exit;
                     break;
+                 default:
+                    echo json_encode(['error' => 'Tipo de action no reconocido.']);
+                     exit;
+                   break;
             }
         } else {
             echo json_encode(['error' => 'El tipo de formulario no está definido.']);
+             exit;
         }
     }
 }
@@ -543,44 +562,64 @@ function obtenerRegistroPorId($tabla, $id)
 
 
 //ESTA FUNCION ACTUALIZA LOS REGISTROS POR EL ID
-function actualizarRegistro($conn, $datos)
+
+function actualizarRegistro($conn, $datos, $tabla)
 {
-    $codigo = $datos['codigo'];
-    $tabla = $datos['tabla'];
+    echo "<pre>";
+   var_dump($datos);
+   echo "</pre>";
+    echo "<script>console.log('Datos recibidos en actualizarRegistro:', " . json_encode($datos) . ");</script>";
+    $codigo = filter_var($datos['codigo'], FILTER_SANITIZE_STRING);
 
-    $setClauses = [];
-    $types = '';
-    $bindParams = [];
+    if(empty($codigo) ){
+        return ['success' => false, 'message' => 'Error, el campo código es obligatorio.'];
+     }
 
-    foreach ($datos as $key => $value) {
-        if ($key != 'codigo' && $key != 'tabla' && $key != 'action') {
-            $setClauses[] = "$key = ?";
-            $types .= 's';
-            $bindParams[] = $value;
-        }
-    }
-    $setString = implode(", ", $setClauses);
-    $sql = "UPDATE `$tabla` SET $setString WHERE codigo = ?";
+     $setClauses = [];
+     $types = '';
+     $bindParams = [];
 
-    $bindParams[] = $codigo;
-    $types .= 's';
+       // Sanitizar y validar datos del formulario
+     foreach ($datos as $key => $value) {
+          if ($key != 'codigo' && $key != 'tabla' && $key != 'action' && $key != 'url_foto_principal' ) {
+             if(is_int($value)){
+               $setClauses[] = "$key = ?";
+                $types .= 'i';
+                 $bindParams[] = $value;
+             }else if(is_float($value)){
+                  $setClauses[] = "$key = ?";
+                $types .= 'd';
+                $bindParams[] = $value;
+             }else{
+                 $setClauses[] = "$key = ?";
+                 $types .= 's';
+                 $bindParams[] = $value;
+             }
 
-  
+         }
+     }
 
-    $stmt = $conn->prepare($sql);
+     $setString = implode(", ", $setClauses);
+   
+     $sql = "UPDATE  $tabla SET $setString WHERE codigo = ?";
+     $bindParams[] = $codigo;
+     $types .= 's';
+     
+     $stmt = $conn->prepare($sql);
 
-    if ($stmt === false) {
-        return ['success' => false, 'message' => 'Error en la preparación de la consulta: ' . $conn->error];
-    }
 
-    $stmt->bind_param($types, ...$bindParams);
+     if ($stmt === false) {
+          return ['success' => false, 'message' => 'Error en la preparación de la consulta: ' . $conn->error];
+     }
+
+      $stmt->bind_param($types, ...$bindParams);
 
     if ($stmt->execute()) {
-        return ['success' => true];
-    } else {
+         return ['success' => true];
+     } else {
         return ['success' => false, 'message' => 'Error en la ejecución de la consulta: ' . $stmt->error];
-    }
-}
+     }
+ }
 
 //FUNCIONES PARA GESTIONAR LAS IMAGENES 
 
