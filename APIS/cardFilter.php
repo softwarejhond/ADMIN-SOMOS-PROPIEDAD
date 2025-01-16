@@ -354,7 +354,7 @@ ${item.fotos.map((foto, index) => {
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item"> <h5 class="prop-title text-left text-uppercase text-magenta-dark "><b>${item.tipoInmueble} - ${item.codigo}</b></h5></li>
-    <li class="list-group-item"><i class="bi bi-geo-alt-fill"></i> ${item.municipio}</li>
+    <li class="list-group-item"><i class="bi bi-geo-alt-fill"></i> ${item.direccion}</li>
     <li class="list-group-item"><i class="bi bi-bar-chart-steps"></i> NIVEL: ${item.nivel_piso}</li>
      <li class="list-group-item"><i class="bi bi-bounding-box"></i> ÁREA: ${item.area} </li>
     <li class="list-group-item"><h5 class="text-magenta-dark"><b>$ ${valorCanonFormatted}</b></h5></li>
