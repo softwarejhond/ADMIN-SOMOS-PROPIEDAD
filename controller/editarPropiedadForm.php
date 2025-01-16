@@ -126,12 +126,6 @@ if (isset($_POST['update'])) {
     $contrato_EPM = $_POST['contrato_EPM'];
     $condicion = $_POST['condicion'];
 
- 
-    // Procesar 'closet'
-    $closetSeleccionadoTexto = isset($_POST['closet']) && is_array($_POST['closet']) 
-        ? implode(', ', $_POST['closet']) 
-        : '';
-
     // Foto principal
     $ruta1 = '';
     if (isset($_FILES['url_foto_principal']) && $_FILES['url_foto_principal']['error'] == 0) {
@@ -151,7 +145,7 @@ if (isset($_POST['update'])) {
         parqueadero = '$parqueadero',
         cuarto_util = '$cuarto_util',
         alcobas = '$alcobas',
-        closet = '$closetSeleccionadoTexto',
+        closet = '$closet',
         sala = '$sala',
         sala_comedor = '$sala_comedor',
         comedor = '$comedor',
@@ -182,17 +176,14 @@ if (isset($_POST['update'])) {
 
     if ($conn->query($queryUpdate) === TRUE) {
         echo "<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                showToast('success', 'Actualización exitosa.');
-            });
+            alert('Registro actualizado correctamente');
         </script>";
     } else {
         echo "<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                showToast('error', 'Error: " . $conn->error . "');
-            });
+            alert('Error: " . addslashes($conn->error) . "');
         </script>";
     }
+    
 }
 ?>
 
