@@ -713,7 +713,7 @@ if (isset($_POST['update'])) {
                 // Select para estado propietario
                 echo "<select id='$fieldName' name='$fieldName' class='form-control'>";
                 echo "<option value=''>Seleccione el estado</option>"; // Opción vacía por defecto
-                $options = ['EN VENTA', 'EN ALQUILER', 'EN VENTA O ALQUILER'];
+                $options = ['EN VENTA', 'EN ALQUILER', 'EN VENTA O ALQUILER','ARRENDADA','VENDIDA'];
                 foreach ($options as $option) {
                     $selected = ($option == $valor) ? 'selected' : '';
                     echo "<option value='$option' $selected>$option</option>";
