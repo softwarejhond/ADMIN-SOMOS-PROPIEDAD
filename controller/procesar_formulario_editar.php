@@ -37,6 +37,10 @@ return [
         'contrato_EPM',
         'url_foto_principal',
         'condicion',
+        'doc_inquilino',
+        'nombre_inquilino',
+        'telefono_inquilino',
+        'email_inquilino',
     ],
 
     'tipoInmueble' => [
