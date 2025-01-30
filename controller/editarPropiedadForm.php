@@ -125,7 +125,10 @@ if (isset($_POST['update'])) {
     $diaPago = $_POST['diaPago'];
     $contrato_EPM = $_POST['contrato_EPM'];
     $condicion = $_POST['condicion'];
-
+    $IdInquilino = $_POST['doc_inquilino'];
+    $nombreInquilino = $_POST['nombre_inquilino'];
+    $telefonoInquilino = $_POST['telefono_inquilino'];
+    $emailInquilino = $_POST['email_inquilino'];
     // Foto principal
     $ruta1 = '';
     if (isset($_FILES['url_foto_principal']) && $_FILES['url_foto_principal']['error'] == 0) {
@@ -169,20 +172,40 @@ if (isset($_POST['update'])) {
         tipoCuenta = '$tipoCuenta',
         numeroCuenta = '$numeroCuenta',
         diaPago = '$diaPago',
+        doc_inquilino = '$IdInquilino',
+        nombre_inquilino = '$nombreInquilino',
+        telefono_inquilino = '$telefonoInquilino',
+        email_inquilino = '$emailInquilino',
         contrato_EPM = '$contrato_EPM',
         url_foto_principal = IF('$ruta1' != '', '$ruta1', url_foto_principal),
         condicion = '$condicion'
         WHERE codigo = $codigoGet";
+        
+if ($conn->query($queryUpdate) === TRUE) {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: 'Registro actualizado correctamente',
+                confirmButtonText: 'Aceptar'
+            });
+        });
+    </script>";
+} else {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error en la actualización',
+                text: '" . addslashes($conn->error) . "',
+                confirmButtonText: 'Cerrar'
+            });
+        });
+    </script>";
+}
 
-    if ($conn->query($queryUpdate) === TRUE) {
-        echo "<script>
-            alert('Registro actualizado correctamente');
-        </script>";
-    } else {
-        echo "<script>
-            alert('Error: " . addslashes($conn->error) . "');
-        </script>";
-    }
+
     
 }
 ?>
@@ -713,7 +736,7 @@ if (isset($_POST['update'])) {
                 // Select para estado propietario
                 echo "<select id='$fieldName' name='$fieldName' class='form-control'>";
                 echo "<option value=''>Seleccione el estado</option>"; // Opción vacía por defecto
-                $options = ['EN VENTA', 'EN ALQUILER', 'EN VENTA O ALQUILER'];
+                $options = ['EN VENTA', 'EN ALQUILER', 'EN VENTA O ALQUILER','ARRENDADA','VENDIDA'];
                 foreach ($options as $option) {
                     $selected = ($option == $valor) ? 'selected' : '';
                     echo "<option value='$option' $selected>$option</option>";
@@ -721,7 +744,39 @@ if (isset($_POST['update'])) {
                 echo "</select>";
 
                 echo "</div>";
-            } else {
+            }else if ($fieldName == 'doc_inquilino') {
+                echo "<div class='form-group'>";
+                echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Número de documento del inquilino')) . "</label>";
+
+                // Input para el contrato EPM
+                echo "<input type='text' id='doc_inquilino' name='$fieldName' class='form-control' placeholder='Ingrese el número de documento del inquilino' value='" . htmlspecialchars($valor) . "'>";
+
+                echo "</div>";
+            } else if ($fieldName == 'nombre_inquilino') {
+                echo "<div class='form-group'>";
+                echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Nombre del inquilino')) . "</label>";
+
+                // Input para el contrato EPM
+                echo "<input type='text' id='nombre_inquilino' name='$fieldName' class='form-control' placeholder='Ingrese el nombre del inquilino' value='" . htmlspecialchars($valor) . "'>";
+
+                echo "</div>";
+            } else if ($fieldName == 'telefono_inquilino') {
+                echo "<div class='form-group'>";
+                echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Teléfono del inquilino')) . "</label>";
+
+                // Input para el contrato EPM
+                echo "<input type='text' id='telefono_inquilino' name='$fieldName' class='form-control' placeholder='Ingrese el número del inquilino' value='" . htmlspecialchars($valor) . "'>";
+
+                echo "</div>";
+            } else if ($fieldName == 'email_inquilino') {
+                echo "<div class='form-group'>";
+                echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'E-mail del inquilino')) . "</label>";
+
+                // Input para el contrato EPM
+                echo "<input type='email' id='email_inquilino' name='$fieldName' class='form-control' placeholder='Ingrese el E-mail del inquilino' value='" . htmlspecialchars($valor) . "'>";
+
+                echo "</div>";
+            }  else {
                 // Para campos estándar
                 $fieldType = isset($formConfig[$fieldName]['type']) ? $formConfig[$fieldName]['type'] : 'text';
                 $attributes = isset($formConfig[$fieldName]['attributes']) ? generateAttributes($formConfig[$fieldName]['attributes']) : '';
@@ -807,7 +862,7 @@ if (isset($_POST['update'])) {
     // Inicializar el primer paso al cargar la página
     showStep();
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA98OpvjlfBwdRXdIVsGCyNM2ak5o-WYYs&libraries=places&callback=initAutocomplete" async defer></script>
 
 <script>

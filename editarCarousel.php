@@ -93,11 +93,16 @@ $rol = $infoUsuario['rol'];
 
                                     <div class="col col-lg-6 col-md-6 col-sm-12 px-2 mt-1 ">
                                         <div class="form-group">
-                                            <label for="titulo" class="col-sm-3 control-label">Titulo</label>
+                                            <label for="titulo" class="col-sm-3 control-label">Estado</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="titulo" value="<?php echo $titulo; ?>" required name="titulo">
+                                                <select class="form-control" id="titulo" name="titulo" required>
+                                                    <option value="EN VENTA" <?php echo ($titulo == 'EN VENTA') ? 'selected' : ''; ?>>EN VENTA</option>
+                                                    <option value="EN ALQUILER" <?php echo ($titulo == 'EN ALQUILER') ? 'selected' : ''; ?>>EN ALQUILER</option>
+                                                    <option value="EN ALQUILER" <?php echo ($titulo == 'EN ALQUILER O VENTA') ? 'selected' : ''; ?>>EN ALQUILER O VENTA</option>
+                                                </select>
                                                 <input type="hidden" class="form-control" id="id_slide" value="<?php echo intval($id_slide); ?>" name="id_slide">
                                             </div>
+
                                         </div>
 
                                         <div class="form-group">
@@ -107,7 +112,7 @@ $rol = $infoUsuario['rol'];
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="texto_boton" class="col-sm-3 control-label">Texto del botón</label>
+                                            <label for="texto_boton" class="col-sm-3 control-label">Precio</label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="texto_boton" name="texto_boton" value="<?php echo $texto_boton ?>">
                                             </div>

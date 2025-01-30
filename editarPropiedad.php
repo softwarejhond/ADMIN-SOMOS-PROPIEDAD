@@ -12,8 +12,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 include("funciones.php");
 include("conexion.php");
-if (isset($_GET['id']) && isset($_GET['tabla'])) {
-    $id = $_GET['id'];
+if (isset($_GET['codigo']) && isset($_GET['tabla'])) {
+    $id = $_GET['codigo'];
     $tabla = $_GET['tabla'];
     echo "<script>console.log('Variable tabla:', " . json_encode($tabla) . ");</script>";
 
@@ -199,6 +199,7 @@ $rol = $infoUsuario['rol'];
                                 <div class="col-lg-12 col-md-12 col-sm-12 px-2 mt-1">
 
                                     <?php include("controller/editarPropiedadForm.php"); ?>
+                                    <br><br>
                                 </div>
 
                             </div>

@@ -20,8 +20,8 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $row['acciones'] = '
             <td><a href="verDetalle.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></a></td>
-            <td><a href="editarPropiedad.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-pencil-fill"></i></a></td>
-            <td><a href="propiedad_fotos.php?codigo=' . $row['codigo'].'" class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-image-fill"></i></a></td>
+            <td><a href="editarPropiedad.php?codigo=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-pencil-fill"></i></a></td>
+            <td><a href="propiedad_fotos.php?codigo=' . $row['codigo'].'" class="btn bg-magenta-dark text-white btn-sm"><i class="bi bi-image-fill"></i></a></td>
            
             ';
         $data[] = $row;
@@ -41,6 +41,7 @@ if ($result->num_rows > 0) {
                 <th></th>
                 <th></th>
                 <th></th>
+                
             <?php endif; ?>
         </tr>
     </thead>
