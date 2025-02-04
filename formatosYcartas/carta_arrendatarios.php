@@ -1,5 +1,8 @@
+
 <?php
-require '../../../vendor/autoload.php';
+require '../vendor/autoload.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -66,6 +69,9 @@ $html = '
     <p>Gracias nuevamente por elegir a SOMOS PROPIEDAD S.A.S. Estamos agradecidos por darnos la oportunidad de servirle, trabajaremos incansablemente para brindarle todo el apoyo que requiera. </p>
 
     <p>Cordialmente:</p>
+    <br>
+    <br>
+    <br>
 
     <p style="font-size: 12pt;"><strong>JAIME ZULUAGA CARDONA</strong></p>
     
