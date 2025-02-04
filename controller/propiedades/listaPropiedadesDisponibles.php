@@ -24,7 +24,9 @@ if ($result->num_rows > 0) {
             <td><a href="propiedad_fotos.php?codigo=' . $row['codigo'] . '" class="btn bg-magenta-dark text-white btn-sm"><i class="bi bi-image-fill"></i></a></td>
              <td>
              <form action="formatosYcartas/carta_arrendatarios.php" method="POST">
-              <input type="submit" name="carta_propietarios" value="CARTA PROPIETARIOS">
+             <button type="submit" name="carta_propietarios" style="border: none; cursor: pointer;" class="btn bg-red-dark text-white btn-sm">
+       <i class="bi bi-file-earmark-pdf-fill"></i>
+    </button>
                </form>
                </td>
              <td><a href="propiedadesDisponibles.php?codigo=' . $row['codigo'] . '" class="btn bg-teal-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></a></td>
