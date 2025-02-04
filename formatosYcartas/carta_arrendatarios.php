@@ -99,4 +99,4 @@ $dompdf->render();
 ob_clean();
 
 // Salida del PDF
-$dompdf->stream('carta_bienvenida_propietarios.pdf', ['Attachment' => true]);
+$dompdf->stream('carta_bienvenida_arrendatario.pdf', ['Attachment' => true]);

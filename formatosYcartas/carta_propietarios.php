@@ -66,7 +66,9 @@ $html = '
     <p>Gracias nuevamente por elegir a SOMOS PROPIEDAD S.A.S. Estamos agradecidos por darnos la oportunidad de servirle, trabajaremos incansablemente para brindarle todo el apoyo que requiera. </p>
 
     <p>Cordialmente:</p>
-
+<br>
+<br>
+<br>
     <p style="font-size: 12pt;"><strong>JAIME ZULUAGA CARDONA</strong></p>
     
     <p>ADMINISTRADOR</p>
