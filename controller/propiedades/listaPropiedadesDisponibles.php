@@ -21,7 +21,15 @@ if ($result->num_rows > 0) {
         $row['acciones'] = '
             <td><a href="verDetalle.php?id=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-lime-dark btn-sm"><i class="bi bi-eye-fill"></i></a></td>
             <td><a href="editarPropiedad.php?codigo=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-pencil-fill"></i></a></td>
-            <td><a href="propiedad_fotos.php?codigo=' . $row['codigo'].'" class="btn bg-magenta-dark text-white btn-sm"><i class="bi bi-image-fill"></i></a></td>
+            <td><a href="propiedad_fotos.php?codigo=' . $row['codigo'] . '" class="btn bg-magenta-dark text-white btn-sm"><i class="bi bi-image-fill"></i></a></td>
+             <td>
+             <form action="formatosYcartas/carta_arrendatarios.php" method="POST">
+              <input type="submit" name="carta_propietarios" value="CARTA PROPIETARIOS">
+               </form>
+               </td>
+             <td><a href="propiedadesDisponibles.php?codigo=' . $row['codigo'] . '" class="btn bg-teal-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></a></td>
+             <td><a href="propiedadesDisponibles.php?codigo=' . $row['codigo'] . '" class="btn bg-lime-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></a></td>
+             <td><a href="propiedadesDisponibles.php?codigo=' . $row['codigo'] . '" class="btn bg-cyan-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></a></td>
            
             ';
         $data[] = $row;
@@ -41,7 +49,10 @@ if ($result->num_rows > 0) {
                 <th></th>
                 <th></th>
                 <th></th>
-                
+                <th>CA</th>
+                <th>CP</th>
+                <th>CA</th>
+                <th>CC</th>
             <?php endif; ?>
         </tr>
     </thead>
@@ -61,10 +72,10 @@ if ($result->num_rows > 0) {
 <script>
     $(document).ready(function() {
         $('#propiedadesVenta').DataTable({
-    responsive: true,
-    language: {
-        url: 'js/lang/es-ES.json'  
-    }
-});
+            responsive: true,
+            language: {
+                url: 'js/lang/es-ES.json'
+            }
+        });
     });
 </script>
