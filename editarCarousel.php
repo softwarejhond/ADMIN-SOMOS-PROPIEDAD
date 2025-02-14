@@ -192,6 +192,7 @@ $rol = $infoUsuario['rol'];
                                             <i class="bi bi-images"></i>
                                         </a>
                                         <button type="submit" class="btn bg-magenta-dark text-white m-1">Actualizar datos</button>
+                                        <br><br><br><br><br><br>
                                     </div>
                                 </div>
                             </div>

@@ -23,13 +23,17 @@ if ($result->num_rows > 0) {
             <td><a href="editarPropiedad.php?codigo=' . $row['codigo'] . '&tabla=proprieter" class="btn bg-indigo-dark text-white btn-sm"><i class="bi bi-pencil-fill"></i></a></td>
             <td><a href="propiedad_fotos.php?codigo=' . $row['codigo'] . '" class="btn bg-magenta-dark text-white btn-sm"><i class="bi bi-image-fill"></i></a></td>
             <td>
-              <button type="button" onclick="window.location.href=\'formatosYcartas/carta_arrendatarios.php\'" class="btn bg-red-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+              <button type="button" onclick="window.location.href=\'formatosYcartas/carta_arrendatarios.php\'" class="btn bg-red-dark text-white btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Carta arrendatarios"><i class="bi bi-file-earmark-pdf-fill"></i></button>
             </td>
             <td>
-              <button type="button" onclick="window.location.href=\'formatosYcartas/carta_propietarios.php\'" class="btn bg-teal-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+              <button type="button" onclick="window.location.href=\'formatosYcartas/carta_propietarios.php\'" class="btn bg-red-dark text-white btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Carta propietarios"><i class="bi bi-file-earmark-pdf-fill"></i></button>
             </td>
-             <td><a href="propiedadesDisponibles.php?codigo=' . $row['codigo'] . '" class="btn bg-lime-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></a></td>
-             <td><a href="propiedadesDisponibles.php?codigo=' . $row['codigo'] . '" class="btn bg-cyan-dark text-white btn-sm"><i class="bi bi-file-earmark-pdf-fill"></i></a></td>
+            <td>
+              <button type="button" onclick="window.location.href=\'formatosYcartas/contrato_administracion.php?codigo=' . $row['codigo'] . '\'" class="btn bg-red-dark text-white btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Contrato administración"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+            </td>
+            <td>
+              <button type="button" onclick="window.location.href=\'formatosYcartas/contrato_arriendo.php?codigo=' . $row['codigo'] . '\'" class="btn bg-red-dark text-white btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Contrato arriendo"><i class="bi bi-file-earmark-pdf-fill"></i></button>
+            </td>
            
             ';
         $data[] = $row;
