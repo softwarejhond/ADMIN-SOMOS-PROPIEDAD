@@ -1,26 +1,57 @@
 <?php
 session_start();
-
+// Conexión a la base de datos
+include("conexion.php");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    // Si no está logueado, redirigir a la página de inicio de sesión
     header('Location: login.php');
     exit;
 }
+
 include("funciones.php");
 
-// Obtiene el total de registros de las tablas
 $empresas = obtenerEmpresas();
 $infoUsuario = obtenerInformacionUsuario(); // Obtén la información del usuario
 $rol = $infoUsuario['rol'];
+$usaurio = htmlspecialchars($_SESSION["username"]);
 
+if (!$conn) {
+    die("Error en la conexión a la base de datos: " . mysqli_connect_error());
+}
+
+// Capturar el ID del slider desde la URL
+$id_slide = intval($_GET['id']);
+
+// Consulta SQL para obtener los datos del slider
+$sql = mysqli_query($conn, "SELECT * FROM slider WHERE id='$id_slide' LIMIT 1");
+if (!$sql) {
+    die("Error en la consulta SQL: " . mysqli_error($conn));
+}
+
+$count = mysqli_num_rows($sql);
+if ($count == 0) {
+    header("location: carusel.php");
+    exit;
+}
+
+$rw = mysqli_fetch_array($sql);
+$titulo = $rw['titulo'];
+$descripcion = $rw['descripcion'];
+$texto_boton = $rw['texto_boton'];
+$url_boton = $rw['url_boton'];
+$estilo_boton = $rw['estilo_boton'];
+$url_image = $rw['url_image'];
+$orden = intval($rw['orden']);
+$estado = intval($rw['estado']);
+$active_config = "active";
+$active_slider = "active";
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -53,36 +84,10 @@ $rol = $infoUsuario['rol'];
                     <h2 class="position-absolute top-0 start-0 "><i class="bi bi-info-circle-fill"></i> Información del carousel</h2>
 
                     <?php include("controller/notificacioRetiroInquilino.php"); ?>
-                    </h2>
                 </div>
                 <h6 class="text-aling-rigth"></h6>
                 <hr>
                 <div class="row">
-                    <?php
-
-                    include("conexion.php");
-                    $active = "active";
-                    //Insert un nuevo producto
-                    $imagen_demo = "demo.png";
-                    $id_slide = intval($_GET['id']);
-                    $sql = mysqli_query($conn, "select * from slider where id='$id_slide' limit 0,1");
-                    $count = mysqli_num_rows($sql);
-                    if ($count == 0) {
-                        header("location: carusel.php");
-                        exit;
-                    }
-                    $rw = mysqli_fetch_array($sql);
-                    $titulo = $rw['titulo'];
-                    $descripcion = $rw['descripcion'];
-                    $texto_boton = $rw['texto_boton'];
-                    $url_boton = $rw['url_boton'];
-                    $estilo_boton = $rw['estilo_boton'];
-                    $url_image = $rw['url_image'];
-                    $orden = intval($rw['orden']);
-                    $estado = intval($rw['estado']);
-                    $active_config = "active";
-                    $active_slider = "active";
-                    ?>
                     <div class="align-items-center" style="height: 50vh;">
                         <form class="" id="editar_slide">
                             <div class="container">
@@ -98,11 +103,10 @@ $rol = $infoUsuario['rol'];
                                                 <select class="form-control" id="titulo" name="titulo" required>
                                                     <option value="EN VENTA" <?php echo ($titulo == 'EN VENTA') ? 'selected' : ''; ?>>EN VENTA</option>
                                                     <option value="EN ALQUILER" <?php echo ($titulo == 'EN ALQUILER') ? 'selected' : ''; ?>>EN ALQUILER</option>
-                                                    <option value="EN ALQUILER" <?php echo ($titulo == 'EN ALQUILER O VENTA') ? 'selected' : ''; ?>>EN ALQUILER O VENTA</option>
+                                                    <option value="EN ALQUILER O VENTA" <?php echo ($titulo == 'EN ALQUILER O VENTA') ? 'selected' : ''; ?>>EN ALQUILER O VENTA</option>
                                                 </select>
                                                 <input type="hidden" class="form-control" id="id_slide" value="<?php echo intval($id_slide); ?>" name="id_slide">
                                             </div>
-
                                         </div>
 
                                         <div class="form-group">
@@ -117,7 +121,6 @@ $rol = $infoUsuario['rol'];
                                                 <input type="text" class="form-control" id="texto_boton" name="texto_boton" value="<?php echo $texto_boton ?>">
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="col col-lg-6 col-md-6 col-sm-12 px-2 mt-1 ">
                                         <div class="form-group">
@@ -127,36 +130,24 @@ $rol = $infoUsuario['rol'];
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="texto_boton" class="col-sm-3 control-label">Color del boton</label>
+                                            <label for="texto_boton" class="col-sm-3 control-label">Color del botón</label>
                                             <div class="col-sm-9">
                                                 <button type="button" class="btn btn-info btn-sm">
-                                                    <input type="radio" name="estilo" value="info" <?php if ($estilo_boton == "info") {
-                                                                                                        echo "checked";
-                                                                                                    } ?>>
+                                                    <input type="radio" name="estilo" value="info" <?php if ($estilo_boton == "info") echo "checked"; ?>>
                                                 </button>
                                                 <button type="button" class="btn btn-warning btn-sm">
-                                                    <input type="radio" name="estilo" value="warning" <?php if ($estilo_boton == "warning") {
-                                                                                                            echo "checked";
-                                                                                                        } ?>>
+                                                    <input type="radio" name="estilo" value="warning" <?php if ($estilo_boton == "warning") echo "checked"; ?>>
                                                 </button>
                                                 <button type="button" class="btn btn-primary btn-sm">
-                                                    <input type="radio" name="estilo" value="primary" <?php if ($estilo_boton == "primary") {
-                                                                                                            echo "checked";
-                                                                                                        } ?>>
+                                                    <input type="radio" name="estilo" value="primary" <?php if ($estilo_boton == "primary") echo "checked"; ?>>
                                                 </button>
                                                 <button type="button" class="btn btn-success btn-sm">
-                                                    <input type="radio" name="estilo" value="success" <?php if ($estilo_boton == "success") {
-                                                                                                            echo "checked";
-                                                                                                        } ?>>
+                                                    <input type="radio" name="estilo" value="success" <?php if ($estilo_boton == "success") echo "checked"; ?>>
                                                 </button>
                                                 <button type="button" class="btn btn-danger btn-sm">
-                                                    <input type="radio" name="estilo" value="danger" <?php if ($estilo_boton == "danger") {
-                                                                                                            echo "checked";
-                                                                                                        } ?>>
+                                                    <input type="radio" name="estilo" value="danger" <?php if ($estilo_boton == "danger") echo "checked"; ?>>
                                                 </button>
                                             </div>
-
-
                                         </div>
                                         <div class="form-group">
                                             <label for="orden" class="col-sm-3 control-label">Orden</label>
@@ -164,18 +155,12 @@ $rol = $infoUsuario['rol'];
                                                 <input type="number" class="form-control" id="orden" name="orden" value="<?php echo $orden; ?>">
                                             </div>
                                         </div>
-
-
                                         <div class="form-group">
                                             <label for="estado" class="col-sm-3 control-label">Estado</label>
                                             <div class="col-sm-9">
                                                 <select class="form-control" id="estado" required name="estado">
-                                                    <option value="0" <?php if ($estado == 0) {
-                                                                            echo "selected";
-                                                                        } ?>>Inactivo</option>
-                                                    <option value="1" <?php if ($estado == 1) {
-                                                                            echo "selected";
-                                                                        } ?>>Activo</option>
+                                                    <option value="0" <?php if ($estado == 0) echo "selected"; ?>>Inactivo</option>
+                                                    <option value="1" <?php if ($estado == 1) echo "selected"; ?>>Activo</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -197,12 +182,9 @@ $rol = $infoUsuario['rol'];
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 
@@ -211,7 +193,6 @@ $rol = $infoUsuario['rol'];
     <?php include("footer.php"); ?>
     <script>
         $("#editar_slide").submit(function(e) {
-
             $.ajax({
                 url: "ajax/editar_slide.php",
                 type: "POST",
@@ -234,7 +215,5 @@ $rol = $infoUsuario['rol'];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
-
 </body>
-
 </html>
