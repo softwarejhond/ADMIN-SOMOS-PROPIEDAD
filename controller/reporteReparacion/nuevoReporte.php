@@ -58,10 +58,10 @@ $includeFieldsReport = isset($formConfigReport['include_fields']) ? $formConfigR
                         // Guardar la ruta del archivo en los datos del formulario.
                         $formDataReport['fotoReporte'] = $uploadFilePath;
                     } else {
-                        echo "<script>alert('Error al cargar la imagen.');</script>"; // Error al mover el archivo.
+                        echo "<script>Swal.fire('Error', 'Error al cargar la imagen.', 'error');</script>"; // Error al mover el archivo.
                     }
                 } else {
-                    echo "<script>alert('Solo se permiten imágenes (PNG, JPEG, JPG, GIF).');</script>"; // Validación del tipo de archivo.
+                    echo "<script>Swal.fire('Error', 'Solo se permiten imágenes (PNG, JPEG, JPG, GIF).', 'error');</script>"; // Validación del tipo de archivo.
                 }
             }
 
@@ -71,7 +71,7 @@ $includeFieldsReport = isset($formConfigReport['include_fields']) ? $formConfigR
             $resultCheckReport = $conn->query($queryCheckReport);
 
             if ($resultCheckReport->num_rows > 0) {
-                echo "<script>alert('El reporte ya existe.');</script>"; // Mostrar mensaje si el reporte ya existe.
+                echo "<script>Swal.fire('Advertencia', 'El reporte ya existe.', 'warning');</script>"; // Mostrar mensaje si el reporte ya existe.
             } else {
                 // Si el reporte no existe, insertar los datos en la base de datos.
                 $columnsReport = implode(", ", array_keys($formDataReport)); // Crear la lista de columnas.
@@ -79,9 +79,9 @@ $includeFieldsReport = isset($formConfigReport['include_fields']) ? $formConfigR
                 $queryInsertReport = "INSERT INTO $tableNameReport ($columnsReport) VALUES ($valuesReport)"; // Consulta SQL de inserción.
 
                 if ($conn->query($queryInsertReport) === TRUE) {
-                    echo "<script>alert('Registro exitoso.');</script>"; // Mostrar mensaje si la inserción fue exitosa.
+                    echo "<script>Swal.fire('Éxito', 'Registro exitoso.', 'success');</script>"; // Mostrar mensaje si la inserción fue exitosa.
                 } else {
-                    echo "<script>alert('Error al registrar: " . $conn->error . "');</script>"; // Mostrar mensaje si hay un error.
+                    echo "<script>Swal.fire('Error', 'Error al registrar: " . $conn->error . "', 'error');</script>"; // Mostrar mensaje si hay un error.
                 }
             }
         }
@@ -147,6 +147,11 @@ $includeFieldsReport = isset($formConfigReport['include_fields']) ? $formConfigR
     let random = genRandomString(12); // Generar un código aleatorio para el reporte.
     document.getElementById('codigoReporte').value = random; // Asignar el código generado al campo del formulario.
 </script>
+<!-- Incluir jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Incluir Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybV5DAmDlW5U72dUj5SC2z9z3E6w5pFnidkAY07eMOm1PcHpT" crossorigin="anonymous"></script>
 
 <script>
     // Función para actualizar el contador de caracteres en el campo 'situacionReportada'.
@@ -158,3 +163,6 @@ $includeFieldsReport = isset($formConfigReport['include_fields']) ? $formConfigR
         counter.textContent = charCount + '/' + maxLength + ' caracteres'; // Actualizar el contador de caracteres.
     }
 </script>
+
+<!-- Incluir SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

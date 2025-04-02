@@ -28,7 +28,10 @@
                 $sqlQuery = "SELECT * FROM report 
                             INNER JOIN proprieter ON report.codigo_propietario = proprieter.codigo 
                             INNER JOIN repairmen ON report.id_reparador = repairmen.identificacion";
-                $sql = mysqli_query($conn, $sqlQuery);
+            $sql = mysqli_query($conn, $sqlQuery);
+            if (!$sql) {
+                die("Error en la consulta SQL: " . mysqli_error($conn));
+            }
 
                 // Verificar si hay resultados
                 if (mysqli_num_rows($sql) == 0) {
@@ -73,3 +76,10 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
+<!-- Incluir Popper.js sin el atributo integrity -->
+<script src="https://unpkg.com/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<!-- Incluir Bootstrap JS sin el atributo integrity -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+<!-- Incluir DataTables -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<!-- Incluir DataTables con estilos --> 

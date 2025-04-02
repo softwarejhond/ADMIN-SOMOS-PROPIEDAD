@@ -575,7 +575,7 @@ if ($conn->query($queryUpdate) === TRUE) {
                 echo "<div class='form-group'>";
                 echo "<label class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', 'Dirección')) . "</label>";
                 // Campo para la dirección
-                echo "<input type='text' id='direccion' name='$fieldName' class='form-control' placeholder='Escriba la dirección' autocomplete='off' value='" . htmlspecialchars($valor) . "' readonly>";
+                echo "<input type='text' id='direccion' name='$fieldName' class='form-control' placeholder='Escriba la dirección' autocomplete='off' value='" . htmlspecialchars($valor) . "' >";
                 echo "</div>";
             } else if ($fieldName == 'TelefonoInmueble') {
                 echo "<div class='form-group'>";

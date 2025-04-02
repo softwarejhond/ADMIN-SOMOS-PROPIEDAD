@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     // Si no está logueado, redirigir a la página de inicio de sesión
@@ -53,7 +51,10 @@ $rol = $infoUsuario['rol'];
                 <div class="position-relative">
                     <h2 class="position-absolute top-0 start-0 "><i class="bi bi-wrench-adjustable"></i> Lista de reparaciones</h2>
 
-                    <?php include("controller/notificacioRetiroInquilino.php"); ?>
+                    <?php 
+                    ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL); include("controller/notificacioRetiroInquilino.php"); ?>
                     </h2>
                 </div>
                 <h6 class="text-aling-rigth"></h6>
