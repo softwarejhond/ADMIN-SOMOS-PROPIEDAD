@@ -1,17 +1,23 @@
-<?php 
+<?php
 require_once 'conexion.php';
+
+header('Content-Type: application/json');
 
 function getDepartamento()
 {
   $mysqli = getConn();
   $query = 'SELECT * FROM `departamentos` ORDER BY departamento ';
   $result = $mysqli->query($query);
-  $departamento = '<option value="0">Seleccionar departamento</option>';
+  $departamentos = array();
+  
   while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-    // $departamento .= "<option value='$row[id_departamento]'>$row[departamento]</option>";
-    $departamento .= "<option value='$row[id_departamento]'>$row[departamento]</option>";
+    $departamentos[] = array(
+      'id_departamento' => $row['id_departamento'],
+      'departamento' => $row['departamento']
+    );
   }
-  return $departamento;
+  return $departamentos;
 }
-echo getDepartamento();
+
+echo json_encode(getDepartamento());
 ?>

@@ -1,9 +1,9 @@
 <?php
 //datos del servidor
 $server = "localhost";
-$username = "u420923412_L0g1nD4t4B4S3";
-$password = "u420923412_L0g1nD4t4B4S3";
-$bd = "u420923412_S0m0sProp13D4d";
+$username = "root";
+$password = "";
+$bd = "somos_propiedad";
 //creamos una conexión
 $conn = mysqli_connect($server, $username, $password, $bd);
 //Chequeamos la conexión

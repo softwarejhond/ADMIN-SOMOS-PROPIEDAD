@@ -2,9 +2,9 @@
 function getConn(): mysqli
 {
 	$host = 'localhost';
-	$user = 'u420923412_L0g1nD4t4B4S3';
-	$password = 'u420923412_L0g1nD4t4B4S3';
-	$database = 'u420923412_S0m0sProp13D4d';
+	$user = 'root';
+	$password = '';
+	$database = 'somos_propiedad';
 
 	$mysqli = new mysqli($host, $user, $password, $database);
 

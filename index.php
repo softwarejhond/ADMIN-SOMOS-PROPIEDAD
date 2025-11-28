@@ -14,7 +14,10 @@ include("funciones.php");
 
 $empresas = obtenerEmpresas();
 $infoUsuario = obtenerInformacionUsuario(); // Obtén la información del usuario
+$total_usuarios = obtenerTotalRegistros('users');
 $rol = $infoUsuario['rol'];
+
+
 
 ?>
 <!DOCTYPE html>
@@ -58,16 +61,12 @@ $rol = $infoUsuario['rol'];
                 <hr>
                 <?php include("contadores.php"); ?>
                 <div class="row">
-                    <div class=" col-sm-12 col-md-8 col-lg-6">
+                    <div class="col-12">
+                        <?php include("carousel.php"); ?>
+                    </div>
+                    <div class="col-12">
                         <?php include 'APIS/cardFilter.php'; ?>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-6">
-                        <?php include("carousel.php"); ?>
-                        <br>
-                        <?php include("controller/mapaRealTime.php"); ?>
-                    </div>
-
-
                 </div>
             </div>
 
@@ -90,7 +89,7 @@ $rol = $infoUsuario['rol'];
     <?php include("footer.php"); ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script type="text/javascript" src="js/departamentos_municipios_barrios.js?v=2"></script>
-    
+
     <script src="js/real-time-inquilino-proximo-retiro.js?v=0.1"></script>
     <script src="js/real-time-update-contadores.js?v=0.1"></script>
     <script>

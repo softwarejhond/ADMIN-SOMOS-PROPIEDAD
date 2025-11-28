@@ -33,14 +33,12 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
 
 <!-- Formulario de filtros -->
 <form id="filterForm">
-    <div class="mt-3">
-        <div class="card rounded-bottom ">
-            <div class=" card-header boton bg-indigo-dark text-white ">
-                <i class=" fa-solid fa-filter"></i> REALIZAR CONSULTA PERSONALIZADA
+        <div class="card rounded-bottom">
+            <div class="card-header boton bg-indigo-dark text-white">
+                <i class="fa-solid fa-filter"></i> REALIZAR CONSULTA PERSONALIZADA
             </div>
-            <br>
-            <div class="card-body">
-                <div class="row  d-flex justify-content-center">
+            <div class="card-body w-100">
+                <div class="row d-flex justify-content-center w-100">
                     <div class="form-group col-sm-12 col-md-6 col-lg-3 text-left">
 
                         <label for="tipoInmueble"><i class="bi bi-filter-square-fill"></i> Tipo </label>
@@ -360,8 +358,10 @@ ${item.fotos.map((foto, index) => {
     <li class="list-group-item"><h5 class="text-magenta-dark"><b>$ ${valorCanonFormatted}</b></h5></li>
   </ul>
   <div class="card-body">
-    <a href="#" class=" btn bg-indigo-dark text-white w-100"><i class="bi bi-eye-fill"></i> <b>VER MÁS</b></a>
-  </div>
+    <a href="detalle_inmueble.php?codigo=${item.codigo}" target="_blank" class="btn bg-indigo-dark text-white w-100">
+        <i class="bi bi-eye-fill"></i> <b>VER MÁS</b>
+    </a>
+</div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modalInfo${item.codigo}" tabindex="-1" aria-labelledby="propertyModalLabel" aria-hidden="true">
