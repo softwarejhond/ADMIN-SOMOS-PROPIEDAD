@@ -2,7 +2,7 @@
     /* Llamar la Cadena de Conexion*/
     include("conexion.php");
     ?>
-   <div id="carouselExampleIndicators" class="carousel slide mt-3" data-bs-ride="carousel">
+   <div id="carouselExampleIndicators" class="carousel slide mt-3 mb-3" data-bs-ride="carousel">
        <?php
         $sql_slider = mysqli_query($conn, "SELECT * FROM slider WHERE estado=1 ORDER BY orden");
         $nums_slides = mysqli_num_rows($sql_slider);

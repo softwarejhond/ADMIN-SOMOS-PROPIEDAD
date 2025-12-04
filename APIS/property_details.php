@@ -148,87 +148,87 @@ $valorCanonFormatted = number_format($propiedad['valor_canon'], 0, ',', '.');
                 </div>
 
                 <?php if (!empty($propiedad['terraza']) && $propiedad['terraza'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-sun fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Terraza:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['terraza']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-sun fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Terraza:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['terraza']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['ascensor']) && $propiedad['ascensor'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-arrow-up-square fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Ascensor:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['ascensor']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-arrow-up-square fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Ascensor:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['ascensor']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['cuarto_util']) && $propiedad['cuarto_util'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-box fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Cuarto Útil:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['cuarto_util']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-box fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Cuarto Útil:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['cuarto_util']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['CuartoServicios']) && $propiedad['CuartoServicios'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-house-gear fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Cuarto de Servicios:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['CuartoServicios']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-house-gear fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Cuarto de Servicios:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['CuartoServicios']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['ZonaRopa']) && $propiedad['ZonaRopa'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-basket fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Zona de Ropa:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['ZonaRopa']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-basket fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Zona de Ropa:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['ZonaRopa']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['vista'])): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-eye fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Vista:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['vista']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-eye fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Vista:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['vista']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['sala']) && $propiedad['sala'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-house fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Sala:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['sala']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-house fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Sala:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['sala']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['sala_comedor']) && $propiedad['sala_comedor'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-house-heart fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Sala Comedor:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['sala_comedor']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-house-heart fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Sala Comedor:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['sala_comedor']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['comedor']) && $propiedad['comedor'] !== 'no'): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-table fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Comedor:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['comedor']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-table fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Comedor:</strong><br><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['comedor']))); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['TelefonoInmueble'])): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-telephone fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Teléfono Inmueble:</strong><br><?php echo htmlspecialchars($propiedad['TelefonoInmueble']); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-telephone fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Teléfono Inmueble:</strong><br><?php echo htmlspecialchars($propiedad['TelefonoInmueble']); ?></div>
+                    </div>
                 <?php endif; ?>
 
                 <?php if (!empty($propiedad['servicios_publicos'])): ?>
-                <div class="col d-flex align-items-start">
-                    <i class="bi bi-lightning-charge fs-4 text-indigo-dark me-3"></i>
-                    <div><strong>Servicios Públicos:</strong><br><?php echo htmlspecialchars(ucwords(strtolower($propiedad['servicios_publicos']))); ?></div>
-                </div>
+                    <div class="col d-flex align-items-start">
+                        <i class="bi bi-lightning-charge fs-4 text-indigo-dark me-3"></i>
+                        <div><strong>Servicios Públicos:</strong><br><?php echo htmlspecialchars(ucwords(strtolower($propiedad['servicios_publicos']))); ?></div>
+                    </div>
                 <?php endif; ?>
             </div>
 
             <?php if (!empty($propiedad['otras_caracteristicas'])): ?>
-            <hr class="my-4">
-            <h4 class="mb-3"><i class="bi bi-info-circle"></i> Otras Características</h4>
-            <p class="text-muted fs-6 lh-lg bg-light p-3 rounded"><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['otras_caracteristicas']))); ?></p>
+                <hr class="my-4">
+                <h4 class="mb-3"><i class="bi bi-info-circle"></i> Otras Características</h4>
+                <p class="text-muted fs-6 lh-lg bg-light p-3 rounded"><?php echo htmlspecialchars(ucfirst(strtolower($propiedad['otras_caracteristicas']))); ?></p>
             <?php endif; ?>
         </div>
 

@@ -25,7 +25,7 @@ if ($result_count) {
     $num_total_rows = 0;
 }
 
-// Formatear un valor ejemplo (reemplazar $row['valor_canon'] con un dato válido)
+// Formatear un valor ejemplo (reemplazar $row['valor_canon'] with un dato válido)
 $row = ['valor_canon' => 1500000]; // Esto es solo un ejemplo para evitar errores
 $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
 
@@ -322,19 +322,19 @@ ${item.fotos.map((foto, index) => {
   console.log(rutaImagen); // Verifica si la ruta construida es correcta
   return `
     <div class="carousel-item ${index === 0 ? 'active' : ''}">
-      <img src="${rutaImagen}" class="d-block w-100" alt="Foto de la propiedad" style="height:300px;" onerror="this.onerror=null; this.src='ruta_a_imagen_defecto.jpg';">
+      <img src="${rutaImagen}" class="d-block w-100" alt="Foto de la propiedad" style="height:300px; object-fit: contain; background-color: #f8f9fa;" onerror="this.onerror=null; this.src='ruta_a_imagen_defecto.jpg';">
     </div>
   `;
 }).join('')}
 
 
   </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carousel${item.codigo}" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel${item.codigo}" data-bs-slide="prev" style="background: rgba(0,0,0,0.3); border-radius: 50%; width: 40px; height: 40px; top: 50%; transform: translateY(-50%); left: 10px;">
+      <i class="bi bi-chevron-left" style="font-size: 1.2rem; color: white;"></i>
       <span class="visually-hidden">Anterior</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carousel${item.codigo}" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel${item.codigo}" data-bs-slide="next" style="background: rgba(0,0,0,0.3); border-radius: 50%; width: 40px; height: 40px; top: 50%; transform: translateY(-50%); right: 10px;">
+      <i class="bi bi-chevron-right" style="font-size: 1.2rem; color: white;"></i>
       <span class="visually-hidden">Siguiente</span>
     </button>
   </div>

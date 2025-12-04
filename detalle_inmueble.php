@@ -47,7 +47,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title><?php echo htmlspecialchars($propiedad['tipoInmueble'] . ' - ' . $propiedad['codigo']); ?> - Somos Propiedad</title>
     <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
-    
+
     <!-- Meta tags para compartir en redes sociales -->
     <meta property="og:title" content="<?php echo htmlspecialchars($propiedad['tipoInmueble'] . ' - ' . $propiedad['codigo']); ?>">
     <meta property="og:description" content="<?php echo htmlspecialchars($propiedad['direccion'] . ' - $' . number_format($propiedad['valor_canon'])); ?>">
@@ -62,7 +62,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2><i class="bi bi-house-door"></i> Detalles del Inmueble</h2>
                 </div>
-                
+
                 <?php include("APIS/property_details.php"); ?>
             </div>
         </div>
@@ -81,7 +81,9 @@ if ($result && mysqli_num_rows($result) > 0) {
         <li></li>
         <li></li>
     </ul>
-    
+    <?php include("footer.php"); ?>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
