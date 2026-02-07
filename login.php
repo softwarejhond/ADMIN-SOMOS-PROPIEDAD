@@ -71,14 +71,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     if (mysqli_stmt_fetch($stmt)) {
                         if (password_verify($password, $hashed_password)) {
                             // La contraseña es correcta, iniciar una nueva sesión
-                            $_SESSION['loggedin'] = true; // Indica que el usuario ha iniciado sesión
-                            $_SESSION['nombre'] = htmlspecialchars($nombre); // Nombre del usuario
-                            $_SESSION['rol'] = $rol; // Rol del usuario
-                            $_SESSION['username'] = htmlspecialchars($username); // Nombre de usuario
-                            $_SESSION['foto'] = htmlspecialchars($foto); // Ruta de la foto del usuario
+                            $_SESSION['loggedin'] = true;
+                            $_SESSION['nombre'] = htmlspecialchars($nombre);
+                            $_SESSION['rol'] = $rol;
+                            $_SESSION['username'] = htmlspecialchars($username);
+                            $_SESSION['foto'] = htmlspecialchars($foto);
 
-                            // Redirigir al usuario a la página principal
-                            header("location: index.php");
+                            // Redirigir según el rol del usuario
+                            if ($rol == 5) { // Nuevo rol para panel de propiedades únicamente
+                                header("location: panel_arrendatario.php");
+                            } else {
+                                header("location: index.php");
+                            }
                             exit;
                         } else {
                             $password_err = "Contraseña incorrecta.";
@@ -148,7 +152,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </div>
     <ul class="circles">
-        <li></li>
         <li></li>
         <li></li>
         <li></li>

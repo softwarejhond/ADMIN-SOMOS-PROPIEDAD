@@ -156,6 +156,8 @@ function rolUsuario($rol)
             return "Aprobador";
         case 4:
             return "Editor";
+        case 5:
+            return "Arrendatario"; // Nuevo rol
         default:
             return "Rol desconocido";
     }
@@ -681,4 +683,37 @@ function obtenerPropiedadPorId($id) {
     return $stmt->execute();
   }
  
+?>
+
+<?php
+// Función para verificar acceso hermético por rol
+function verificarAccesoHermetico() {
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Verificar si está logueado
+    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+        header('Location: login.php');
+        exit;
+    }
+    
+    $rol_actual = $_SESSION['rol'];
+    $archivo_actual = basename($_SERVER['PHP_SELF']);
+    
+    // PROTECCIÓN HERMÉTICA: Rol 5 solo puede acceder a panel_arrendatario.php y cerrar-sesion.php
+    if ($rol_actual == 5) {
+        $archivos_permitidos = ['panel_arrendatario.php', 'cerrar-sesion.php'];
+        if (!in_array($archivo_actual, $archivos_permitidos)) {
+            header('Location: panel_arrendatario.php');
+            exit;
+        }
+    }
+    
+    // PROTECCIÓN HERMÉTICA: Otros roles NO pueden acceder a panel_arrendatario.php
+    if ($rol_actual != 5 && $archivo_actual == 'panel_arrendatario.php') {
+        header('Location: index.php');
+        exit;
+    }
+}
 ?>

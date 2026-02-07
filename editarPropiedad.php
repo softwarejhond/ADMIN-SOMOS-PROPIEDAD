@@ -11,6 +11,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 include("funciones.php");
+
+// Verificar acceso hermético
+verificarAccesoHermetico();
+
 include("conexion.php");
 if (isset($_GET['codigo']) && isset($_GET['tabla'])) {
     $id = $_GET['codigo'];

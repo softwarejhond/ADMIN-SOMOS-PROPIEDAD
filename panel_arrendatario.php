@@ -1,26 +1,31 @@
 <?php
 session_start();
-// Habilitar la visualización de errores
-ini_set('display_errors', 1);
-error_reporting(E_ALL);  // Mostrar todos los errores
 
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    // Si no está logueado, redirigir a la página de inicio de sesión
     header('Location: login.php');
     exit;
 }
+
+// PROTECCIÓN HERMÉTICA: Solo el rol 5 puede acceder a este panel
+if ($_SESSION['rol'] != 5) {
+    // Si no es rol 5, redirigir según su rol
+    switch ($_SESSION['rol']) {
+        case 1: // Administrador
+        case 2: // Operario
+        case 3: // Aprobador
+        case 4: // Editor
+        default:
+            header('Location: index.php');
+            exit;
+    }
+}
+
 include("funciones.php");
 
-// Verificar acceso hermético
-verificarAccesoHermetico();
-
 $empresas = obtenerEmpresas();
-$infoUsuario = obtenerInformacionUsuario(); // Obtén la información del usuario
-$total_usuarios = obtenerTotalRegistros('users');
+$infoUsuario = obtenerInformacionUsuario();
 $rol = $infoUsuario['rol'];
-
-
 
 ?>
 <!DOCTYPE html>
@@ -38,45 +43,18 @@ $rol = $infoUsuario['rol'];
     <link rel="stylesheet" href="css/animacion.css?v=0.15">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <title>SIVP - Admin</title>
+    <title>Panel arrendatario</title>
     <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
 </head>
 
 <body class="" style="background-color:white">
     <?php include("header.php"); ?>
-    <?php include("slidebar.php"); ?>
-    <?php include("modals/nuevoTipoPropiedad.php"); ?>
-    <?php include("modals/nuevoUsuarioAdministrador.php"); ?>
-    <?php include("modals/nuevoReparador.php"); ?>
-    <?php include("modals/nuevaReporteReparacion.php"); ?>
-    <?php include("modals/actualizarIPC.php"); ?>
-    <?php include("modals/actualizarIPC_locales.php"); ?>
+    
     <div id="mt-3">
-        <div class="mt-3">
-            <br><br>
-            <div id="dashboard">
-                <div class="position-relative bg-transparent">
-                    <h2 class="position-absolute top-0 start-0 "><i class="bi bi-speedometer2 "></i> Dashboard</h2>
-
-                    <?php include("controller/notificacioRetiroInquilino.php"); ?>
-                </div>
-                <h6 class="text-aling-rigth"></h6>
-                <hr>
-                <?php include("contadores.php"); ?>
-                <div class="">
-                    <div class="col-6">
-                        <?php include("carousel.php"); ?>
-                    </div>
-                    <div class="col-6">
-                        <?php include 'APIS/cardFilter.php'; ?>
-                    </div>
-                </div>
-            </div>
-
+        <div class="mt-3 pt-5">
+            <?php include("controller/arrendatarios/cards_valores.php"); ?>
         </div>
     </div>
-    <?php include("controller/botonFlotanteDerecho.php"); ?>
-    <?php include("sliderBarBotton.php"); ?>
     <ul class="circles">
         <li></li>
         <li></li>

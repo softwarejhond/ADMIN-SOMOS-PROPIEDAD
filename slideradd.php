@@ -12,6 +12,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 include("funciones.php");
 
+// Verificar acceso hermético
+verificarAccesoHermetico();
+
 // Obtiene el total de registros de las tablas
 $empresas = obtenerEmpresas();
 $infoUsuario = obtenerInformacionUsuario(); // Obtén la información del usuario

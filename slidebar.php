@@ -1,3 +1,5 @@
+<?php include("modals/nuevoArrendatario.php"); ?>
+
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel"><i class="bi bi-boxes"></i> SIVP Aplicaciones</h5>
@@ -45,6 +47,18 @@
                         </span>
                     </label>
                 </div>
+                <!-- Añadir arrendatario -->
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Añadir arrendatario">
+                    <label class="checkbox-wrapper" onclick="mostrarFormularioArrendatario()">
+                        <span class="checkbox-tile">
+                            <span class="checkbox-icon">
+                                <i class="bi bi-person-plus-fill icono"></i>
+                            </span>
+                            <span class="checkbox-label">Arrendatario</span>
+                        </span>
+                    </label>
+                </div>
+
                 <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Agenda">
                     <a href="agenda.php">
                         <label class="checkbox-wrapper">
