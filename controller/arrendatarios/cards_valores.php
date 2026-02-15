@@ -43,6 +43,28 @@ if (!empty($info['fecha_ingreso']) && $porcentaje_aumento !== null && isset($inf
     $fecha_incremento = date('d/m/Y', strtotime($info['fecha_ingreso'] . ' +1 year'));
     $nuevo_valor_canon = $info['valor_canon'] * (1 + ($porcentaje_aumento / 100));
 }
+
+// Obtener detalles de reportes pendientes
+$reportes_pendientes = [];
+$suma_reportes_pendientes = 0;
+if (!empty($info['codigo'])) {
+    $sqlReportes = "SELECT codigoReporte, situacionReportada, totalPagar FROM report WHERE codigo_propietario = ? AND pagado = 0";
+    $stmtReportes = $conn->prepare($sqlReportes);
+    $stmtReportes->bind_param("i", $info['codigo']);
+    $stmtReportes->execute();
+    $stmtReportes->bind_result($codigoReporte, $situacion, $totalPagar);
+    while ($stmtReportes->fetch()) {
+        $reportes_pendientes[] = [
+            'codigo' => $codigoReporte,
+            'situacion' => $situacion,
+            'total' => $totalPagar,
+            'total_formateado' => '$' . number_format($totalPagar, 0, ',', '.')
+        ];
+        $suma_reportes_pendientes += $totalPagar;
+    }
+    $stmtReportes->close();
+}
+$saldo_actual = ($info['valor_canon'] ?? 0) + $suma_reportes_pendientes;
 ?>
 
 <div class="container-fluid px-3">
@@ -56,7 +78,9 @@ if (!empty($info['fecha_ingreso']) && $porcentaje_aumento !== null && isset($inf
                     <h5 class="mb-0">Saldo Actual</h5>
                 </div>
                 <div class="card-body d-flex flex-column justify-content-center text-center">
-                    <p class="h2 fw-bold mb-1">$500.000</p>
+                    <p class="h2 fw-bold mb-1" style="cursor: pointer;" onclick="mostrarDesgloseSaldo()">
+                        <?= isset($info['codigo']) ? '$' . number_format($saldo_actual, 0, ',', '.') : 'Sin registro' ?>
+                    </p>
                     <p class="text-muted small mb-0">En tiempo real</p>
                 </div>
             </div>
@@ -193,6 +217,7 @@ if (!empty($info['fecha_ingreso']) && $porcentaje_aumento !== null && isset($inf
                     <div class="d-flex flex-wrap justify-content-center gap-3 w-100">
                         <!-- Botón Certificado -->
                         <button type="button" class="btn p-0 border-0 bg-transparent position-relative"
+                            onclick="generarCertificado()"
                             data-bs-toggle="popover"
                             data-bs-trigger="hover focus"
                             data-bs-placement="top"
@@ -265,4 +290,102 @@ if (!empty($info['fecha_ingreso']) && $porcentaje_aumento !== null && isset($inf
             });
         });
     });
+
+    function mostrarDesgloseSaldo() {
+        const valorCanon = <?= json_encode(isset($info['valor_canon']) ? '$' . number_format($info['valor_canon'], 0, ',', '.') : 'Sin registro') ?>;
+        const reportes = <?= json_encode($reportes_pendientes) ?>;
+        const totalSaldo = <?= json_encode(isset($info['codigo']) ? '$' . number_format($saldo_actual, 0, ',', '.') : 'Sin registro') ?>;
+
+        let tablaHtml = '';
+        if (reportes.length > 0) {
+            tablaHtml = `
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Código de Reporte</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Situación Reportada</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Total a Pagar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            reportes.forEach(reporte => {
+                tablaHtml += `
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px;">${reporte.codigo}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">${reporte.situacion}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${reporte.total_formateado}</td>
+                    </tr>
+                `;
+            });
+            tablaHtml += `</tbody></table>`;
+        } else {
+            tablaHtml = '<p style="margin-top: 10px;">No hay deudas por reparaciones pendientes.</p>';
+        }
+
+        const htmlContent = `
+            <div style="text-align: left;">
+                <p><strong>Canon de arriendo:</strong> ${valorCanon}</p>
+                <p><strong>Pendientes por reparaciones:</strong></p>
+                ${tablaHtml}
+                <hr style="margin: 20px 0;">
+                <p><strong>Total:</strong> ${totalSaldo}</p>
+            </div>
+        `;
+
+        Swal.fire({
+            title: 'Desglose del Saldo Actual',
+            html: htmlContent,
+            icon: 'info',
+            confirmButtonText: 'Cerrar',
+            width: '600px' // Ajusta el ancho para que quepa la tabla
+        });
+    }
+
+    function generarCertificado() {
+        Swal.fire({
+            title: 'Generando certificado...',
+            text: 'Por favor espera',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        fetch('controller/arrendatarios/generar_certificado.php?codigo=<?= urlencode($info['codigo']) ?>', {
+                method: 'GET'
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Decodificar base64 y crear blob para descarga
+                const byteCharacters = atob(data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], {
+                    type: 'application/pdf'
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'certificado_residencia_<?= $info['codigo'] ?>.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'Certificado generado y descargado.',
+                    icon: 'success'
+                });
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo generar el certificado.',
+                    icon: 'error'
+                });
+            });
+    }
 </script>
