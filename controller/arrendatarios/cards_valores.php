@@ -48,7 +48,7 @@ if (!empty($info['fecha_ingreso']) && $porcentaje_aumento !== null && isset($inf
 $reportes_pendientes = [];
 $suma_reportes_pendientes = 0;
 if (!empty($info['codigo'])) {
-    $sqlReportes = "SELECT codigoReporte, situacionReportada, totalPagar FROM report WHERE codigo_propietario = ? AND pagado = 0";
+    $sqlReportes = "SELECT codigoReporte, situacionReportada, totalPagar FROM report WHERE codigo_propietario = ?";
     $stmtReportes = $conn->prepare($sqlReportes);
     $stmtReportes->bind_param("i", $info['codigo']);
     $stmtReportes->execute();
@@ -353,39 +353,41 @@ $saldo_actual = ($info['valor_canon'] ?? 0) + $suma_reportes_pendientes;
         });
 
         fetch('controller/arrendatarios/generar_certificado.php?codigo=<?= urlencode($info['codigo']) ?>', {
-                method: 'GET'
-            })
-            .then(response => response.text())
-            .then(data => {
-                // Decodificar base64 y crear blob para descarga
-                const byteCharacters = atob(data);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], {
-                    type: 'application/pdf'
-                });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'certificado_residencia_<?= $info['codigo'] ?>.pdf';
-                a.click();
-                URL.revokeObjectURL(url);
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            const byteCharacters = atob(data.pdf);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'certificado_residencia_' + data.consecutivo + '.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
 
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: 'Certificado generado y descargado.',
-                    icon: 'success'
-                });
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'No se pudo generar el certificado.',
-                    icon: 'error'
-                });
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'Certificado generado y descargado.',
+                icon: 'success'
             });
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo generar el certificado.',
+                icon: 'error'
+            });
+        });
     }
 </script>

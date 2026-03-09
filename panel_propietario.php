@@ -7,15 +7,16 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// PROTECCIÓN HERMÉTICA: Solo el rol 5 puede acceder a este panel
-if ($_SESSION['rol'] != 5) {
-    // Si no es rol 5, redirigir según su rol
+// PROTECCIÓN HERMÉTICA: Solo el rol 6 puede acceder a este panel
+if ($_SESSION['rol'] != 6) {
+    // Si no es rol 6, redirigir según su rol
     switch ($_SESSION['rol']) {
         case 1: // Administrador
         case 2: // Operario
         case 3: // Aprobador
         case 4: // Editor
-        case 6: // Propietario
+        case 5: // Arrendatario
+        
         default:
             header('Location: index.php');
             exit;
@@ -44,7 +45,7 @@ $rol = $infoUsuario['rol'];
     <link rel="stylesheet" href="css/animacion.css?v=0.15">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <title>Panel arrendatario</title>
+    <title>Panel propietario</title>
     <link rel="icon" href="img/somosLogo.png" type="image/x-icon">
 </head>
 
@@ -53,7 +54,7 @@ $rol = $infoUsuario['rol'];
     
     <div id="mt-3">
         <div class="mt-3 pt-5">
-            <?php include("controller/arrendatarios/cards_valores.php"); ?>
+            <?php include("controller/propietarios/cards_valores.php"); ?>
         </div>
     </div>
     <ul class="circles">

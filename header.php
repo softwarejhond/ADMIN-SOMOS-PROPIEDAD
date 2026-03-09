@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
     <div class="container-fluid">
-        <?php $esArrendatario = ($infoUsuario['rol'] === 'Arrendatario'); ?>
+        <?php $esArrendatario = ($infoUsuario['rol'] === 'Arrendatario' || $infoUsuario['rol'] === 'Propietario'); ?>
         <?php if (!$esArrendatario): ?>
             <button class="btn btn-tertiary mr-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                 <i class="bi bi-list"></i>

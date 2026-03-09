@@ -157,7 +157,9 @@ function rolUsuario($rol)
         case 4:
             return "Editor";
         case 5:
-            return "Arrendatario"; // Nuevo rol
+            return "Arrendatario";
+        case 6:
+            return "Propietario";
         default:
             return "Rol desconocido";
     }
@@ -710,8 +712,22 @@ function verificarAccesoHermetico() {
         }
     }
     
-    // PROTECCIÓN HERMÉTICA: Otros roles NO pueden acceder a panel_arrendatario.php
+    // PROTECCIÓN HERMÉTICA: Rol 6 solo puede acceder a panel_propietario.php y cerrar-sesion.php
+    if ($rol_actual == 6) {
+        $archivos_permitidos = ['panel_propietario.php', 'cerrar-sesion.php'];
+        if (!in_array($archivo_actual, $archivos_permitidos)) {
+            header('Location: panel_propietario.php');
+            exit;
+        }
+    }
+    
+    // PROTECCIÓN HERMÉTICA: Otros roles NO pueden acceder a panel_arrendatario.php ni panel_propietario.php
     if ($rol_actual != 5 && $archivo_actual == 'panel_arrendatario.php') {
+        header('Location: index.php');
+        exit;
+    }
+    
+    if ($rol_actual != 6 && $archivo_actual == 'panel_propietario.php') {
         header('Location: index.php');
         exit;
     }
