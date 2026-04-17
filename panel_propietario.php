@@ -55,6 +55,9 @@ $rol = $infoUsuario['rol'];
     <div id="mt-3">
         <div class="mt-3 pt-5">
             <?php include("controller/propietarios/cards_valores.php"); ?>
+            <div class="container-fluid px-4 pb-4">
+                <?php include("controller/propietarios/cartera_propietario.php"); ?>
+            </div>
         </div>
     </div>
     <ul class="circles">

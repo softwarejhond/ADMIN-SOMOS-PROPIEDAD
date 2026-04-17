@@ -58,6 +58,18 @@
                         </span>
                     </label>
                 </div>
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Gestionar cartera">
+                    <a href="admin_cartera.php">
+                        <label class="checkbox-wrapper">
+                            <span class="checkbox-tile">
+                                <span class="checkbox-icon">
+                                    <i class="bi bi-wallet2 icono"></i>
+                                </span>
+                                <span class="checkbox-label">Cartera</span>
+                            </span>
+                        </label>
+                    </a>
+                </div>
 
                 <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Agenda">
                     <a href="agenda.php">
