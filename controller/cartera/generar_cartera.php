@@ -37,18 +37,18 @@ $mesesLargo = [
 $mesNombreCorto = $meses[$mes] ?? $mes;
 $mesNombreLargo = $mesesLargo[$mes] ?? $mes;
 
-// Obtener inmuebles ocupados
-$whereInm = "doc_inquilino != '' AND doc_inquilino IS NOT NULL";
+// Obtener inmuebles ocupados desde contratos
+$whereInm = "cedula_arrendatario != '' AND cedula_arrendatario IS NOT NULL";
 $params = [];
 $types = "";
 
 if ($nitFiltro !== 'TODOS' && !empty($nitFiltro)) {
-    $whereInm .= " AND doc_propietario = ?";
+    $whereInm .= " AND cedula_propietario = ?";
     $params[] = $nitFiltro;
     $types .= "s";
 }
 
-$sqlInm = "SELECT * FROM proprieter WHERE $whereInm ORDER BY doc_propietario, codigo";
+$sqlInm = "SELECT * FROM contratos_somos_propiedad WHERE $whereInm ORDER BY cedula_propietario, no_contrato";
 $stmtInm = $conn->prepare($sqlInm);
 if (!empty($params)) {
     $stmtInm->bind_param($types, ...$params);
@@ -65,14 +65,15 @@ $totalGenerados = 0;
 $totalOmitidos = 0;
 
 while ($inm = $resInm->fetch_assoc()) {
-    $codigoInm = $inm['codigo'];
-    $nitProp = $inm['doc_propietario'];
-    $nombreProp = strtoupper($inm['nombre_propietario']);
+    $codigoInm = $inm['no_contrato'];
+    $nitProp = $inm['cedula_propietario'];
+    $nombreProp = strtoupper($inm['propietario']);
     $direccion = strtoupper($inm['direccion']);
-    $valorCanonStr = str_replace(['.', ','], '', $inm['valor_canon']);
-    $valorCanon = floatval($valorCanonStr);
-    $comisionPct = floatval(str_replace(['%', ','], ['', '.'], $inm['comision']));
-    $ivaPct = floatval($inm['iva']);
+    $valorCanon = floatval($inm['vr_canon']);
+    // Valores ya calculados en el contrato
+    $ivaArrendamiento = floatval($inm['valor_iva']);
+    $comisionCanon    = floatval($inm['vr_administracion']);
+    $ivaComision      = $comisionCanon > 0 ? round($comisionCanon * 0.19, 2) : 0.00;
 
     if ($valorCanon <= 0) continue;
 
@@ -101,11 +102,6 @@ while ($inm = $resInm->fetch_assoc()) {
     if ($mesSig > 12) { $mesSig = 1; $anioSig++; }
     $mesSigStr = str_pad($mesSig, 2, '0', STR_PAD_LEFT);
     $mesSigNombre = $meses[$mesSigStr] ?? '';
-
-    // Calcular valores
-    $ivaArrendamiento = $valorCanon * ($ivaPct / 100);
-    $comisionCanon = $valorCanon * ($comisionPct / 100);
-    $ivaComision = $comisionCanon * ($ivaPct / 100);
 
     // 1. Canon de arrendamiento (CRÉDITO)
     $detalleCanon = "Canon de  desde {$diaInicioFormato}/{$anio} hasta {$diaFinFormato}/{$anio}  {$direccion}";

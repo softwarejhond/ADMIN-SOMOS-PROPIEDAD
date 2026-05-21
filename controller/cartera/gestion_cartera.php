@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . "/../conexion.php";
 
-// Obtener todos los propietarios con inmuebles
-$sqlPropietarios = "SELECT DISTINCT doc_propietario, nombre_propietario FROM proprieter WHERE doc_propietario != '' ORDER BY nombre_propietario";
+// Obtener todos los propietarios con inmuebles desde la tabla de contratos
+$sqlPropietarios = "SELECT DISTINCT cedula_propietario AS doc_propietario, propietario AS nombre_propietario FROM contratos_somos_propiedad WHERE cedula_propietario != '' ORDER BY propietario";
 $resPropietarios = $conn->query($sqlPropietarios);
 
 // Filtros
@@ -31,9 +31,9 @@ if ($hayFiltroActivo) {
         $types .= "i";
     }
 
-    $sqlMovimientos = "SELECT c.*, p.direccion, p.tipoInmueble 
+    $sqlMovimientos = "SELECT c.*, csp.direccion, csp.ciudad AS tipoInmueble 
                        FROM cartera_propietario c 
-                       LEFT JOIN proprieter p ON c.codigo_inmueble = p.codigo 
+                       LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato 
                        WHERE $whereCartera 
                        ORDER BY c.nit_propietario, c.codigo_inmueble, c.es_giro ASC, c.id ASC";
 
@@ -215,7 +215,7 @@ $conceptos = [
                                             <td class="text-center"><?= htmlspecialchars($mov['codigo_inmueble']) ?></td>
                                             <td><?= htmlspecialchars($mov['anio']) ?></td>
                                             <td class="text-center">
-                                                <button class="btn btn-sm btn-outline-primary btn-editar-mov" 
+                                                <button class="btn btn-sm bg-indigo-dark text-white btn-editar-mov" 
                                                     data-id="<?= $mov['id'] ?>"
                                                     data-nit="<?= htmlspecialchars($mov['nit_propietario']) ?>"
                                                     data-nombre="<?= htmlspecialchars($mov['nombre_tercero']) ?>"
@@ -231,7 +231,7 @@ $conceptos = [
                                                     title="Editar">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-outline-danger btn-eliminar-mov" data-id="<?= $mov['id'] ?>" title="Eliminar">
+                                                <button class="btn btn-sm bg-danger text-white btn-eliminar-mov" data-id="<?= $mov['id'] ?>" title="Eliminar">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </td>

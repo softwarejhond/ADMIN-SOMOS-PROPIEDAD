@@ -5,16 +5,16 @@ require_once "conexion.php";
 // Obtener documento del propietario logueado
 $doc_propietario = $_SESSION['username'] ?? '';
 
-// Consultar inmuebles del propietario
-$sqlInmuebles = "SELECT * FROM proprieter WHERE doc_propietario = ?";
+// Consultar inmuebles del propietario desde la tabla de contratos exclusiva
+$sqlInmuebles = "SELECT COUNT(*) as total FROM contratos_somos_propiedad WHERE cedula_propietario = ?";
 $stmtInm = $conn->prepare($sqlInmuebles);
 $stmtInm->bind_param("s", $doc_propietario);
 $stmtInm->execute();
-$resultInmuebles = $stmtInm->get_result();
-$totalInmuebles = $resultInmuebles->num_rows;
+$resInmuebles = $stmtInm->get_result()->fetch_assoc();
+$totalInmuebles = $resInmuebles['total'] ?? 0;
 
 // Inmuebles ocupados vs desocupados
-$sqlOcupados = "SELECT COUNT(*) as total FROM proprieter WHERE doc_propietario = ? AND doc_inquilino != '' AND doc_inquilino IS NOT NULL";
+$sqlOcupados = "SELECT COUNT(*) as total FROM contratos_somos_propiedad WHERE cedula_propietario = ? AND cedula_arrendatario != '' AND cedula_arrendatario IS NOT NULL";
 $stmtOc = $conn->prepare($sqlOcupados);
 $stmtOc->bind_param("s", $doc_propietario);
 $stmtOc->execute();
@@ -23,36 +23,23 @@ $inmueblesOcupados = $resOcupados['total'] ?? 0;
 $inmueblesDesocupados = $totalInmuebles - $inmueblesOcupados;
 
 // Total valor canon mensual
-$sqlCanon = "SELECT SUM(CAST(REPLACE(REPLACE(valor_canon, '.', ''), ',', '') AS UNSIGNED)) as totalCanon FROM proprieter WHERE doc_propietario = ? AND doc_inquilino != '' AND doc_inquilino IS NOT NULL";
+$sqlCanon = "SELECT SUM(vr_canon) as totalCanon FROM contratos_somos_propiedad WHERE cedula_propietario = ? AND cedula_arrendatario != '' AND cedula_arrendatario IS NOT NULL";
 $stmtCanon = $conn->prepare($sqlCanon);
 $stmtCanon->bind_param("s", $doc_propietario);
 $stmtCanon->execute();
 $resCanon = $stmtCanon->get_result()->fetch_assoc();
 $totalCanon = $resCanon['totalCanon'] ?? 0;
 
-// Reportes pendientes
-$sqlReportes = "SELECT COUNT(*) as total FROM report r INNER JOIN proprieter p ON r.codigo_propietario = p.codigo WHERE p.doc_propietario = ? AND r.EstadoReporte != 'Finalizado'";
-$stmtRep = $conn->prepare($sqlReportes);
-$stmtRep->bind_param("s", $doc_propietario);
-$stmtRep->execute();
-$resReportes = $stmtRep->get_result()->fetch_assoc();
-$reportesPendientes = $resReportes['total'] ?? 0;
-
-// Reportes finalizados
-$sqlRepFin = "SELECT COUNT(*) as total FROM report r INNER JOIN proprieter p ON r.codigo_propietario = p.codigo WHERE p.doc_propietario = ? AND r.EstadoReporte = 'Finalizado'";
-$stmtRepFin = $conn->prepare($sqlRepFin);
-$stmtRepFin->bind_param("s", $doc_propietario);
-$stmtRepFin->execute();
-$resRepFin = $stmtRepFin->get_result()->fetch_assoc();
-$reportesFinalizados = $resRepFin['total'] ?? 0;
-
-// Contratos próximos a vencer (30 días)
-$sqlVencimiento = "SELECT COUNT(*) as total FROM proprieter WHERE doc_propietario = ? AND vigenciaContrato != '' AND STR_TO_DATE(vigenciaContrato, '%Y-%m-%d') BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
-$stmtVenc = $conn->prepare($sqlVencimiento);
-$stmtVenc->bind_param("s", $doc_propietario);
-$stmtVenc->execute();
-$resVenc = $stmtVenc->get_result()->fetch_assoc();
-$contratosProxVencer = $resVenc['total'] ?? 0;
+// Listado completo de contratos del propietario (uno por fila)
+$sqlContratos = "SELECT no_contrato, direccion, ciudad, vr_canon, arrendatario,
+                         cedula_arrendatario, aseguradora, no_solicitud, multiple
+                  FROM contratos_somos_propiedad
+                  WHERE cedula_propietario = ?
+                  ORDER BY no_contrato ASC";
+$stmtContratos = $conn->prepare($sqlContratos);
+$stmtContratos->bind_param("s", $doc_propietario);
+$stmtContratos->execute();
+$resContratos = $stmtContratos->get_result();
 
 // Nombre del propietario
 $sqlNombre = "SELECT nombre FROM users WHERE username = ? LIMIT 1";
@@ -149,64 +136,6 @@ $nombrePropietario = $resNom['nombre'] ?? 'Propietario';
             </div>
         </div>
     </div>
-
-    <!-- Segunda fila de cards -->
-    <div class="row g-3 mb-4">
-        <!-- Reportes Pendientes -->
-        <!-- <div class="col-xl-4 col-md-6 col-sm-12">
-            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #990000 !important; border-left-style: solid !important;">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-1 small text-uppercase fw-semibold">Reportes Pendientes</p>
-                        <h2 class="fw-bold mb-0" style="color:#990000"><?= $reportesPendientes ?></h2>
-                        <small class="text-muted">Reparaciones en curso</small>
-                    </div>
-                    <div class="ms-3">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;background-color:rgba(153,0,0,0.1)">
-                            <i class="bi bi-tools fs-3" style="color:#990000"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- Reportes Finalizados -->
-        <!-- <div class="col-xl-4 col-md-6 col-sm-12">
-            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #5d3fd3 !important; border-left-style: solid !important;">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-1 small text-uppercase fw-semibold">Reportes Resueltos</p>
-                        <h2 class="fw-bold mb-0" style="color:#5d3fd3"><?= $reportesFinalizados ?></h2>
-                        <small class="text-muted">Reparaciones completadas</small>
-                    </div>
-                    <div class="ms-3">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;background-color:rgba(93,63,211,0.1)">
-                            <i class="bi bi-check-circle-fill fs-3" style="color:#5d3fd3"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- Contratos próximos a vencer -->
-        <!-- <div class="col-xl-4 col-md-6 col-sm-12">
-            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #e67300 !important; border-left-style: solid !important;">
-                <div class="card-body d-flex align-items-center">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-1 small text-uppercase fw-semibold">Contratos por Vencer</p>
-                        <h2 class="fw-bold mb-0" style="color:#e67300"><?= $contratosProxVencer ?></h2>
-                        <small class="text-muted">Próximos 30 días</small>
-                    </div>
-                    <div class="ms-3">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;background-color:rgba(230,115,0,0.1)">
-                            <i class="bi bi-calendar-event fs-3" style="color:#e67300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    </div>
-
     <!-- Listado de Inmuebles del Propietario -->
     <div class="row mb-4 w-100">
         <div class="col-12">
@@ -219,60 +148,43 @@ $nombrePropietario = $resNom['nombre'] ?? 'Propietario';
                         <table class="table table-hover mb-0 align-middle w-100">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Código</th>
-                                    <th>Tipo</th>
+                                    <th>No. Contrato</th>
                                     <th>Dirección</th>
-                                    <th>Municipio</th>
-                                    <th>Canon</th>
-                                    <th>Vigencia Contrato</th>
+                                    <th>Ciudad</th>
+                                    <th>Arrendatario</th>
+                                    <th class="text-end">Vr Canon</th>
+                                    <th>Aseguradora</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                // Reiniciar el resultado
-                                $stmtInm->execute();
-                                $resultInmuebles = $stmtInm->get_result();
-                                
-                                if ($resultInmuebles->num_rows > 0):
-                                    while ($inmueble = $resultInmuebles->fetch_assoc()):
-                                        $tieneInquilino = !empty($inmueble['doc_inquilino']);
-                                        $estadoBadge = $tieneInquilino 
-                                            ? '<span class="badge bg-success rounded-pill">Ocupado</span>' 
-                                            : '<span class="badge bg-warning text-dark rounded-pill">Desocupado</span>';
+                                <?php if ($resContratos->num_rows > 0): ?>
+                                <?php while ($contrato = $resContratos->fetch_assoc()):
+                                    $ocupado = !empty($contrato['cedula_arrendatario']);
+                                    $estadoBadge = $ocupado
+                                        ? '<span class="badge bg-success rounded-pill">Ocupado</span>'
+                                        : '<span class="badge bg-warning text-dark rounded-pill">Desocupado</span>';
                                 ?>
                                 <tr>
-                                    <td><strong>#<?= htmlspecialchars($inmueble['codigo']) ?></strong></td>
-                                    <td><i class="bi bi-house-door"></i> <?= htmlspecialchars($inmueble['tipoInmueble']) ?></td>
-                                    <td><?= htmlspecialchars($inmueble['direccion']) ?></td>
-                                    <td><?= htmlspecialchars($inmueble['Municipio']) ?></td>
-                                    <td><strong>$<?= number_format((int)str_replace(['.', ','], '', $inmueble['valor_canon']), 0, ',', '.') ?></strong></td>
+                                    <td><strong><?= htmlspecialchars($contrato['no_contrato']) ?></strong></td>
+                                    <td><?= htmlspecialchars($contrato['direccion']) ?></td>
+                                    <td><?= htmlspecialchars($contrato['ciudad']) ?></td>
                                     <td>
-                                        <?php 
-                                        if (!empty($inmueble['vigenciaContrato'])) {
-                                            $fechaVenc = strtotime($inmueble['vigenciaContrato']);
-                                            $hoy = time();
-                                            $diasRestantes = floor(($fechaVenc - $hoy) / 86400);
-                                            $colorFecha = $diasRestantes <= 30 ? 'text-danger fw-bold' : 'text-dark';
-                                            echo '<span class="'.$colorFecha.'">' . date('d/m/Y', $fechaVenc) . '</span>';
-                                            if ($diasRestantes <= 30 && $diasRestantes > 0) {
-                                                echo '<br><small class="text-danger"><i class="bi bi-exclamation-triangle"></i> '.$diasRestantes.' días</small>';
-                                            } elseif ($diasRestantes <= 0) {
-                                                echo '<br><small class="text-danger fw-bold"><i class="bi bi-x-circle"></i> Vencido</small>';
-                                            }
-                                        } else {
-                                            echo '<span class="text-muted">N/A</span>';
-                                        }
-                                        ?>
+                                        <?php if ($ocupado): ?>
+                                            <?= htmlspecialchars($contrato['arrendatario']) ?><br>
+                                            <small class="text-muted"><?= htmlspecialchars($contrato['cedula_arrendatario']) ?></small>
+                                        <?php else: ?>
+                                            <span class="text-muted">—</span>
+                                        <?php endif; ?>
                                     </td>
+                                    <td class="text-end"><strong>$ <?= number_format((float)$contrato['vr_canon'], 0, ',', '.') ?></strong></td>
+                                    <td><?= htmlspecialchars($contrato['aseguradora']) ?></td>
                                     <td><?= $estadoBadge ?></td>
                                 </tr>
-                                <?php 
-                                    endwhile;
-                                else: 
-                                ?>
+                                <?php endwhile; ?>
+                                <?php else: ?>
                                 <tr>
-                                    <td colspan="8" class="text-center py-4 text-muted">
+                                    <td colspan="7" class="text-center py-4 text-muted">
                                         <i class="bi bi-inbox fs-1"></i><br>
                                         No tienes inmuebles registrados
                                     </td>
@@ -287,7 +199,7 @@ $nombrePropietario = $resNom['nombre'] ?? 'Propietario';
     </div>
 
     <!-- Reportes recientes -->
-    <div class="row mb-4">
+    <!-- <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
@@ -358,7 +270,7 @@ $nombrePropietario = $resNom['nombre'] ?? 'Propietario';
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!--
     <div class="row mb-4">

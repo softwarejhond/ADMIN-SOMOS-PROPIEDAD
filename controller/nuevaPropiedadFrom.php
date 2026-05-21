@@ -160,6 +160,40 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
         )";
 
             if ($conn->query($queryInsert) === TRUE) {
+                // ── Guardar propietarios adicionales ──────────────────────
+                if (!empty($_POST['adic_doc'])) {
+                    $stmtAdic = $conn->prepare(
+                        "INSERT INTO prop_propietarios_adicionales
+                         (codigo_inmueble, doc_propietario, nombre_propietario,
+                          telefono_propietario, email_propietario, banco,
+                          tipoCuenta, numeroCuenta, diaPago, porcentaje)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    );
+                    if ($stmtAdic) {
+                        foreach ($_POST['adic_doc'] as $i => $docAdic) {
+                            $docAdic  = trim($docAdic);
+                            if ($docAdic === '') continue;
+                            $nomAdic  = trim($_POST['adic_nombre'][$i]       ?? '');
+                            $telAdic  = trim($_POST['adic_telefono'][$i]     ?? '');
+                            $emAdic   = trim($_POST['adic_email'][$i]        ?? '');
+                            $banAdic  = trim($_POST['adic_banco'][$i]        ?? '');
+                            $tipAdic  = trim($_POST['adic_tipoCuenta'][$i]   ?? '');
+                            $cueAdic  = trim($_POST['adic_numeroCuenta'][$i] ?? '');
+                            $diaAdic  = intval($_POST['adic_diaPago'][$i]    ?? 0);
+                            $porAdic  = floatval($_POST['adic_porcentaje'][$i] ?? 0);
+                            $codInt   = intval($codigo);
+                            $stmtAdic->bind_param(
+                                'isssssssid',
+                                $codInt, $docAdic, $nomAdic, $telAdic,
+                                $emAdic, $banAdic, $tipAdic, $cueAdic,
+                                $diaAdic, $porAdic
+                            );
+                            $stmtAdic->execute();
+                        }
+                        $stmtAdic->close();
+                    }
+                }
+                // ──────────────────────────────────────────────────────────
                 echo "<script>
                     document.addEventListener('DOMContentLoaded', function() {
                         showToast('success', 'Registro exitoso.');
@@ -718,6 +752,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
             }
         }
         ?>
+        <?php include __DIR__ . '/propietarios/step_propietarios_adicionales.php'; ?>
         <!-- CAMPOS OCULTOS PARA CAPTURAR ESTOS CAMPOS -->
         <input type="hidden" id="latitud" name="latitud">
         <input type="hidden" id="longitud" name="longitud">

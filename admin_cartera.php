@@ -57,7 +57,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
         <br><br>
         <div id="dashboard">
             <div class="position-relative">
-                <h2 class=position-absolute top-0 start-0 translate-middle""><i class="bi bi-buildings-fill"></i>Ad</h2>
+                <h2 class=position-absolute top-0 start-0 translate-middle""><i class="bi bi-buildings-fill"></i>Administración de Cartera</h2>
 
                 <?php include("controller/notificacioRetiroInquilino.php"); ?>
 

@@ -23,9 +23,9 @@ if (!empty($filtroAnioProp)) {
     $typesProp .= "i";
 }
 
-$sqlCarteraProp = "SELECT c.*, p.direccion, p.tipoInmueble 
+$sqlCarteraProp = "SELECT c.*, csp.direccion, csp.ciudad AS tipoInmueble 
                    FROM cartera_propietario c 
-                   LEFT JOIN proprieter p ON c.codigo_inmueble = p.codigo 
+                   LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato 
                    WHERE $whereProp 
                    ORDER BY c.codigo_inmueble, c.es_giro ASC, c.id ASC";
 $stmtCarteraProp = $conn->prepare($sqlCarteraProp);

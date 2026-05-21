@@ -13,7 +13,7 @@ if (empty($nit)) {
     exit;
 }
 
-$sql = "SELECT codigo, direccion, tipoInmueble, valor_canon FROM proprieter WHERE doc_propietario = ? ORDER BY codigo";
+$sql = "SELECT no_contrato AS codigo, direccion, ciudad AS tipoInmueble, vr_canon AS valor_canon FROM contratos_somos_propiedad WHERE cedula_propietario = ? ORDER BY no_contrato";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $nit);
 $stmt->execute();
