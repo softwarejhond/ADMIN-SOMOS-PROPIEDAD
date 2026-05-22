@@ -105,9 +105,17 @@ $conceptos = [
                 <h4 class="fw-bold mb-1"><i class="bi bi-journal-text text-primary"></i> Gestión de Cartera - Propietarios</h4>
                 <p class="text-muted mb-0 small">Administre los movimientos de cartera, débitos y créditos por propietario e inmueble.</p>
             </div>
-            <button class="btn bg-indigo-dark text-white" data-bs-toggle="modal" data-bs-target="#modalNuevoMovimiento">
-                <i class="bi bi-plus-circle"></i> Nuevo Movimiento
-            </button>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="uploads/plantilla_contratos.xls" download class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-file-earmark-arrow-down"></i> Plantilla XLS
+                </a>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportarCartera">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Importar XLS
+                </button>
+                <button class="btn bg-indigo-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoMovimiento">
+                    <i class="bi bi-plus-circle"></i> Nuevo Movimiento
+                </button>
+            </div>
         </div>
     </div>
 
@@ -183,7 +191,7 @@ $conceptos = [
                                 <th>Detalle</th>
                                 <th class="text-end">Débito</th>
                                 <th class="text-end">Crédito</th>
-                                <th class="text-center">No. Inm</th>
+                                <th class="text-center">No. Contrato</th>
                                 <th>Año</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
@@ -354,7 +362,7 @@ $conceptos = [
 <div class="modal fade" id="modalEditarMovimiento" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-warning">
+            <div class="modal-header bg-magenta-dark text-white">
                 <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Editar Movimiento</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -423,7 +431,7 @@ $conceptos = [
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-warning"><i class="bi bi-save"></i> Actualizar</button>
+                    <button type="submit" class="btn btn-magenta-dark text-white"><i class="bi bi-save"></i> Actualizar</button>
                 </div>
             </form>
         </div>
@@ -675,4 +683,124 @@ $('#modalGenerarCartera').on('shown.bs.modal', function() {
         dropdownParent: $('#modalGenerarCartera')
     });
 });
+
+// Importar movimientos desde XLS
+// Delegación en document para que funcione aunque el script se ejecute antes del HTML del modal
+$(document).on('submit', '#formImportarCartera', function(e) {
+    e.preventDefault();
+
+    const inputFile = document.getElementById('inputArchivoCartera');
+    if (!inputFile || !inputFile.files.length) {
+        Swal.fire({icon: 'warning', title: 'Sin archivo', text: 'Seleccione un archivo antes de importar.'});
+        return;
+    }
+    const archivo = inputFile.files[0];
+
+    // Cerrar modal antes de mostrar el loader
+    const modalEl = document.getElementById('modalImportarCartera');
+    const modalInst = bootstrap.Modal.getInstance(modalEl);
+    if (modalInst) modalInst.hide();
+
+    Swal.fire({
+        title: 'Importando...',
+        text: 'Procesando el archivo, por favor espere.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    const fd = new FormData();
+    fd.append('archivo_cartera', archivo);
+
+    fetch('controller/cartera/importar_movimientos_cartera.php', {
+        method: 'POST',
+        body: fd
+    })
+    .then(function(r) {
+        // Leer como texto primero para detectar errores PHP que contaminen el JSON
+        return r.text();
+    })
+    .then(function(texto) {
+        let resp;
+        try {
+            resp = JSON.parse(texto);
+        } catch (err) {
+            // El servidor devolvió HTML/error en lugar de JSON
+            console.error('Respuesta no-JSON del servidor:', texto);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error del servidor',
+                html: '<pre style="text-align:left;font-size:0.75rem;max-height:200px;overflow:auto">' +
+                      texto.replace(/</g, '&lt;') + '</pre>'
+            });
+            return;
+        }
+        if (resp.success) {
+            let detalle = 'Insertados: <strong>' + resp.insertados + '</strong> &nbsp;|&nbsp; Actualizados: <strong>' + resp.actualizados + '</strong>';
+
+            if (resp.usuariosCreados > 0) {
+                detalle += '<br>Usuarios creados: <strong>' + resp.usuariosCreados + '</strong>';
+            }
+            if (resp.errores && resp.errores.length > 0) {
+                detalle += '<br><br><small class="text-warning">Advertencias:<br>' +
+                    resp.errores.map(function(e) { return '&bull; ' + e; }).join('<br>') + '</small>';
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Importación completada',
+                html: detalle,
+                confirmButtonText: 'Aceptar'
+            }).then(function() { location.reload(); });
+        } else {
+            Swal.fire({icon: 'error', title: 'Error al importar', text: resp.message});
+        }
+    })
+    .catch(function(err) {
+        console.error('Fetch error:', err);
+        Swal.fire({icon: 'error', title: 'Error de red', text: 'No se pudo conectar con el servidor.'});
+    });
+});
 </script>
+
+<!-- Modal Importar Movimientos XLS -->
+<div class="modal fade" id="modalImportarCartera" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-file-earmark-spreadsheet"></i> Importar Movimientos desde XLS</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formImportarCartera" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">
+                        El archivo debe tener <strong>encabezados en la fila 1</strong> y datos desde la fila 2,
+                        con las columnas en este orden:<br>
+                        <code>NoContrato, Direccion, Ciudad, Vr Canon, Vr Administracion, Valor Iva,
+                        Canon+Admon+IVA, Propietario, P Cedula, Arrendatario, A. Cedula, Aseguradora,
+                        NoSolicitud, Multiple (Si/No)</code>.<br>
+                        Los contratos existentes (<code>no_contrato</code>) serán <strong>actualizados</strong>.
+                    </p>
+                    <div class="mb-3">
+                        <label for="inputArchivoCartera" class="form-label fw-semibold">
+                            <i class="bi bi-upload"></i> Seleccionar archivo
+                        </label>
+                        <input type="file"
+                               id="inputArchivoCartera"
+                               name="archivo_cartera"
+                               class="form-control"
+                               accept=".xls,.xlsx,.ods"
+                               required>
+                        <div class="form-text">Formatos aceptados: .xls, .xlsx, .ods</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-cloud-upload"></i> Importar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -4,8 +4,24 @@ require_once __DIR__ . "/../conexion.php";
 $doc_propietario = $_SESSION['username'] ?? '';
 
 // Filtros del propietario
-$filtroMesProp = $_GET['mes_cartera'] ?? '';
-$filtroAnioProp = $_GET['anio_cartera'] ?? date('Y');
+$filtroMesProp      = $_GET['mes_cartera']      ?? '';
+$filtroAnioProp     = $_GET['anio_cartera']     ?? date('Y');
+$filtroInmuebleProp = $_GET['inmueble_cartera'] ?? '';
+
+// Consulta de propiedades disponibles para este propietario (para el selector de filtro)
+$sqlInmuebles = "SELECT DISTINCT c.codigo_inmueble, csp.direccion
+                 FROM cartera_propietario c
+                 LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato
+                 WHERE c.nit_propietario = ?
+                 ORDER BY c.codigo_inmueble ASC";
+$stmtInmuebles = $conn->prepare($sqlInmuebles);
+$stmtInmuebles->bind_param("s", $doc_propietario);
+$stmtInmuebles->execute();
+$resInmuebles = $stmtInmuebles->get_result();
+$inmueblesList = [];
+while ($row = $resInmuebles->fetch_assoc()) {
+    $inmueblesList[] = $row;
+}
 
 // Obtener movimientos del propietario
 $whereProp = "c.nit_propietario = ?";
@@ -21,6 +37,11 @@ if (!empty($filtroAnioProp)) {
     $whereProp .= " AND c.anio = ?";
     $paramsProp[] = $filtroAnioProp;
     $typesProp .= "i";
+}
+if (!empty($filtroInmuebleProp)) {
+    $whereProp .= " AND c.codigo_inmueble = ?";
+    $paramsProp[] = $filtroInmuebleProp;
+    $typesProp .= "s";
 }
 
 $sqlCarteraProp = "SELECT c.*, csp.direccion, csp.ciudad AS tipoInmueble 
@@ -77,6 +98,18 @@ $mesesProp = [
                     <!-- Filtros inline -->
                     <form method="GET" class="d-flex gap-2 align-items-end flex-wrap">
                         <div>
+                            <select name="inmueble_cartera" class="form-select form-select-sm" style="min-width: 160px;">
+                                <option value="">Todas las propiedades</option>
+                                <?php foreach ($inmueblesList as $inm): ?>
+                                <option value="<?= htmlspecialchars($inm['codigo_inmueble']) ?>"
+                                    <?= $filtroInmuebleProp == $inm['codigo_inmueble'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($inm['codigo_inmueble']) ?>
+                                    <?= !empty($inm['direccion']) ? ' - ' . htmlspecialchars($inm['direccion']) : '' ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
                             <select name="mes_cartera" class="form-select form-select-sm" style="min-width: 140px;">
                                 <option value="">Todos los meses</option>
                                 <?php foreach ($mesesProp as $numMes => $nombreMes): ?>
@@ -94,7 +127,20 @@ $mesesProp = [
                         <button type="submit" class="btn btn-sm btn-dark">
                             <i class="bi bi-funnel"></i> Filtrar
                         </button>
+                        <button type="button" class="btn btn-sm btn-danger" id="btnExportarPdfCartera">
+                            <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+                        </button>
                     </form>
+
+                    <!-- JSON con datos de inmuebles para el modal (escapa correctamente) -->
+                    <script>
+                    var carterapdfInmuebles = <?= json_encode(array_map(function($i) {
+                        return [
+                            'codigo'    => $i['codigo_inmueble'],
+                            'direccion' => $i['direccion'] ?? ''
+                        ];
+                    }, $inmueblesList)) ?>;
+                    </script>
                 </div>
             </div>
             <div class="card-body vstack w-100 p-0">
@@ -219,3 +265,131 @@ $mesesProp = [
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    // Meses para el modal PDF
+    var mesesPdf = {
+        '01':'Enero','02':'Febrero','03':'Marzo','04':'Abril',
+        '05':'Mayo','06':'Junio','07':'Julio','08':'Agosto',
+        '09':'Septiembre','10':'Octubre','11':'Noviembre','12':'Diciembre'
+    };
+
+    document.getElementById('btnExportarPdfCartera').addEventListener('click', function () {
+        // Construir opciones de inmuebles
+        var inmueblesOpts = '<option value="todos">Todas las propiedades</option>';
+        if (typeof carterapdfInmuebles !== 'undefined') {
+            carterapdfInmuebles.forEach(function(inm) {
+                var label = inm.codigo + (inm.direccion ? ' - ' + inm.direccion : '');
+                inmueblesOpts += '<option value="' + inm.codigo + '">' + label + '</option>';
+            });
+        }
+
+        // Construir opciones de meses
+        var mesesOpts = '<option value="">Todos los meses</option>';
+        Object.entries(mesesPdf).forEach(function([num, nom]) {
+            mesesOpts += '<option value="' + num + '">' + nom + '</option>';
+        });
+
+        // Construir opciones de años
+        var anioActual = new Date().getFullYear();
+        var aniosOpts = '<option value="">Todos los años</option>';
+        for (var a = anioActual; a >= 2020; a--) {
+            aniosOpts += '<option value="' + a + '">' + a + '</option>';
+        }
+
+        Swal.fire({
+            title: '<i class="bi bi-file-earmark-pdf text-danger"></i> Exportar Cartera PDF',
+            html: `
+                <div class="text-start px-2">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Propiedad</label>
+                        <select id="swal-pdf-inmueble" class="form-select form-select-sm">
+                            ${inmueblesOpts}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Mes</label>
+                        <select id="swal-pdf-mes" class="form-select form-select-sm">
+                            ${mesesOpts}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Año</label>
+                        <select id="swal-pdf-anio" class="form-select form-select-sm">
+                            ${aniosOpts}
+                        </select>
+                    </div>
+                </div>`,
+            showCancelButton: true,
+            confirmButtonText: '<i class="bi bi-download"></i> Descargar PDF',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            width: 420,
+            didOpen: function () {
+                // Aplicar estilos Bootstrap al popup de Swal
+                document.querySelectorAll('.swal2-popup .form-select').forEach(function(el) {
+                    el.style.fontSize = '0.85rem';
+                });
+            },
+            preConfirm: function () {
+                return {
+                    inmueble: document.getElementById('swal-pdf-inmueble').value,
+                    mes:      document.getElementById('swal-pdf-mes').value,
+                    anio:     document.getElementById('swal-pdf-anio').value
+                };
+            }
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                var v = result.value;
+                var url = 'controller/propietarios/pdf_cartera_propietario.php?';
+                if (v.inmueble && v.inmueble !== 'todos') url += 'cod_inmueble=' + encodeURIComponent(v.inmueble) + '&';
+                if (v.mes)   url += 'mes='  + encodeURIComponent(v.mes)  + '&';
+                if (v.anio)  url += 'anio=' + encodeURIComponent(v.anio) + '&';
+
+                Swal.fire({
+                    title: 'Generando PDF...',
+                    text: 'Por favor espere.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: function () { Swal.showLoading(); }
+                });
+
+                fetch(url)
+                    .then(function (res) {
+                        var ct = res.headers.get('content-type') || '';
+                        if (ct.indexOf('application/json') !== -1) {
+                            return res.json().then(function (json) {
+                                throw new Error(json.message || 'Sin movimientos de cartera para los filtros seleccionados.');
+                            });
+                        }
+                        if (!res.ok) throw new Error('Error al generar el PDF');
+                        return res.blob();
+                    })
+                    .then(function (blob) {
+                        var blobUrl = URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = 'cartera_' + new Date().toISOString().slice(0, 10) + '.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(blobUrl);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'PDF listo',
+                            text: 'La descarga ha comenzado.',
+                            timer: 2200,
+                            showConfirmButton: false
+                        });
+                    })
+                    .catch(function (err) {
+                        Swal.fire('Error', err.message || 'No se pudo generar el PDF.', 'error');
+                    });
+            }
+        });
+    });
+})();
+</script>
