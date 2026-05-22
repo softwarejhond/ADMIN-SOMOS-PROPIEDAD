@@ -130,7 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 <hr class="my-2">
                 <div class="mb-2">
                     <label class="form-label small fw-semibold">Nueva contrase&ntilde;a *</label>
-                    <input type="password" id="swal-password" class="form-control form-control-sm" placeholder="M&iacute;nimo 8 caracteres" autocomplete="new-password">
+                    <div class="input-group input-group-sm">
+                        <input type="password" id="swal-password" class="form-control form-control-sm" placeholder="M&iacute;nimo 8 caracteres" autocomplete="new-password">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="toggle-pwd" tabindex="-1" title="Ver contrase&ntilde;a"><i class="bi bi-eye" id="icon-pwd"></i></button>
+                    </div>
                     <div class="progress mt-1" style="height:5px;">
                         <div id="swal-pwd-bar" class="progress-bar" style="width:0%;transition:width 0.3s;"></div>
                     </div>
@@ -144,7 +147,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
                 <div class="mb-1">
                     <label class="form-label small fw-semibold">Confirmar contrase&ntilde;a *</label>
-                    <input type="password" id="swal-password2" class="form-control form-control-sm" placeholder="Repite la contrase&ntilde;a" autocomplete="new-password">
+                    <div class="input-group input-group-sm">
+                        <input type="password" id="swal-password2" class="form-control form-control-sm" placeholder="Repite la contrase&ntilde;a" autocomplete="new-password">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="toggle-pwd2" tabindex="-1" title="Ver contrase&ntilde;a"><i class="bi bi-eye" id="icon-pwd2"></i></button>
+                    </div>
                     <div id="swal-pwd-match" style="font-size:0.72rem;margin-top:2px;"></div>
                 </div>
             </div>`,
@@ -204,6 +210,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 var m = pwd.value === pwd2.value;
                 matchEl.textContent = m ? 'Las contraseñas coinciden' : 'Las contraseñas no coinciden';
                 matchEl.style.color = m ? '#1a6e1a' : '#dc3545';
+            });
+
+            document.getElementById('toggle-pwd').addEventListener('click', function () {
+                var isText = pwd.type === 'text';
+                pwd.type = isText ? 'password' : 'text';
+                document.getElementById('icon-pwd').className = isText ? 'bi bi-eye' : 'bi bi-eye-slash';
+            });
+
+            document.getElementById('toggle-pwd2').addEventListener('click', function () {
+                var isText = pwd2.type === 'text';
+                pwd2.type = isText ? 'password' : 'text';
+                document.getElementById('icon-pwd2').className = isText ? 'bi bi-eye' : 'bi bi-eye-slash';
             });
         },
         preConfirm: function () {
