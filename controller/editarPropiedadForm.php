@@ -461,7 +461,7 @@ if ($conn->query($queryUpdate) === TRUE) {
                 echo "<div class='form-group'>";
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
                 // Lista de opciones para vista
-                $opcionesVista = ['venta', 'ventanal', 'balcon', 'apartamento interno', 'sotano', 'finca', 'lote', 'puerta garage', 'puerta enrollable'];
+                $opcionesVista = ['primer piso', 'ventanal', 'balcon', 'apartamento interno', 'sotano', 'finca', 'lote', 'puerta garage', 'puerta enrollable'];
                 foreach ($opcionesVista as $value) {
                     $checked = ($value == $valor) ? 'checked' : '';
                     echo "<div class='form-check-inline'>";

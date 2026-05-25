@@ -30,12 +30,32 @@ $codigoPropiedad = isset($_GET['codigo']) ? $_GET['codigo'] : 0;
 
 // Verificar que el código de la propiedad es válido
 if ($codigoPropiedad) {
-  // Recuperar las fotos de la propiedad
-  $query = "SELECT * FROM fotos WHERE codigoPropiedad = '$codigoPropiedad'";
+  // Recuperar las fotos de la propiedad ordenadas
+  $query = "SELECT * FROM fotos WHERE codigoPropiedad = '$codigoPropiedad' ORDER BY orden ASC, id ASC";
   $result = mysqli_query($conn, $query);
   $fotos = mysqli_fetch_all($result, MYSQLI_ASSOC);
 } else {
   echo "Propiedad no encontrada.";
+  exit;
+}
+
+// Guardar orden de fotos (AJAX)
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['formType']) && $_POST['formType'] === 'ordenarFotos') {
+  header('Content-Type: application/json');
+  $ids = json_decode($_POST['ids'] ?? '[]', true);
+  if (!is_array($ids) || empty($ids)) {
+    echo json_encode(['success' => false, 'message' => 'Sin datos']);
+    exit;
+  }
+  $ok = true;
+  foreach ($ids as $orden => $id) {
+    $id    = intval($id);
+    $orden = intval($orden) + 1;
+    if (!mysqli_query($conn, "UPDATE fotos SET orden=$orden WHERE id=$id")) {
+      $ok = false;
+    }
+  }
+  echo json_encode(['success' => $ok]);
   exit;
 }
 
@@ -136,62 +156,101 @@ if (isset($_GET['eliminar']) && isset($_GET['id_foto'])) {
   <style>
     .drag-area {
       width: 100%;
-      height: 250px;
+      height: 220px;
       border: 3px dashed #ccc;
+      border-radius: 12px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
-      background-color: #f9f9f9;
-      margin-bottom: 20px;
+      background-color: #fafafa;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
     }
-
-    .drag-area p {
-      font-size: 18px;
-      color: #333;
-      text-align: center;
+    .drag-area:hover, .drag-area.drag-over {
+      border-color: #ec008c;
+      background-color: #fff0f8;
     }
+    .drag-area i { font-size: 3rem; color: #ccc; }
+    .drag-area.drag-over i { color: #ec008c; }
+    .drag-area p { margin: 8px 0 0; color: #888; font-size: 15px; }
 
-    .drag-area.drag-over {
-      border-color: #3b82f6;
-      background-color: #e0f3ff;
+    .preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
     }
-
-    .panel-previsualizacion {
-      margin-top: 20px;
-      border: 1px solid #ddd;
-      padding: 15px;
-      background-color: #f5f5f5;
-    }
-
-    .panel-previsualizacion h3 {
-      margin-bottom: 15px;
-    }
-
-    .panel-previsualizacion .image-preview {
-      display: inline-block;
+    .preview-thumb {
       position: relative;
-      margin-right: 15px;
-    }
-
-    .panel-previsualizacion .image-preview img {
       width: 100px;
       height: 100px;
-      object-fit: cover;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #ddd;
     }
+    .preview-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .preview-thumb .remove-preview {
+      position: absolute; top: 3px; right: 3px;
+      background: rgba(220,53,69,0.85);
+      color: white; border: none; border-radius: 50%;
+      width: 20px; height: 20px; font-size: 12px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .preview-thumb { cursor: grab; }
+    .preview-thumb:active { cursor: grabbing; }
+    .preview-ghost { opacity: .4; }
 
-    .panel-previsualizacion .image-preview .remove-preview {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background-color: red;
-      color: white;
-      border-radius: 50%;
-      padding: 2px 5px;
-      font-size: 12px;
-      cursor: pointer;
+    /* Galería sortable */
+    .sortable-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .sortable-item {
+      position: relative;
+      width: 140px;
+      cursor: grab;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #dee2e6;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+      transition: box-shadow .2s;
+    }
+    .sortable-item:active { cursor: grabbing; }
+    .sortable-item.sortable-ghost { opacity: .4; }
+    .sortable-item img {
+      width: 100%; height: 110px; object-fit: cover; display: block;
+    }
+    .sortable-item .foto-footer {
+      padding: 4px 6px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #f8f9fa;
+    }
+    .sortable-item .drag-handle {
+      color: #aaa; cursor: grab; font-size: 16px;
+    }
+    .sortable-item .orden-badge {
+      font-size: 11px; font-weight: 700;
+      background: #ec008c; color: #fff;
+      border-radius: 10px; padding: 1px 7px;
+    }
+    .sortable-item .btn-del {
+      background: none; border: none; color: #dc3545;
+      cursor: pointer; font-size: 15px; padding: 0;
+    }
+    .foto-principal-badge {
+      position: absolute; top: 6px; left: 6px;
+      background: #ec008c; color: #fff;
+      font-size: 10px; font-weight: 700;
+      border-radius: 8px; padding: 2px 6px;
+    }
+    .upload-card, .gallery-card {
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
     }
   </style>
 </head>
@@ -217,47 +276,91 @@ if (isset($_GET['eliminar']) && isset($_GET['id_foto'])) {
         </div>
         <h6 class="text-aling-rigth"></h6>
                 <hr>
-        <div class="container">
-          <!-- Formulario de subida de fotos -->
-          <form method="POST" enctype="multipart/form-data">
-            <div class="drag-area" id="drag-area">
-              <p>Arrastra y suelta las fotos aquí, o haz clic para seleccionar imágenes.</p>
-              <input type="file" class="form-control" id="fotos" name="fotos[]" multiple accept="image/*" style="display:none;">
+        <div class="container-fluid px-4">
+
+          <div class="row g-4">
+
+            <!-- ── COLUMNA IZQUIERDA: subir fotos ── -->
+            <div class="col-lg-4">
+              <div class="card upload-card p-3 h-100">
+                <h5 class="mb-3"><i class="bi bi-cloud-upload-fill text-magenta-dark"></i> Subir nuevas fotos</h5>
+                <form method="POST" enctype="multipart/form-data" id="upload-form">
+                  <input type="hidden" name="formType" value="subirFotos">
+
+                  <div class="drag-area mb-3" id="drag-area">
+                    <i class="bi bi-images"></i>
+                    <p>Arrastra imágenes aquí</p>
+                    <small class="text-muted">o haz clic para seleccionar</small>
+                    <input type="file" id="fotos" name="fotos[]" multiple accept="image/*" style="display:none;">
+                  </div>
+
+                  <!-- Previsualización -->
+                  <div id="preview-container" style="display:none;">
+                    <p class="fw-bold mb-1">Seleccionadas:</p>
+                    <div class="preview-grid" id="preview-grid"></div>
+                    <hr>
+                  </div>
+
+                  <button type="submit" class="btn bg-magenta-dark text-white w-100 mt-2">
+                    <i class="bi bi-cloud-upload-fill"></i> Subir Fotos
+                  </button>
+                </form>
+
+                <?php if (isset($reporte)) echo "<div class='mt-3'>$reporte</div>"; ?>
+              </div>
             </div>
 
-            <!-- Panel de previsualización -->
-            <div class="panel-previsualizacion" id="panel-previsualizacion" style="display:none;">
-              <h3>Fotos seleccionadas:</h3>
-              <div id="image-preview-panel"></div>
+            <!-- ── COLUMNA DERECHA: galería + reordenar ── -->
+            <div class="col-lg-8">
+              <div class="card gallery-card p-3">
+                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                  <h5 class="mb-0"><i class="bi bi-grid-3x3-gap-fill text-indigo-dark"></i>
+                    Fotos de la propiedad
+                    <span class="badge bg-secondary ms-1"><?php echo count($fotos); ?></span>
+                  </h5>
+                  <button class="btn btn-sm bg-indigo-dark text-white" id="btn-guardar-orden" style="display:none;"
+                    onclick="guardarOrden()">
+                    <i class="bi bi-floppy-fill"></i> Guardar orden
+                  </button>
+                </div>
+
+                <p class="text-muted small mb-3">
+                  <i class="bi bi-info-circle"></i>
+                  Arrastra las fotos para cambiar el orden en que aparecerán. La primera foto será la principal.
+                </p>
+
+                <?php if ($fotos): ?>
+                  <div class="sortable-grid" id="sortable-gallery">
+                    <?php foreach ($fotos as $i => $foto): ?>
+                      <div class="sortable-item" data-id="<?php echo $foto['id']; ?>">
+                        <?php if ($i === 0): ?>
+                          <span class="foto-principal-badge"><i class="bi bi-star-fill"></i> Principal</span>
+                        <?php endif; ?>
+                        <img src="fotos/<?php echo $codigoPropiedad; ?>/<?php echo $foto['nombre_foto']; ?>"
+                             alt="Foto <?php echo $i + 1; ?>"
+                             onerror="this.src='img/no-image.png'">
+                        <div class="foto-footer">
+                          <span class="drag-handle"><i class="bi bi-grip-vertical"></i></span>
+                          <span class="orden-badge">#<span class="num"><?php echo $i + 1; ?></span></span>
+                          <button class="btn-del" onclick="confirmarEliminar(<?php echo $foto['id']; ?>)"
+                                  title="Eliminar">
+                            <i class="bi bi-trash3-fill"></i>
+                          </button>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php else: ?>
+                  <div class="text-center py-5 text-muted">
+                    <i class="bi bi-images" style="font-size:3rem;"></i>
+                    <p class="mt-2">No hay fotos para esta propiedad.</p>
+                  </div>
+                <?php endif; ?>
+              </div>
             </div>
 
-            <button type="submit" class="btn bg-magenta-dark text-white"><i class="bi bi-cloud-upload-fill"></i> Subir Fotos</button>
-          </form>
-
-          <!-- Mostrar reporte de carga -->
-          <?php if (isset($reporte)) echo $reporte; ?>
-
-          <!-- Mostrar fotos subidas -->
-          <div class="mt-4">
-            <h3>Fotos Subidas</h3>
-            <div id="image-preview">
-              <?php
-              if ($fotos) {
-                foreach ($fotos as $foto) {
-                  echo '<div class="card" style="width: 18rem; display: inline-block; margin: 10px;">
-                                <img src="fotos/' . $codigoPropiedad . '/' . $foto['nombre_foto'] . '" class="card-img-top" alt="Imagen">
-                                <div class="card-body">
-                                    <button class="btn btn-danger btn-sm" onclick="eliminarImagen(' . $foto['id'] . ')">Eliminar</button>
-                                </div>
-                              </div>';
-                }
-              } else {
-                echo "<p>No hay fotos para esta propiedad.</p>";
-              }
-              ?>
-            </div>
-          </div>
-        </div>
+          </div><!-- /row -->
+        </div><!-- /container -->
       </div>
     </div>
   </div>
@@ -271,60 +374,105 @@ if (isset($_GET['eliminar']) && isset($_GET['id_foto'])) {
     $('#link-dashboard').addClass('pagina-activa');
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
-
   <script>
-    // Función para mostrar las imágenes previas
-    const dragArea = document.getElementById("drag-area");
-    const fileInput = document.getElementById("fotos");
-    const previewZone = document.getElementById("preview-images-zone");
-    const panelPrevisualizacion = document.getElementById("panel-previsualizacion");
-    const previewPanel = document.getElementById("image-preview-panel");
+    // ── Drag & drop zona de subida ──────────────────────────────
+    const dragArea   = document.getElementById('drag-area');
+    const fileInput  = document.getElementById('fotos');
+    const previewContainer = document.getElementById('preview-container');
+    const previewGrid      = document.getElementById('preview-grid');
 
-    dragArea.addEventListener("click", () => fileInput.click());
-    fileInput.addEventListener("change", handleFileSelect);
-    dragArea.addEventListener("dragover", (e) => e.preventDefault());
-    dragArea.addEventListener("drop", handleFileDrop);
-
-    function handleFileDrop(e) {
+    dragArea.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    dragArea.addEventListener('dragover', e => { e.preventDefault(); dragArea.classList.add('drag-over'); });
+    dragArea.addEventListener('dragleave', () => dragArea.classList.remove('drag-over'));
+    dragArea.addEventListener('drop', e => {
       e.preventDefault();
-      const files = e.dataTransfer.files;
-      handleFiles(files);
-    }
+      dragArea.classList.remove('drag-over');
+      fileInput.files = e.dataTransfer.files;
+      handleFiles(e.dataTransfer.files);
+    });
 
-    function handleFileSelect(e) {
-      const files = e.target.files;
-      handleFiles(files);
-    }
+    let previewSortable = null;
 
     function handleFiles(files) {
-      previewPanel.innerHTML = "";
-      panelPrevisualizacion.style.display = "block";
-
-      Array.from(files).forEach((file, index) => {
+      previewGrid.innerHTML = '';
+      previewContainer.style.display = files.length ? 'block' : 'none';
+      Array.from(files).forEach((file, i) => {
         const reader = new FileReader();
-        reader.onload = function(event) {
-          const imgElement = document.createElement("img");
-          imgElement.src = event.target.result;
-          imgElement.classList.add("img-preview");
-          const previewDiv = document.createElement("div");
-          previewDiv.classList.add("image-preview");
-          previewDiv.innerHTML = `<span class="remove-preview" onclick="removePreview(${index})">&times;</span>`;
-          previewDiv.appendChild(imgElement);
-          previewPanel.appendChild(previewDiv);
+        reader.onload = ev => {
+          const div = document.createElement('div');
+          div.className = 'preview-thumb';
+          div.dataset.name = file.name;
+          div.innerHTML = `<img src="${ev.target.result}" alt="">
+            <button class="remove-preview" onclick="this.parentElement.remove()" title="Quitar">&times;</button>`;
+          previewGrid.appendChild(div);
         };
         reader.readAsDataURL(file);
       });
+      // Activar Sortable en el preview-grid
+      if (!previewSortable) {
+        previewSortable = Sortable.create(previewGrid, {
+          animation: 150,
+          ghostClass: 'preview-ghost'
+        });
+      }
     }
 
-    function removePreview(index) {
-      previewPanel.removeChild(previewPanel.childNodes[index]);
+    // ── SortableJS en galería existente ────────────────────────
+    const gallery = document.getElementById('sortable-gallery');
+    const btnGuardar = document.getElementById('btn-guardar-orden');
+
+    if (gallery) {
+      Sortable.create(gallery, {
+        animation: 200,
+        ghostClass: 'sortable-ghost',
+        onEnd: () => {
+          // Actualizar badges de número y badge "Principal"
+          gallery.querySelectorAll('.sortable-item').forEach((el, i) => {
+            el.querySelector('.num').textContent = i + 1;
+            const badge = el.querySelector('.foto-principal-badge');
+            if (i === 0) {
+              if (!badge) {
+                el.insertAdjacentHTML('afterbegin',
+                  '<span class="foto-principal-badge"><i class="bi bi-star-fill"></i> Principal</span>');
+              }
+            } else {
+              if (badge) badge.remove();
+            }
+          });
+          btnGuardar.style.display = 'inline-block';
+        }
+      });
     }
 
-    function eliminarImagen(idFoto) {
-      if (confirm('¿Estás seguro de que deseas eliminar esta foto?')) {
-        window.location.href = "?eliminar=true&id_foto=" + idFoto + "&codigo=" + <?php echo $codigoPropiedad; ?>;
+    // ── Guardar nuevo orden vía AJAX ────────────────────────────
+    function guardarOrden() {
+      const ids = Array.from(gallery.querySelectorAll('.sortable-item')).map(el => el.dataset.id);
+      fetch('', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'formType=ordenarFotos&ids=' + JSON.stringify(ids)
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          btnGuardar.style.display = 'none';
+          btnGuardar.insertAdjacentHTML('afterend',
+            '<span class="text-success ms-2 small"><i class="bi bi-check-circle-fill"></i> Orden guardado</span>');
+          setTimeout(() => document.querySelector('.text-success.ms-2')?.remove(), 3000);
+        } else {
+          alert('Error al guardar el orden: ' + (data.message || ''));
+        }
+      });
+    }
+
+    // ── Eliminar foto ───────────────────────────────────────────
+    function confirmarEliminar(idFoto) {
+      if (confirm('¿Eliminar esta foto?')) {
+        window.location.href = '?eliminar=true&id_foto=' + idFoto + '&codigo=<?php echo $codigoPropiedad; ?>';
       }
     }
   </script>

@@ -212,8 +212,9 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
 
-    <form id="multi-step-form was-validated"  method="POST" enctype="multipart/form-data">
-
+    <form id="multi-step-form" class="was-validated" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="formType" value="nuevaPropiedad">
+        
         <?php
         // Dividir los campos por pasos
         $totalFields = count($includeFields);
@@ -459,7 +460,7 @@ $fieldsPerStep = 10; // Número de campos por paso (5 por cada columna)
                 echo "<label  class='form-label text-magenta-dark'>" . ucfirst(str_replace('_', ' ', $fieldName)) . "</label>";
 
                 // Lista de opciones para vista
-                $opcionesVista = ['venta', 'ventanal', 'balcon', 'apartamento interno', 'sotano', 'finca', 'lote', 'puerta garage', 'puerta enrollable','duplex'];
+                $opcionesVista = ['primer piso', 'ventanal', 'balcon', 'apartamento interno', 'sotano', 'finca', 'lote', 'puerta garage', 'puerta enrollable','duplex'];
 
                 foreach ($opcionesVista as $value) {
                     echo "<div class='form-check-inline'>";

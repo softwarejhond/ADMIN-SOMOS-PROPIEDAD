@@ -276,6 +276,15 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
                 return response.json();
             })
             .then(data => {
+                // Si el servidor devuelve un objeto en lugar de array (ej: sin resultados)
+                if (!Array.isArray(data)) {
+                    renderResults([]);
+                    totalPages = 0;
+                    generatePaginationButtons();
+                    updatePaginationInfo();
+                    return;
+                }
+
                 // Obtener la cantidad real de resultados después de aplicar los filtros
                 const numResults = data.length;
 
@@ -447,7 +456,6 @@ ${item.fotos.map((foto, index) => {
 
         });
 
-        resultsContainer.appendChild(cardContainer);
         resultsContainer.appendChild(cardContainer);
         // Asignar evento click al botón "Ver más" de cada elemento
         const viewDetailsBtns = document.querySelectorAll('.view-details-btn');

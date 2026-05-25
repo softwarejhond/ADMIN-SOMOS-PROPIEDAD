@@ -189,6 +189,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_POST['formType'])) {
         switch ($_POST['formType']) {
+            case 'nuevaPropiedad':
+                // El formulario de nueva propiedad se procesa en su propio controlador
+                break;
+
+            case 'subirFotos':
+            case 'ordenarFotos':
+                // Procesados directamente en propiedad_fotos.php
+                break;
+
             case 'smtpConfig':
                 $resultado = actualizarSmtpConfig($conn, $_POST, $_FILES);
                 echo json_encode($resultado);

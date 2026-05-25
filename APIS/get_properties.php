@@ -60,6 +60,6 @@ if ($result->num_rows > 0) {
     }
     echo json_encode($response);
 } else {
-    echo json_encode(array('message' => 'No se encontraron resultados.'));
+    echo json_encode([]);
 }
 ?>
