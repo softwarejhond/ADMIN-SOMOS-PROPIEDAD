@@ -431,7 +431,7 @@ $conceptos = [
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-magenta-dark text-white"><i class="bi bi-save"></i> Actualizar</button>
+                    <button type="submit" class="btn bg-magenta-dark text-white"><i class="bi bi-save"></i> Actualizar</button>
                 </div>
             </form>
         </div>

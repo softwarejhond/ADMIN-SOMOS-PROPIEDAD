@@ -284,8 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    break;
             }
         } else {
-            echo json_encode(['error' => 'El tipo de formulario no está definido.']);
-             exit;
+            // Sin formType ni action: es un envío normal de formulario, dejar continuar
         }
     }
 }

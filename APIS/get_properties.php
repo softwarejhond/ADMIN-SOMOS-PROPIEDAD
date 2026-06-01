@@ -19,7 +19,7 @@ $offset = ($page - 1) * $limit;
 
 // Construir la consulta SQL base con paginación
 $sql = "SELECT proprieter.*, 
-        GROUP_CONCAT(fotos.nombre_foto) AS fotos
+        GROUP_CONCAT(fotos.nombre_foto ORDER BY fotos.orden ASC, fotos.id ASC) AS fotos
         FROM proprieter 
         LEFT JOIN municipios ON proprieter.Municipio = municipios.id_municipio
         LEFT JOIN fotos ON fotos.codigoPropiedad = proprieter.codigo 

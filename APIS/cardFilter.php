@@ -140,7 +140,6 @@ $canonFormateado = number_format($row['valor_canon'], 0, ',', '.');
 <br>
 
 <br>
-</div>
 
 <!-- Modal -->
 <!-- Modal -->

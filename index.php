@@ -67,8 +67,13 @@ $rol = $infoUsuario['rol'];
                     <div class="col-6">
                         <?php include("carousel.php"); ?>
                     </div>
-                    <div class="col-6">
-                        <?php include 'APIS/cardFilter.php'; ?>
+                    <div class="row">
+                        <div class="col-6">
+                            <?php include 'APIS/cardFilter.php'; ?>
+                        </div>
+                        <div class="col-6">
+                            <?//php include 'APIS/mapa.php'; ?>
+                        </div>
                     </div>
                 </div>
             </div>
