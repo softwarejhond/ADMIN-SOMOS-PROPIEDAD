@@ -1,8 +1,8 @@
 <?php
 //datos del servidor
-$server = "localhost";
+$server = "db";
 $username = "root";
-$password = "";
+$password = "root";
 $bd = "somos_propiedad";
 //creamos una conexión
 $conn = mysqli_connect($server, $username, $password, $bd);

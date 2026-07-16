@@ -80,6 +80,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             // Redirigir según el rol del usuario
                             if ($rol == 5) { // Nuevo rol para panel de propiedades únicamente
                                 header("location: panel_arrendatario.php");
+                            } elseif ($rol == 6) { // Propietario: solo panel_propietario.php
+                                header("location: panel_propietario.php");
                             } else {
                                 header("location: index.php");
                             }

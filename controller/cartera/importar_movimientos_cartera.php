@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -136,7 +136,7 @@ try {
         $aseguradora        = trim((string) $hoja->getCell("L{$fila}")->getValue());
         $noSolicitud        = trim((string) $hoja->getCell("M{$fila}")->getValue());
         $multipleRaw        = strtolower(trim((string) $hoja->getCell("N{$fila}")->getValue()));
-        $multiple           = ($multipleRaw === 'si' || $multipleRaw === 'si') ? 'Si' : 'No';
+        $multiple           = ($multipleRaw === 'si' || $multipleRaw === 'sí') ? 'Si' : 'No';
 
         $stmt->bind_param(
             'issddddsssssss',

@@ -58,6 +58,20 @@
                         </span>
                     </label>
                 </div>
+
+                <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Gestionar cartera">
+                    <a href="usuarios.php">
+                        <label class="checkbox-wrapper">
+                            <span class="checkbox-tile">
+                                <span class="checkbox-icon">
+                                    <i class="bi bi-people icono"></i>
+                                </span>
+                                <span class="checkbox-label">Usuarios</span>
+                            </span>
+                        </label>
+                    </a>
+                </div>
+
                 <div class="checkbox" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Gestionar cartera">
                     <a href="admin_cartera.php">
                         <label class="checkbox-wrapper">
@@ -155,5 +169,4 @@
             </fieldset>
         </div>
     </div>
-    <?php include("footer.php"); ?>
 </div>

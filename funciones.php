@@ -692,10 +692,7 @@ function obtenerPropiedadPorId($id) {
     $stmt->bind_param("i", $imagenId);
     return $stmt->execute();
   }
- 
-?>
 
-<?php
 // Función para verificar acceso hermético por rol
 function verificarAccesoHermetico() {
     if (session_status() == PHP_SESSION_NONE) {

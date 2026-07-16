@@ -39,8 +39,8 @@
                             IPC
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#actualizarIPC">IPC</a></li>
-                            <li><a class="dropdown-item" href="#" data-toggle="modal" data-target="#actualizarIPCLocales">IPC LOCALES</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#actualizarIPC">IPC</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#actualizarIPCLocales">IPC LOCALES</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -76,8 +76,9 @@
     </div>
 </nav>
 <script>
-    // Inicializa todos los tooltips en la página
-    $(function() {
-        $('[data-bs-toggle="tooltip"]').tooltip();
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+            new bootstrap.Tooltip(el);
+        });
     });
 </script>

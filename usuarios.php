@@ -36,6 +36,9 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     <link rel="stylesheet" href="css/estilo.css?v=0.0.1">
     <link rel="stylesheet" href="css/slidebar.css?v=0.0.2">
     <link rel="stylesheet" href="css/contadores.css?v=0.7">
@@ -67,7 +70,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
                     <div class="col-lg-12 col-md-12 col-sm-12 px-2 mt- bg-transparent">
                         <div class="container-fluid">
                             <!-- Gestión de Cartera -->
-                            <?php include("controller/cartera/gestion_cartera.php"); ?>
+                            <?php include("controller/editUsers/tableUsers.php"); ?>
                         </div>
                     </div>
                 </div>
@@ -85,7 +88,7 @@ $usaurio = htmlspecialchars($_SESSION["username"]);
 <script src="js/real-time-inquilino-proximo-retiro.js?v=0.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const toastPas = document.getElementById('toastPas');
