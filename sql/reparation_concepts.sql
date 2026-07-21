@@ -1,0 +1,9 @@
+CREATE TABLE reparation_concepts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(10) NOT NULL UNIQUE,
+    code_concept VARCHAR(255) NOT NULL,
+    created_by VARCHAR(100) NOT NULL,
+    creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by VARCHAR(100) DEFAULT NULL,
+    update_date DATETIME DEFAULT NULL
+);

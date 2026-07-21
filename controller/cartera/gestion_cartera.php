@@ -89,6 +89,16 @@ $conceptos = [
     'RETEFUENTE COMISION',
     'Giro Renta'
 ];
+
+// Conceptos de reparacion desde BD
+$conceptosReparacion = [];
+$sqlRep = "SELECT code, code_concept FROM reparation_concepts ORDER BY code ASC";
+$resRep = $conn->query($sqlRep);
+if ($resRep) {
+    while ($row = $resRep->fetch_assoc()) {
+        $conceptosReparacion[] = $row;
+    }
+}
 ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -115,9 +125,12 @@ $conceptos = [
                 <button class="btn bg-indigo-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoMovimiento">
                     <i class="bi bi-plus-circle"></i> Nuevo Movimiento
                 </button>
-            </div>
+                <button class="btn bg-teal-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalConceptosReparacion">
+                    <i class="bi bi-tools"></i> Códigos Reparación
+                </button>
         </div>
     </div>
+</div>
 
     <!-- Filtros -->
     <div class="card border-0 shadow-sm mb-4">
@@ -322,6 +335,12 @@ $conceptos = [
                                 <?php foreach ($conceptos as $concepto): ?>
                                 <option value="<?= htmlspecialchars($concepto) ?>"><?= htmlspecialchars($concepto) ?></option>
                                 <?php endforeach; ?>
+                                <?php if (!empty($conceptosReparacion)): ?>
+                                <option disabled>--- Códigos de Reparación ---</option>
+                                <?php foreach ($conceptosReparacion as $cr): ?>
+                                <option value="<?= htmlspecialchars($cr['code'] . ' - ' . $cr['code_concept']) ?>"><?= htmlspecialchars($cr['code'] . ' - ' . $cr['code_concept']) ?></option>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
                                 <option value="Otro">Otro (personalizado)</option>
                             </select>
                         </div>
@@ -404,6 +423,12 @@ $conceptos = [
                                 <?php foreach ($conceptos as $concepto): ?>
                                 <option value="<?= htmlspecialchars($concepto) ?>"><?= htmlspecialchars($concepto) ?></option>
                                 <?php endforeach; ?>
+                                <?php if (!empty($conceptosReparacion)): ?>
+                                <option disabled>--- Códigos de Reparación ---</option>
+                                <?php foreach ($conceptosReparacion as $cr): ?>
+                                <option value="<?= htmlspecialchars($cr['code'] . ' - ' . $cr['code_concept']) ?>"><?= htmlspecialchars($cr['code'] . ' - ' . $cr['code_concept']) ?></option>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
                                 <option value="Otro">Otro (personalizado)</option>
                             </select>
                         </div>
@@ -804,3 +829,230 @@ $(document).on('submit', '#formImportarCartera', function(e) {
         </div>
     </div>
 </div>
+
+<!-- Modal Gestión Códigos de Reparación -->
+<div class="modal fade" id="modalConceptosReparacion" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-teal-dark text-white">
+                <h5 class="modal-title"><i class="bi bi-tools"></i> Códigos de Reparación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-12 text-end">
+                        <button class="btn bg-indigo-dark text-white btn-sm" id="btnNuevoConcepto">
+                            <i class="bi bi-plus-circle"></i> Nuevo Código
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tableConceptosReparacion" class="table table-sm table-bordered table-hover" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Código</th>
+                                <th>Concepto</th>
+                                <th>Creado por</th>
+                                <th>Fecha Creación</th>
+                                <th>Actualizado por</th>
+                                <th>Fecha Actualización</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulario Crear/Editar Concepto (modal anidado) -->
+<div class="modal fade" id="modalFormConcepto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-indigo-dark text-white">
+                <h5 class="modal-title" id="tituloFormConcepto"><i class="bi bi-plus-circle"></i> Nuevo Concepto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formConcepto">
+                <input type="hidden" name="id" id="conceptoId">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Código <span class="text-danger">*</span></label>
+                        <input type="text" name="code" id="conceptoCode" class="form-control" placeholder="Ej: 1001" required maxlength="10" pattern="[0-9]+" title="Solo números permitidos">
+                        <small id="codeHelp" class="text-muted">Solo dígitos numéricos. Debe ser único.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Concepto <span class="text-danger">*</span></label>
+                        <input type="text" name="code_concept" id="conceptoDescripcion" class="form-control text-uppercase" placeholder="Ej: REPARACIÓN DE TECHO" required maxlength="255" style="text-transform: uppercase;">
+                        <small class="text-muted">Se guardará automáticamente en mayúsculas.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn bg-indigo-dark text-white"><i class="bi bi-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function cargarConceptos() {
+    $.ajax({
+        url: 'controller/cartera/listar_conceptos_reparacion.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(resp) {
+            var tbody = $('#tableConceptosReparacion tbody');
+            tbody.empty();
+
+            if (resp.error) {
+                tbody.html('<tr><td colspan="7" class="text-center text-danger">' + resp.error + '</td></tr>');
+                return;
+            }
+
+            if (resp.data.length === 0) {
+                tbody.html('<tr><td colspan="7" class="text-center text-muted">No hay códigos de reparación registrados.</td></tr>');
+                return;
+            }
+
+            resp.data.forEach(function(row) {
+                tbody.append(
+                    '<tr>' +
+                    '<td>' + row.code + '</td>' +
+                    '<td>' + row.code_concept + '</td>' +
+                    '<td>' + (row.created_by || '-') + '</td>' +
+                    '<td>' + (row.creation_date || '-') + '</td>' +
+                    '<td>' + (row.updated_by || '-') + '</td>' +
+                    '<td>' + (row.update_date || '-') + '</td>' +
+                    '<td class="text-center">' +
+                    '<button class="btn btn-sm bg-indigo-dark text-white btn-editar-concepto me-1" data-id="' + row.id + '" data-code="' + row.code + '" data-descripcion="' + row.code_concept + '" title="Editar"><i class="bi bi-pencil"></i></button>' +
+                    '<button class="btn btn-sm bg-danger text-white btn-eliminar-concepto" data-id="' + row.id + '" title="Eliminar"><i class="bi bi-trash"></i></button>' +
+                    '</td></tr>'
+                );
+            });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            var msg = 'Error al cargar conceptos.';
+            if (jqXHR.responseText) {
+                msg += '\nRespuesta del servidor: ' + jqXHR.responseText.substring(0, 500);
+            }
+            $('#tableConceptosReparacion tbody').html('<tr><td colspan="7" class="text-center text-danger">' + msg + '</td></tr>');
+        }
+    });
+}
+
+function abrirFormConcepto(id, code, descripcion) {
+    if (id) {
+        $('#tituloFormConcepto').html('<i class="bi bi-pencil-square"></i> Editar Concepto');
+        $('#conceptoId').val(id);
+        $('#conceptoCode').val(code).prop('readonly', true);
+        $('#conceptoDescripcion').val(descripcion);
+        $('#codeHelp').text('El código no se puede modificar.');
+    } else {
+        $('#tituloFormConcepto').html('<i class="bi bi-plus-circle"></i> Nuevo Concepto');
+        $('#conceptoId').val('');
+        $('#conceptoCode').val('').prop('readonly', false);
+        $('#conceptoDescripcion').val('');
+        $('#codeHelp').text('Solo dígitos numéricos. Debe ser único.');
+    }
+    new bootstrap.Modal(document.getElementById('modalFormConcepto')).show();
+}
+
+$('#btnNuevoConcepto').on('click', function() {
+    abrirFormConcepto(null, '', '');
+});
+
+$('#formConcepto').on('submit', function(e) {
+    e.preventDefault();
+    var id = $('#conceptoId').val();
+    var url = id ? 'controller/cartera/actualizar_concepto_reparacion.php' : 'controller/cartera/guardar_concepto_reparacion.php';
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(resp) {
+            if (resp.success) {
+                bootstrap.Modal.getInstance(document.getElementById('modalFormConcepto')).hide();
+                Swal.fire({icon: 'success', title: 'Guardado', text: resp.message, timer: 1500, showConfirmButton: false});
+                cargarConceptos();
+            } else {
+                Swal.fire({icon: 'error', title: 'Error', text: resp.message});
+            }
+        },
+        error: function(jqXHR) {
+            var msg = 'Error de conexion con el servidor.';
+            if (jqXHR.responseText) {
+                msg += '\n' + jqXHR.responseText.substring(0, 300);
+            }
+            Swal.fire({icon: 'error', title: 'Error', text: msg});
+        }
+    });
+});
+
+$(document).on('click', '.btn-editar-concepto', function() {
+    var id = $(this).data('id');
+    var code = $(this).data('code');
+    var desc = $(this).data('descripcion');
+    abrirFormConcepto(id, code, desc);
+});
+
+$(document).on('click', '.btn-eliminar-concepto', function() {
+    var id = $(this).data('id');
+    Swal.fire({
+        title: '¿Esta seguro?',
+        text: 'El codigo de reparacion sera eliminado permanentemente.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Si, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'controller/cartera/eliminar_concepto_reparacion.php',
+                type: 'POST',
+                data: { id: id },
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.success) {
+                        Swal.fire({icon: 'success', title: 'Eliminado', text: resp.message, timer: 1500, showConfirmButton: false});
+                        cargarConceptos();
+                    } else {
+                        Swal.fire({icon: 'error', title: 'Error', text: resp.message});
+                    }
+                },
+                error: function(jqXHR) {
+                    var msg = 'Error de conexion con el servidor.';
+                    if (jqXHR.responseText) {
+                        msg += '\n' + jqXHR.responseText.substring(0, 300);
+                    }
+                    Swal.fire({icon: 'error', title: 'Error', text: msg});
+                }
+            });
+        }
+    });
+});
+
+$('#modalConceptosReparacion').on('shown.bs.modal', function() {
+    cargarConceptos();
+});
+
+$('#modalConceptosReparacion').on('hidden.bs.modal', function() {
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open').css({overflow: '', paddingRight: ''});
+});
+
+$('#modalFormConcepto').on('hidden.bs.modal', function() {
+    cargarConceptos();
+    if (!$('#modalConceptosReparacion').hasClass('show')) {
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css({overflow: '', paddingRight: ''});
+    }
+});
+</script>
