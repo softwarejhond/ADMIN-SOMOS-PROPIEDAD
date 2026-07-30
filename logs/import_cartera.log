@@ -1,0 +1,18 @@
+[2026-07-29 17:03:04] ========== INICIO IMPORTACION ==========
+[2026-07-29 17:03:04] Usuario: 1047996089
+[2026-07-29 17:03:04] Archivo: bd_contratos.xls
+[2026-07-29 17:03:05] Lectura del archivo iniciada. Mem: 0.49MB
+[2026-07-29 17:03:06] Archivo cargado. Filas totales: 683. Mem: 13MB
+[2026-07-29 17:03:09] Progreso: 10% (fila 68/683) - Ins:66 Act:0 Usr:0 - 3.8s
+[2026-07-29 17:03:11] Progreso: 19.9% (fila 136/683) - Ins:134 Act:0 Usr:0 - 6.2s
+[2026-07-29 17:03:13] Progreso: 29.9% (fila 204/683) - Ins:202 Act:0 Usr:0 - 8.2s
+[2026-07-29 17:03:15] Progreso: 39.8% (fila 272/683) - Ins:270 Act:0 Usr:0 - 10.2s
+[2026-07-29 17:03:17] Progreso: 49.8% (fila 340/683) - Ins:338 Act:0 Usr:0 - 12.4s
+[2026-07-29 17:03:19] Progreso: 59.7% (fila 408/683) - Ins:406 Act:0 Usr:0 - 14.4s
+[2026-07-29 17:03:20] Progreso: 69.7% (fila 476/683) - Ins:474 Act:0 Usr:0 - 15.5s
+[2026-07-29 17:03:22] Progreso: 79.6% (fila 544/683) - Ins:542 Act:0 Usr:0 - 17.3s
+[2026-07-29 17:03:24] Progreso: 89.6% (fila 612/683) - Ins:610 Act:0 Usr:0 - 19.3s
+[2026-07-29 17:03:26] Progreso: 99.6% (fila 680/683) - Ins:677 Act:1 Usr:0 - 20.8s
+[2026-07-29 17:03:26] Finalizado en 20.88s | Insertados=681 Actualizados=1 Usuarios=0 Omitidas=0 Errores=0 | MemPeak=13.44MB
+[2026-07-29 17:03:26] ========== FIN IMPORTACION ==========
+

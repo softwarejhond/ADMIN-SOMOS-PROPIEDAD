@@ -71,23 +71,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo_xls'])) {
             $actualizados = 0;
             $errores     = [];
 
-            // Columnas esperadas (basadas en BD-CONTRATOS-SOMOS-PROPIEDAD-20260519.csv):
+            // Columnas esperadas (plantilla v2):
             // A: NoContrato   B: Direccion       C: Ciudad
-            // D: Vr Canon     E: Vr Administracion  F: Valor Iva
-            // G: Canon+Admon+IVA  H: Propietario  I: P Cedula
-            // J: Arrendatario K: A. Cedula        L: Aseguradora
-            // M: NoSolicitud  N: Multiple
+            // D: Vr Canon     E: Vr Administracion  F: Vr Comision
+            // G: Valor Iva    H: Canon+Admon+IVA   I: Propietario
+            // J: P Cedula     K: Arrendatario       L: A. Cedula
+            // M: Aseguradora  N: NoSolicitud        O: Multiple
 
             $sql = "INSERT INTO contratos_somos_propiedad
                         (no_contrato, direccion, ciudad, vr_canon, vr_administracion,
-                         valor_iva, canon_total, propietario, cedula_propietario,
+                         vr_comision, valor_iva, canon_total, propietario, cedula_propietario,
                          arrendatario, cedula_arrendatario, aseguradora, no_solicitud, multiple)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE
                         direccion           = VALUES(direccion),
                         ciudad              = VALUES(ciudad),
                         vr_canon            = VALUES(vr_canon),
                         vr_administracion   = VALUES(vr_administracion),
+                        vr_comision         = VALUES(vr_comision),
                         valor_iva           = VALUES(valor_iva),
                         canon_total         = VALUES(canon_total),
                         propietario         = VALUES(propietario),
@@ -124,24 +125,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo_xls'])) {
                 $ciudad             = trim((string) $hoja->getCell("C{$fila}")->getValue());
                 $vrCanon            = limpiarMoneda($hoja->getCell("D{$fila}")->getValue());
                 $vrAdministracion   = limpiarMoneda($hoja->getCell("E{$fila}")->getValue());
-                $valorIva           = limpiarMoneda($hoja->getCell("F{$fila}")->getValue());
-                $canonTotal         = limpiarMoneda($hoja->getCell("G{$fila}")->getValue());
-                $propietario        = trim((string) $hoja->getCell("H{$fila}")->getValue());
-                $cedulaPropietario  = trim((string) $hoja->getCell("I{$fila}")->getValue());
-                $arrendatario       = trim((string) $hoja->getCell("J{$fila}")->getValue());
-                $cedulaArrendatario = trim((string) $hoja->getCell("K{$fila}")->getValue());
-                $aseguradora        = trim((string) $hoja->getCell("L{$fila}")->getValue());
-                $noSolicitud        = trim((string) $hoja->getCell("M{$fila}")->getValue());
-                $multipleRaw        = strtolower(trim((string) $hoja->getCell("N{$fila}")->getValue()));
+                $vrComision         = limpiarMoneda($hoja->getCell("F{$fila}")->getValue());
+                $valorIva           = limpiarMoneda($hoja->getCell("G{$fila}")->getValue());
+                $canonTotal         = limpiarMoneda($hoja->getCell("H{$fila}")->getValue());
+                $propietario        = trim((string) $hoja->getCell("I{$fila}")->getValue());
+                $cedulaPropietario  = trim((string) $hoja->getCell("J{$fila}")->getValue());
+                $arrendatario       = trim((string) $hoja->getCell("K{$fila}")->getValue());
+                $cedulaArrendatario = trim((string) $hoja->getCell("L{$fila}")->getValue());
+                $aseguradora        = trim((string) $hoja->getCell("M{$fila}")->getValue());
+                $noSolicitud        = trim((string) $hoja->getCell("N{$fila}")->getValue());
+                $multipleRaw        = strtolower(trim((string) $hoja->getCell("O{$fila}")->getValue()));
                 $multiple           = ($multipleRaw === 'si' || $multipleRaw === 'sí') ? 'Si' : 'No';
 
                 $stmt->bind_param(
-                    'issddddsssssss',
+                    'issdddddsssssss',
                     $noContrato,
                     $direccion,
                     $ciudad,
                     $vrCanon,
                     $vrAdministracion,
+                    $vrComision,
                     $valorIva,
                     $canonTotal,
                     $propietario,
@@ -227,9 +230,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo_xls'])) {
                     <p class="text-muted small mb-4">
                         El archivo debe tener los encabezados en la <strong>fila 1</strong> y los datos a partir de la <strong>fila 2</strong>,
                         con las columnas en este orden:
-                        <code>NoContrato, Direccion, Ciudad, Vr Canon, Vr Administracion, Valor Iva,
-                        Canon+Admon+IVA, Propietario, P Cedula, Arrendatario, A. Cedula, Aseguradora,
-                        NoSolicitud, Multiple</code>.
+                        <code>NoContrato, Direccion, Ciudad, Vr Canon, Vr Administracion, Vr Comision,
+                        Valor Iva, Canon+Admon+IVA, Propietario, P Cedula, Arrendatario, A. Cedula, Aseguradora,
+                        NoSolicitud, Multiple (Si/No)</code>.
                         Los registros existentes (<code>no_contrato</code>) serán <strong>actualizados</strong>.
                     </p>
 

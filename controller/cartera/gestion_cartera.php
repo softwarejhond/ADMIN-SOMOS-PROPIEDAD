@@ -116,7 +116,7 @@ if ($resRep) {
                 <p class="text-muted mb-0 small">Administre los movimientos de cartera, débitos y créditos por propietario e inmueble.</p>
             </div>
             <div class="d-flex gap-2 flex-wrap">
-                <a href="uploads/plantilla_contratos.xls" download class="btn btn-outline-success btn-sm">
+                <a href="uploads/plantilla_contratos_v2.xls" download class="btn btn-outline-success btn-sm">
                     <i class="bi bi-file-earmark-arrow-down"></i> Plantilla XLS
                 </a>
                 <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportarCartera">
@@ -127,6 +127,9 @@ if ($resRep) {
                 </button>
                 <button class="btn bg-teal-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalConceptosReparacion">
                     <i class="bi bi-tools"></i> Códigos Reparación
+                </button>
+                <button class="btn bg-indigo-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportarInformeCartera">
+                    <i class="bi bi-file-earmark-arrow-up"></i> Importar Informe
                 </button>
         </div>
     </div>
@@ -767,6 +770,16 @@ $(document).on('submit', '#formImportarCartera', function(e) {
             if (resp.usuariosCreados > 0) {
                 detalle += '<br>Usuarios creados: <strong>' + resp.usuariosCreados + '</strong>';
             }
+            if (resp.omitidas > 0) {
+                detalle += '<br>Filas omitidas: <strong>' + resp.omitidas + '</strong>';
+            }
+            if (resp.total) {
+                detalle += '<br>Total filas procesadas: <strong>' + resp.total + '</strong>';
+            }
+            if (resp.tiempo) {
+                detalle += '<br>Tiempo: <strong>' + resp.tiempo + 's</strong>';
+            }
+            detalle += '<br><small class="text-muted">Log guardado en <code>logs/import_cartera.log</code></small>';
             if (resp.errores && resp.errores.length > 0) {
                 detalle += '<br><br><small class="text-warning">Advertencias:<br>' +
                     resp.errores.map(function(e) { return '&bull; ' + e; }).join('<br>') + '</small>';
@@ -801,8 +814,8 @@ $(document).on('submit', '#formImportarCartera', function(e) {
                     <p class="text-muted small mb-3">
                         El archivo debe tener <strong>encabezados en la fila 1</strong> y datos desde la fila 2,
                         con las columnas en este orden:<br>
-                        <code>NoContrato, Direccion, Ciudad, Vr Canon, Vr Administracion, Valor Iva,
-                        Canon+Admon+IVA, Propietario, P Cedula, Arrendatario, A. Cedula, Aseguradora,
+                        <code>NoContrato, Direccion, Ciudad, Vr Canon, Vr Administracion, Vr Comision,
+                        Valor Iva, Canon+Admon+IVA, Propietario, P Cedula, Arrendatario, A. Cedula, Aseguradora,
                         NoSolicitud, Multiple (Si/No)</code>.<br>
                         Los contratos existentes (<code>no_contrato</code>) serán <strong>actualizados</strong>.
                     </p>
@@ -892,6 +905,45 @@ $(document).on('submit', '#formImportarCartera', function(e) {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn bg-indigo-dark text-white"><i class="bi bi-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Importar Informe Cartera -->
+<div class="modal fade" id="modalImportarInformeCartera" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-indigo-dark text-white">
+                <h5 class="modal-title"><i class="bi bi-file-earmark-arrow-up"></i> Importar Informe de Cartera</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formImportarInformeCartera" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">
+                        Suba el archivo <strong>.xls</strong> de informe por propiedad generado por el sistema contable.<br>
+                        La cédula del propietario y el número de contrato se extraen automáticamente de los datos del archivo.<br>
+                        Ej: <code>INFORME CC1127232488 C1481 20260729.xls</code>
+                    </p>
+                    <div class="mb-3">
+                        <label for="inputArchivoInformeCartera" class="form-label fw-semibold">
+                            <i class="bi bi-upload"></i> Seleccionar archivo
+                        </label>
+                        <input type="file"
+                               id="inputArchivoInformeCartera"
+                               name="archivo_informe"
+                               class="form-control"
+                               accept=".xls,.xlsx,.ods"
+                               required>
+                        <div class="form-text">Formatos aceptados: .xls, .xlsx, .ods</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn bg-indigo-dark text-white">
+                        <i class="bi bi-cloud-upload"></i> Importar
+                    </button>
                 </div>
             </form>
         </div>
@@ -1054,5 +1106,85 @@ $('#modalFormConcepto').on('hidden.bs.modal', function() {
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css({overflow: '', paddingRight: ''});
     }
+});
+
+// ── Importar Informe Cartera ──
+$(document).on('submit', '#formImportarInformeCartera', function(e) {
+    e.preventDefault();
+
+    const inputFile = document.getElementById('inputArchivoInformeCartera');
+    if (!inputFile || !inputFile.files.length) {
+        Swal.fire({icon: 'warning', title: 'Sin archivo', text: 'Seleccione un archivo antes de importar.'});
+        return;
+    }
+    const archivo = inputFile.files[0];
+
+    const modalEl = document.getElementById('modalImportarInformeCartera');
+    const modalInst = bootstrap.Modal.getInstance(modalEl);
+    if (modalInst) modalInst.hide();
+
+    Swal.fire({
+        title: 'Importando...',
+        text: 'Procesando el archivo, por favor espere.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    const fd = new FormData();
+    fd.append('archivo_informe', archivo);
+
+    fetch('controller/cartera/importar_informe_cartera.php', {
+        method: 'POST',
+        body: fd
+    })
+    .then(function(r) { return r.text(); })
+    .then(function(texto) {
+        let resp;
+        try {
+            resp = JSON.parse(texto);
+        } catch (err) {
+            console.error('Respuesta no-JSON del servidor:', texto);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error del servidor',
+                html: '<pre style="text-align:left;font-size:0.75rem;max-height:200px;overflow:auto">' +
+                      texto.replace(/</g, '&lt;') + '</pre>'
+            });
+            return;
+        }
+        if (resp.success) {
+            let detalle = 'Propietario: <strong>' + resp.propietario + '</strong><br>';
+            detalle += 'CC: <strong>' + resp.cedula + '</strong> &nbsp;|&nbsp; Contrato: <strong>#' + resp.contrato + '</strong><br>';
+            detalle += 'Direccion: <strong>' + (resp.direccion || 'N/A') + '</strong><br>';
+            detalle += 'Insertados: <strong>' + resp.insertados + '</strong>';
+            if (resp.borradosPrevios > 0) {
+                detalle += ' &nbsp;|&nbsp; Reemplazados: <strong>' + resp.borradosPrevios + '</strong>';
+            }
+            if (resp.omitidas > 0) {
+                detalle += '<br>Filas omitidas (encabezados/sin datos): <strong>' + resp.omitidas + '</strong>';
+            }
+            if (resp.tiempo) {
+                detalle += '<br>Tiempo: <strong>' + resp.tiempo + 's</strong>';
+            }
+            if (resp.errores && resp.errores.length > 0) {
+                detalle += '<br><br><small class="text-warning">Advertencias:<br>' +
+                    resp.errores.map(function(e) { return '&bull; ' + e; }).join('<br>') + '</small>';
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Importacion completada',
+                html: detalle,
+                confirmButtonText: 'Aceptar'
+            }).then(function() { location.reload(); });
+        } else {
+            Swal.fire({icon: 'error', title: 'Error al importar', text: resp.message});
+        }
+    })
+    .catch(function(err) {
+        console.error('Fetch error:', err);
+        Swal.fire({icon: 'error', title: 'Error de red', text: 'No se pudo conectar con el servidor.'});
+    });
 });
 </script>

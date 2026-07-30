@@ -72,7 +72,7 @@ while ($inm = $resInm->fetch_assoc()) {
     $valorCanon = floatval($inm['vr_canon']);
     // Valores ya calculados en el contrato
     $ivaArrendamiento = floatval($inm['valor_iva']);
-    $comisionCanon    = floatval($inm['vr_administracion']);
+    $comisionCanon    = floatval($inm['vr_comision'] ?: $inm['vr_administracion']);
     $ivaComision      = $comisionCanon > 0 ? round($comisionCanon * 0.19, 2) : 0.00;
 
     if ($valorCanon <= 0) continue;
