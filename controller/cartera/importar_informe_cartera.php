@@ -42,6 +42,21 @@ if ($archivo['error'] !== UPLOAD_ERR_OK || !in_array($ext, $extensionesPermitida
     exit;
 }
 
+// ── Log ──
+$logDir = __DIR__ . '/../../logs';
+if (!is_dir($logDir)) {
+    mkdir($logDir, 0755, true);
+}
+$logFile = $logDir . '/import_informe_cartera.log';
+function logInforme($msg) {
+    global $logFile;
+    $line = '[' . date('Y-m-d H:i:s') . '] ' . $msg . PHP_EOL;
+    file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+}
+logInforme('========== INICIO IMPORTACION INFORME ==========');
+logInforme('Usuario: ' . ($_SESSION['username'] ?? 'desconocido'));
+logInforme('Archivo: ' . ($_FILES['archivo_informe']['name'] ?? 'N/A'));
+
 // ── Mapeo de meses ──
 $mesesMap = [
     'ene' => '01', 'feb' => '02', 'mar' => '03', 'abr' => '04',
@@ -133,6 +148,7 @@ try {
     $noContratoArchivo = (int) trim((string) $hoja->getCell("J3")->getValue());
 
     if (!is_numeric($cedulaArchivo) || empty($cedulaArchivo) || $noContratoArchivo <= 0) {
+        logInforme('ERROR: No se pudo extraer cedula/contrato de B3/J3');
         ob_end_clean();
         echo json_encode(['success' => false, 'message' => 'No se pudo extraer la cedula y/o el numero de contrato del archivo. Revise que el formato del Excel sea el esperado.']);
         exit;
@@ -151,6 +167,7 @@ try {
     $stmtVerifica->close();
 
     if (!$datosPropiedad) {
+        logInforme("ERROR: CC{$cedulaArchivo} / Contrato #{$noContratoArchivo} no encontrados en BD");
         ob_end_clean();
         echo json_encode(['success' => false, 'message' => "No se encontro en la base de datos el propietario CC{$cedulaArchivo} con contrato #{$noContratoArchivo}. Verifique que exista en contratos_somos_propiedad."]);
         exit;
@@ -185,6 +202,7 @@ try {
     $stmtDelete->execute();
     $borradosPrevios = $stmtDelete->affected_rows;
     $stmtDelete->close();
+    logInforme("Borrados previos: {$borradosPrevios} (contrato #{$noContratoArchivo}, mes {$mesArchivo}, anio {$anioArchivo})");
 
     // ── Segundo barrido: insertar registros ──
     $insertados = 0;
@@ -288,6 +306,9 @@ try {
 
     $totalTime = round(microtime(true) - $startTime, 2);
 
+    logInforme("RESULTADO: Insertados={$insertados} Borrados={$borradosPrevios} Omitidas={$omitidas} Errores=" . count($errores) . " Tiempo={$totalTime}s");
+    logInforme('========== FIN IMPORTACION INFORME ==========' . PHP_EOL);
+
     ob_end_clean();
     echo json_encode([
         'success'       => true,
@@ -303,6 +324,8 @@ try {
     ]);
 
 } catch (Throwable $e) {
+    logInforme('EXCEPCION: ' . $e->getMessage());
+    logInforme('========== FIN IMPORTACION INFORME CON ERROR ==========' . PHP_EOL);
     ob_end_clean();
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }

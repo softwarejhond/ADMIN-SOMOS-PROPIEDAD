@@ -12,7 +12,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 include("funciones.php");
 
-// Verificar acceso hermético
 verificarAccesoHermetico();
 
 $empresas = obtenerEmpresas();

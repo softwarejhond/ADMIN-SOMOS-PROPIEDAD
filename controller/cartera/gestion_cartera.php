@@ -131,6 +131,9 @@ if ($resRep) {
                 <button class="btn bg-indigo-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportarInformeCartera">
                     <i class="bi bi-file-earmark-arrow-up"></i> Importar Informe
                 </button>
+                <button class="btn bg-indigo-dark text-white btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportarInformeMasivo">
+                    <i class="bi bi-file-zip"></i> Importar Masivo
+                </button>
         </div>
     </div>
 </div>
@@ -950,6 +953,46 @@ $(document).on('submit', '#formImportarCartera', function(e) {
     </div>
 </div>
 
+<!-- Modal Importar Informe Masivo (ZIP) -->
+<div class="modal fade" id="modalImportarInformeMasivo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-indigo-dark text-white">
+                <h5 class="modal-title"><i class="bi bi-file-zip"></i> Importar Informes Masivo (ZIP)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formImportarInformeMasivo" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">
+                        Suba un archivo <strong>.zip</strong> que contenga varios informes de cartera.<br>
+                        Los archivos .xls/.xlsx/.ods dentro del ZIP se procesaran automaticamente.<br>
+                        Puede contener subcarpetas, se buscan recursivamente.<br>
+                        <span class="text-warning"><i class="bi bi-exclamation-triangle"></i> Por limitaciones del servidor, se recomienda que el ZIP no contenga mas de <strong>30 archivos</strong>.</span>
+                    </p>
+                    <div class="mb-3">
+                        <label for="inputArchivoZipMasivo" class="form-label fw-semibold">
+                            <i class="bi bi-upload"></i> Seleccionar archivo ZIP
+                        </label>
+                        <input type="file"
+                               id="inputArchivoZipMasivo"
+                               name="archivo_zip"
+                               class="form-control"
+                               accept=".zip"
+                               required>
+                        <div class="form-text">Formato aceptado: .zip</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn bg-indigo-dark text-white">
+                        <i class="bi bi-cloud-upload"></i> Importar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 function cargarConceptos() {
     $.ajax({
@@ -1175,6 +1218,80 @@ $(document).on('submit', '#formImportarInformeCartera', function(e) {
             Swal.fire({
                 icon: 'success',
                 title: 'Importacion completada',
+                html: detalle,
+                confirmButtonText: 'Aceptar'
+            }).then(function() { location.reload(); });
+        } else {
+            Swal.fire({icon: 'error', title: 'Error al importar', text: resp.message});
+        }
+    })
+    .catch(function(err) {
+        console.error('Fetch error:', err);
+        Swal.fire({icon: 'error', title: 'Error de red', text: 'No se pudo conectar con el servidor.'});
+    });
+});
+
+// ── Importar Informes Masivo (ZIP) ──
+$(document).on('submit', '#formImportarInformeMasivo', function(e) {
+    e.preventDefault();
+
+    const inputFile = document.getElementById('inputArchivoZipMasivo');
+    if (!inputFile || !inputFile.files.length) {
+        Swal.fire({icon: 'warning', title: 'Sin archivo', text: 'Seleccione un archivo ZIP antes de importar.'});
+        return;
+    }
+    const archivo = inputFile.files[0];
+
+    const modalEl = document.getElementById('modalImportarInformeMasivo');
+    const modalInst = bootstrap.Modal.getInstance(modalEl);
+    if (modalInst) modalInst.hide();
+
+    Swal.fire({
+        title: 'Importando...',
+        text: 'Procesando el ZIP, por favor espere. Esto puede tardar varios minutos.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    const fd = new FormData();
+    fd.append('archivo_zip', archivo);
+
+    fetch('controller/cartera/importar_informe_cartera_masivo.php', {
+        method: 'POST',
+        body: fd
+    })
+    .then(function(r) { return r.text(); })
+    .then(function(texto) {
+        let resp;
+        try {
+            resp = JSON.parse(texto);
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error del servidor',
+                html: '<pre style="text-align:left;font-size:0.75rem;max-height:200px;overflow:auto">' +
+                      texto.replace(/</g, '&lt;') + '</pre>'
+            });
+            return;
+        }
+        if (resp.success) {
+            let detalle = 'Archivos procesados: <strong>' + resp.totalArchivos + '</strong><br>';
+            detalle += 'Total insertados: <strong>' + resp.totalInsertados + '</strong><br>';
+            detalle += 'Total reemplazados: <strong>' + resp.totalBorrados + '</strong>';
+            if (resp.archivosConError > 0) {
+                detalle += '<br><span class="text-warning">Archivos con error: <strong>' + resp.archivosConError + '</strong></span>';
+            }
+            if (resp.totalErrores > 0) {
+                detalle += '<br><span class="text-danger">Errores: <strong>' + resp.totalErrores + '</strong></span>';
+            }
+            if (resp.tiempo) {
+                detalle += '<br>Tiempo: <strong>' + resp.tiempo + 's</strong>';
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Importacion masiva completada',
                 html: detalle,
                 confirmButtonText: 'Aceptar'
             }).then(function() { location.reload(); });

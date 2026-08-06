@@ -25,6 +25,8 @@ if ($_SESSION['rol'] != 6) {
 
 include("funciones.php");
 
+verificarAccesoHermetico();
+
 $empresas    = obtenerEmpresas();
 $infoUsuario = obtenerInformacionUsuario();
 $rol         = $infoUsuario['rol'];
