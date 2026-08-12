@@ -176,9 +176,9 @@ if ($resRep) {
                 <div class="col-md-3 d-flex gap-2">
                     <button type="submit" class="btn btn-sm bg-magenta-dark text-white"><i class="bi bi-funnel"></i> Filtrar</button>
                     <a href="admin_cartera.php" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x-circle"></i> Limpiar</a>
-                    <button type="button" class="btn btn-sm bg-teal-dark text-white" data-bs-toggle="modal" data-bs-target="#modalGenerarCartera">
+                    <!-- <button type="button" class="btn btn-sm bg-teal-dark text-white" data-bs-toggle="modal" data-bs-target="#modalGenerarCartera">
                         <i class="bi bi-gear"></i> Generar
-                    </button>
+                    </button> -->
                 </div>
             </form>
         </div>
@@ -1198,9 +1198,21 @@ $(document).on('submit', '#formImportarInformeCartera', function(e) {
             return;
         }
         if (resp.success) {
-            let detalle = 'Propietario: <strong>' + resp.propietario + '</strong><br>';
-            detalle += 'CC: <strong>' + resp.cedula + '</strong> &nbsp;|&nbsp; Contrato: <strong>#' + resp.contrato + '</strong><br>';
-            detalle += 'Direccion: <strong>' + (resp.direccion || 'N/A') + '</strong><br>';
+            let detalle = '';
+            const props = resp.propiedades || [];
+            if (props.length === 1) {
+                const p = props[0];
+                detalle += 'Propietario: <strong>' + p.propietario + '</strong><br>';
+                detalle += 'CC: <strong>' + p.cedula + '</strong> &nbsp;|&nbsp; Contrato: <strong>#' + p.contrato + '</strong><br>';
+                detalle += 'Direccion: <strong>' + (p.direccion || 'N/A') + '</strong><br>';
+            } else if (props.length > 1) {
+                detalle += 'Propiedades procesadas: <strong>' + props.length + '</strong><br>';
+                detalle += '<ul style="text-align:left;font-size:0.8rem;margin:5px 0 0 20px;">';
+                props.forEach(function(p) {
+                    detalle += '<li>#' + p.contrato + ' - ' + p.propietario + ' (' + (p.direccion || 'N/A') + ') - ' + p.insertados + ' mov.</li>';
+                });
+                detalle += '</ul>';
+            }
             detalle += 'Insertados: <strong>' + resp.insertados + '</strong>';
             if (resp.borradosPrevios > 0) {
                 detalle += ' &nbsp;|&nbsp; Reemplazados: <strong>' + resp.borradosPrevios + '</strong>';
@@ -1280,17 +1292,29 @@ $(document).on('submit', '#formImportarInformeMasivo', function(e) {
             let detalle = 'Archivos procesados: <strong>' + resp.totalArchivos + '</strong><br>';
             detalle += 'Total insertados: <strong>' + resp.totalInsertados + '</strong><br>';
             detalle += 'Total reemplazados: <strong>' + resp.totalBorrados + '</strong>';
-            if (resp.archivosConError > 0) {
-                detalle += '<br><span class="text-warning">Archivos con error: <strong>' + resp.archivosConError + '</strong></span>';
+
+            // Listar archivos con error
+            const conError = (resp.resultados || []).filter(function(r) {
+                return r.error || (r.errores && r.errores.length > 0);
+            });
+            if (conError.length > 0) {
+                detalle += '<br><br><span class="text-danger fw-bold">Archivos con error:</span>';
+                detalle += '<ul style="text-align:left;font-size:0.8rem;margin:5px 0 0 20px;">';
+                conError.forEach(function(r) {
+                    let msg = r.error ? r.error : (r.errores ? r.errores.join(' | ') : '');
+                    detalle += '<li><strong>' + r.archivo + '</strong>: ' + msg + '</li>';
+                });
+                detalle += '</ul>';
             }
+
             if (resp.totalErrores > 0) {
-                detalle += '<br><span class="text-danger">Errores: <strong>' + resp.totalErrores + '</strong></span>';
+                detalle += '<span class="text-danger">Errores: <strong>' + resp.totalErrores + '</strong></span><br>';
             }
             if (resp.tiempo) {
-                detalle += '<br>Tiempo: <strong>' + resp.tiempo + 's</strong>';
+                detalle += 'Tiempo: <strong>' + resp.tiempo + 's</strong>';
             }
             Swal.fire({
-                icon: 'success',
+                icon: conError.length > 0 ? 'warning' : 'success',
                 title: 'Importacion masiva completada',
                 html: detalle,
                 confirmButtonText: 'Aceptar'

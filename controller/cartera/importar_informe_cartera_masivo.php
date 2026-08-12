@@ -117,64 +117,13 @@ function procesarArchivoExcel($filePath, $fileName, $conn, $mesesMap): array
     $hoja        = $spreadsheet->getActiveSheet();
     $filas       = $hoja->getHighestDataRow();
 
-    $cedula     = trim((string) $hoja->getCell("B3")->getValue());
-    $noContrato = (int) trim((string) $hoja->getCell("J3")->getValue());
-
-    if (!is_numeric($cedula) || empty($cedula) || $noContrato <= 0) {
-        $spreadsheet->disconnectWorksheets();
-        unset($spreadsheet);
-        return ['archivo' => $fileName, 'error' => 'No se pudo extraer cedula/contrato de B3/J3'];
-    }
-
-    // Verificar existencia en BD
-    $sqlVerifica = "SELECT propietario, direccion FROM contratos_somos_propiedad
-                    WHERE cedula_propietario = ? AND no_contrato = ? LIMIT 1";
-    $stmtV = $conn->prepare($sqlVerifica);
-    $stmtV->bind_param('si', $cedula, $noContrato);
-    $stmtV->execute();
-    $datos = $stmtV->get_result()->fetch_assoc();
-    $stmtV->close();
-
-    if (!$datos) {
-        $spreadsheet->disconnectWorksheets();
-        unset($spreadsheet);
-        return ['archivo' => $fileName, 'error' => "CC{$cedula} / Contrato #{$noContrato} no encontrados en BD", 'cedula' => $cedula, 'contrato' => $noContrato];
-    }
-
-    // Extraer mes y año
-    $mesRaw = trim((string) $hoja->getCell("E3")->getValue());
-    $mesArchivo = '';
-    foreach ($mesesMap as $abr => $num) {
-        if (stripos($mesRaw, $abr) !== false) { $mesArchivo = $num; break; }
-    }
-    if (empty($mesArchivo)) $mesArchivo = date('m');
-    $anioArchivo = max((int) trim((string) $hoja->getCell("K3")->getValue()), (int) date('Y'));
-
-    // Borrar previos
-    $sqlDel = "DELETE FROM cartera_propietario WHERE codigo_inmueble = ? AND mes = ? AND anio = ?";
-    $stmtDel = $conn->prepare($sqlDel);
-    $stmtDel->bind_param('isi', $noContrato, $mesArchivo, $anioArchivo);
-    $stmtDel->execute();
-    $borrados = $stmtDel->affected_rows;
-    $stmtDel->close();
-
-    // Insertar
-    $sqlIns = "INSERT INTO cartera_propietario
-        (nit_propietario, nombre_tercero, fecha, mes, concepto, detalle, debito, credito, codigo_inmueble, anio, es_giro)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmtIns = $conn->prepare($sqlIns);
-    if (!$stmtIns) {
-        $spreadsheet->disconnectWorksheets();
-        unset($spreadsheet);
-        return ['archivo' => $fileName, 'error' => 'Error preparando INSERT'];
-    }
-
-    $insertados = 0;
-    $omitidas   = 0;
-    $errores    = [];
+    // Recolectar filas de datos y combos
+    $filasDatos     = [];
+    $paresPropiedad = [];
+    $combosBorrar   = [];
 
     for ($fila = 1; $fila <= $filas; $fila++) {
-        if (!esFilaDatosMasivo($hoja, $fila)) { $omitidas++; continue; }
+        if (!esFilaDatosMasivo($hoja, $fila)) continue;
 
         $nit           = trim((string) $hoja->getCell("B{$fila}")->getValue());
         $nombreTercero = trim((string) $hoja->getCell("C{$fila}")->getValue());
@@ -199,39 +148,121 @@ function procesarArchivoExcel($filePath, $fileName, $conn, $mesesMap): array
 
         $detalle  = trim((string) $hoja->getCell("F{$fila}")->getValue());
         $concepto = inferirConceptoMasivo($detalle);
-
-        $debito  = limpiarMonedaInformeMasivo($hoja->getCell("G{$fila}")->getValue());
-        $credito = limpiarMonedaInformeMasivo($hoja->getCell("H{$fila}")->getValue());
-
+        $debito   = limpiarMonedaInformeMasivo($hoja->getCell("G{$fila}")->getValue());
+        $credito  = limpiarMonedaInformeMasivo($hoja->getCell("H{$fila}")->getValue());
         $codigoInm = (int) trim((string) $hoja->getCell("J{$fila}")->getValue());
         $anio = max((int) trim((string) $hoja->getCell("K{$fila}")->getValue()), (int) date('Y'));
 
-        if ($codigoInm !== $noContrato) { $omitidas++; continue; }
-
-        $esGiro = ($concepto === 'Giro Renta') ? 1 : 0;
-
-        $stmtIns->bind_param('ssssssddiis',
-            $nit, $nombreTercero, $fecha, $mes, $concepto, $detalle,
-            $debito, $credito, $codigoInm, $anio, $esGiro
-        );
-        if ($stmtIns->execute()) { $insertados++; }
-        else { $errores[] = "Fila {$fila}: " . $stmtIns->error; }
+        $filasDatos[] = [
+            'nit' => $nit, 'nombre' => $nombreTercero, 'fecha' => $fecha, 'mes' => $mes,
+            'concepto' => $concepto, 'detalle' => $detalle, 'debito' => $debito, 'credito' => $credito,
+            'codigo' => $codigoInm, 'anio' => $anio,
+        ];
+        $paresPropiedad["{$nit}|{$codigoInm}"] = ['cedula' => $nit, 'contrato' => $codigoInm];
+        $combosBorrar["{$codigoInm}|{$mes}|{$anio}"] = true;
     }
 
+    if (empty($filasDatos)) {
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        return ['archivo' => $fileName, 'error' => 'No se encontraron datos validos'];
+    }
+
+    // Verificar cada par en BD
+    $sqlVerifica = "SELECT propietario, direccion FROM contratos_somos_propiedad
+                    WHERE cedula_propietario = ? AND no_contrato = ? LIMIT 1";
+    $stmtV = $conn->prepare($sqlVerifica);
+    $propiedadesValidas = [];
+    $paresInvalidos = [];
+    foreach ($paresPropiedad as $key => $p) {
+        $stmtV->bind_param('si', $p['cedula'], $p['contrato']);
+        $stmtV->execute();
+        $resV = $stmtV->get_result();
+        $dato = $resV->fetch_assoc();
+        $resV->free();
+        if ($dato) {
+            $propiedadesValidas[$key] = ['propietario' => $dato['propietario'], 'direccion' => $dato['direccion']];
+        } else {
+            $paresInvalidos[$key] = $p;
+        }
+    }
+    $stmtV->close();
+
+    if (empty($propiedadesValidas)) {
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        return ['archivo' => $fileName, 'error' => 'Ninguna propiedad del archivo existe en la BD'];
+    }
+
+    // Borrar previos por combo
+    $sqlDel = "DELETE FROM cartera_propietario WHERE codigo_inmueble = ? AND mes = ? AND anio = ?";
+    $stmtDel = $conn->prepare($sqlDel);
+    $borrados = 0;
+    foreach ($combosBorrar as $key => $_) {
+        [$cod, $mesD, $anioD] = explode('|', $key);
+        $stmtDel->bind_param('isi', $cod, $mesD, $anioD);
+        $stmtDel->execute();
+        $borrados += $stmtDel->affected_rows;
+    }
+    $stmtDel->close();
+
+    // Insertar
+    $sqlIns = "INSERT INTO cartera_propietario
+        (nit_propietario, nombre_tercero, fecha, mes, concepto, detalle, debito, credito, codigo_inmueble, anio, es_giro)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmtIns = $conn->prepare($sqlIns);
+    if (!$stmtIns) {
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        return ['archivo' => $fileName, 'error' => 'Error preparando INSERT'];
+    }
+
+    $insertados = 0;
+    $omitidas   = 0;
+    $errores    = [];
+    $porPropiedad = [];
+
+    foreach ($filasDatos as $f) {
+        $key = "{$f['nit']}|{$f['codigo']}";
+        if (!isset($propiedadesValidas[$key])) { $omitidas++; continue; }
+        $esGiro = ($f['concepto'] === 'Giro Renta') ? 1 : 0;
+        $stmtIns->bind_param('ssssssddiis',
+            $f['nit'], $f['nombre'], $f['fecha'], $f['mes'], $f['concepto'], $f['detalle'],
+            $f['debito'], $f['credito'], $f['codigo'], $f['anio'], $esGiro
+        );
+        if ($stmtIns->execute()) {
+            $insertados++;
+            $porPropiedad[$key] = ($porPropiedad[$key] ?? 0) + 1;
+        } else {
+            $errores[] = "Contrato #{$f['codigo']}: " . $stmtIns->error;
+        }
+    }
     $stmtIns->close();
+
+    $propiedadesResumen = [];
+    foreach ($propiedadesValidas as $key => $info) {
+        [$ced, $ctr] = explode('|', $key);
+        $propiedadesResumen[] = [
+            'cedula' => $ced, 'contrato' => $ctr,
+            'propietario' => $info['propietario'], 'direccion' => $info['direccion'],
+            'insertados' => $porPropiedad[$key] ?? 0,
+        ];
+    }
+    foreach ($paresInvalidos as $key => $p) {
+        $errores[] = "CC{$p['cedula']} / Contrato #{$p['contrato']} no existen en la BD, omitidos.";
+    }
+
     $spreadsheet->disconnectWorksheets();
     unset($spreadsheet);
 
     return [
         'archivo'    => $fileName,
-        'cedula'     => $cedula,
-        'contrato'   => $noContrato,
-        'propietario'=> $datos['propietario'],
-        'direccion'  => $datos['direccion'],
         'insertados' => $insertados,
         'borrados'   => $borrados,
         'omitidas'   => $omitidas,
         'errores'    => $errores,
+        'numPropiedades' => count($propiedadesResumen),
+        'propiedades'=> $propiedadesResumen,
     ];
 }
 
@@ -299,7 +330,7 @@ try {
         } else {
             $totalInsertados += $res['insertados'];
             $totalBorrados   += $res['borrados'];
-            logInformeMasivo("  OK: Ins={$res['insertados']} Borr={$res['borrados']} CC={$res['cedula']} Ctr={$res['contrato']}");
+            logInformeMasivo("  OK: Ins={$res['insertados']} Borr={$res['borrados']} Props={$res['numPropiedades']}");
         }
         $totalErrores += count($res['errores'] ?? []);
         $resultados[] = $res;

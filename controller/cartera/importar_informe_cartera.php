@@ -143,71 +143,115 @@ try {
     $hoja        = $spreadsheet->getActiveSheet();
     $filas       = $hoja->getHighestDataRow();
 
-    // ── Extraer cedula y no_contrato de la fila 3 (primer registro de datos) ──
-    $cedulaArchivo     = trim((string) $hoja->getCell("B3")->getValue());
-    $noContratoArchivo = (int) trim((string) $hoja->getCell("J3")->getValue());
+    // ── Primer barrido: recolectar filas de datos y combos (cedula/contrato, contrato/mes/anio) ──
+    $filasDatos     = [];
+    $paresPropiedad = [];   // "cedula|contrato" => ['cedula'=>..., 'contrato'=>...]
+    $combosBorrar   = [];   // "contrato|mes|anio" => true
 
-    if (!is_numeric($cedulaArchivo) || empty($cedulaArchivo) || $noContratoArchivo <= 0) {
-        logInforme('ERROR: No se pudo extraer cedula/contrato de B3/J3');
+    for ($fila = 1; $fila <= $filas; $fila++) {
+        if (!esFilaDatos($hoja, $fila)) {
+            continue;
+        }
+
+        $nit            = trim((string) $hoja->getCell("B{$fila}")->getValue());
+        $nombreTercero  = trim((string) $hoja->getCell("C{$fila}")->getValue());
+
+        // Fecha
+        $fechaRaw = $hoja->getCell("D{$fila}")->getValue();
+        if (is_numeric($fechaRaw) && $fechaRaw > 1000) {
+            $fecha = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($fechaRaw)->format('Y-m-d');
+        } else {
+            $cd = trim((string) $fechaRaw);
+            $fp = date_parse(str_replace('/', '-', $cd));
+            $fecha = ($fp['year'] && $fp['month'] && $fp['day'])
+                ? sprintf('%04d-%02d-%02d', $fp['year'], $fp['month'], $fp['day'])
+                : date('Y-m-d');
+        }
+
+        // Mes
+        $mesRaw = trim((string) $hoja->getCell("E{$fila}")->getValue());
+        $mes = '';
+        foreach ($mesesMap as $abr => $num) {
+            if (stripos($mesRaw, $abr) !== false) { $mes = $num; break; }
+        }
+        if (empty($mes)) {
+            if (preg_match('/(\d{2})/', $mesRaw, $m)) { $mes = $m[1]; }
+            else { $mes = date('m'); }
+        }
+
+        $detalle  = trim((string) $hoja->getCell("F{$fila}")->getValue());
+        $concepto = inferirConcepto($detalle);
+        $debito   = limpiarMonedaInforme($hoja->getCell("G{$fila}")->getValue());
+        $credito  = limpiarMonedaInforme($hoja->getCell("H{$fila}")->getValue());
+        $codigoInmueble = (int) trim((string) $hoja->getCell("J{$fila}")->getValue());
+        $anio = (int) trim((string) $hoja->getCell("K{$fila}")->getValue());
+        if ($anio <= 0) { $anio = (int) date('Y'); }
+
+        $filasDatos[] = [
+            'nit' => $nit, 'nombre' => $nombreTercero, 'fecha' => $fecha, 'mes' => $mes,
+            'concepto' => $concepto, 'detalle' => $detalle, 'debito' => $debito, 'credito' => $credito,
+            'codigo' => $codigoInmueble, 'anio' => $anio,
+        ];
+        $paresPropiedad["{$nit}|{$codigoInmueble}"] = ['cedula' => $nit, 'contrato' => $codigoInmueble];
+        $combosBorrar["{$codigoInmueble}|{$mes}|{$anio}"] = true;
+    }
+
+    if (empty($filasDatos)) {
+        logInforme('ERROR: No se encontraron filas de datos validas');
         ob_end_clean();
-        echo json_encode(['success' => false, 'message' => 'No se pudo extraer la cedula y/o el numero de contrato del archivo. Revise que el formato del Excel sea el esperado.']);
+        echo json_encode(['success' => false, 'message' => 'No se encontraron datos validos en el archivo. Revise el formato.']);
         exit;
     }
 
-    // ── Verificar que el propietario y el contrato existan ──
-    $sqlVerifica = "SELECT propietario, cedula_propietario, direccion, ciudad
-                    FROM contratos_somos_propiedad
-                    WHERE cedula_propietario = ? AND no_contrato = ?
-                    LIMIT 1";
+    // ── Verificar en BD cada par (cedula, contrato) ──
+    $sqlVerifica = "SELECT propietario, direccion FROM contratos_somos_propiedad
+                    WHERE cedula_propietario = ? AND no_contrato = ? LIMIT 1";
     $stmtVerifica = $conn->prepare($sqlVerifica);
-    $stmtVerifica->bind_param('si', $cedulaArchivo, $noContratoArchivo);
-    $stmtVerifica->execute();
-    $resVerifica = $stmtVerifica->get_result();
-    $datosPropiedad = $resVerifica->fetch_assoc();
-    $stmtVerifica->close();
 
-    if (!$datosPropiedad) {
-        logInforme("ERROR: CC{$cedulaArchivo} / Contrato #{$noContratoArchivo} no encontrados en BD");
-        ob_end_clean();
-        echo json_encode(['success' => false, 'message' => "No se encontro en la base de datos el propietario CC{$cedulaArchivo} con contrato #{$noContratoArchivo}. Verifique que exista en contratos_somos_propiedad."]);
-        exit;
-    }
-
-    $nombrePropietario = $datosPropiedad['propietario'];
-
-    // ── Extraer mes y año del primer registro (fila 3) ──
-    $mesRaw = trim((string) $hoja->getCell("E3")->getValue());
-    $mesArchivo = '';
-    foreach ($mesesMap as $abr => $num) {
-        if (stripos($mesRaw, $abr) !== false) {
-            $mesArchivo = $num;
-            break;
+    $propiedadesValidas = []; // "cedula|contrato" => ['propietario'=>..., 'direccion'=>...]
+    $paresInvalidos     = [];
+    foreach ($paresPropiedad as $key => $p) {
+        $stmtVerifica->bind_param('si', $p['cedula'], $p['contrato']);
+        $stmtVerifica->execute();
+        $resV = $stmtVerifica->get_result();
+        $dato = $resV->fetch_assoc();
+        $resV->free();
+        if ($dato) {
+            $propiedadesValidas[$key] = ['propietario' => $dato['propietario'], 'direccion' => $dato['direccion']];
+        } else {
+            $paresInvalidos[$key] = $p;
         }
     }
-    if (empty($mesArchivo)) {
-        $mesArchivo = date('m');
-    }
-    $anioArchivo = (int) trim((string) $hoja->getCell("K3")->getValue());
-    if ($anioArchivo <= 0) {
-        $anioArchivo = (int) date('Y');
+    $stmtVerifica->close();
+
+    if (empty($propiedadesValidas)) {
+        logInforme('ERROR: Ninguna propiedad del archivo existe en la BD');
+        ob_end_clean();
+        echo json_encode(['success' => false, 'message' => 'Ninguna de las propiedades del archivo existe en la base de datos.']);
+        exit;
     }
 
-    // ── Borrar movimientos existentes de este (contrato, mes, año) ──
+    // ── Borrar movimientos previos por cada combo (contrato, mes, año) ──
     $sqlDelete = "DELETE FROM cartera_propietario WHERE codigo_inmueble = ? AND mes = ? AND anio = ?";
     $stmtDelete = $conn->prepare($sqlDelete);
     if (!$stmtDelete) {
         throw new RuntimeException('Error preparando borrado: ' . $conn->error);
     }
-    $stmtDelete->bind_param('isi', $noContratoArchivo, $mesArchivo, $anioArchivo);
-    $stmtDelete->execute();
-    $borradosPrevios = $stmtDelete->affected_rows;
+    $totalBorrados = 0;
+    foreach ($combosBorrar as $key => $_) {
+        [$codigo, $mesD, $anioD] = explode('|', $key);
+        $stmtDelete->bind_param('isi', $codigo, $mesD, $anioD);
+        $stmtDelete->execute();
+        $totalBorrados += $stmtDelete->affected_rows;
+    }
     $stmtDelete->close();
-    logInforme("Borrados previos: {$borradosPrevios} (contrato #{$noContratoArchivo}, mes {$mesArchivo}, anio {$anioArchivo})");
+    logInforme("Borrados previos totales: {$totalBorrados}");
 
-    // ── Segundo barrido: insertar registros ──
+    // ── Insertar registros (solo propiedades validas) ──
     $insertados = 0;
     $omitidas   = 0;
     $errores    = [];
+    $porPropiedad = []; // "cedula|contrato" => ['insertados'=>0]
 
     $sqlInsert = "INSERT INTO cartera_propietario
         (nit_propietario, nombre_tercero, fecha, mes, concepto, detalle, debito, credito, codigo_inmueble, anio, es_giro)
@@ -217,110 +261,64 @@ try {
         throw new RuntimeException('Error preparando sentencia: ' . $conn->error);
     }
 
-    for ($fila = 1; $fila <= $filas; $fila++) {
-        if (!esFilaDatos($hoja, $fila)) {
+    foreach ($filasDatos as $f) {
+        $key = "{$f['nit']}|{$f['codigo']}";
+        if (!isset($propiedadesValidas[$key])) {
             $omitidas++;
             continue;
         }
-
-        $nit            = trim((string) $hoja->getCell("B{$fila}")->getValue());
-        $nombreTercero  = trim((string) $hoja->getCell("C{$fila}")->getValue());
-
-        // Fecha: puede ser serial de Excel o string d/m/Y
-        $fechaRaw = $hoja->getCell("D{$fila}")->getValue();
-        if (is_numeric($fechaRaw) && $fechaRaw > 1000) {
-            $fechaObj = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($fechaRaw);
-            $fecha = $fechaObj->format('Y-m-d');
-        } else {
-            $celdaD = trim((string) $fechaRaw);
-            $fechaParse = date_parse(str_replace('/', '-', $celdaD));
-            if ($fechaParse['year'] && $fechaParse['month'] && $fechaParse['day']) {
-                $fecha = sprintf('%04d-%02d-%02d', $fechaParse['year'], $fechaParse['month'], $fechaParse['day']);
-            } else {
-                $fecha = date('Y-m-d');
-            }
-        }
-
-        // Mes: "2026 - Jul" → "07"
-        $mesRaw = trim((string) $hoja->getCell("E{$fila}")->getValue());
-        $mes = '';
-        foreach ($mesesMap as $abr => $num) {
-            if (stripos($mesRaw, $abr) !== false) {
-                $mes = $num;
-                break;
-            }
-        }
-        if (empty($mes)) {
-            if (preg_match('/(\d{2})/', $mesRaw, $m)) {
-                $mes = $m[1];
-            } else {
-                $mes = date('m');
-            }
-        }
-
-        $detalle  = trim((string) $hoja->getCell("F{$fila}")->getValue());
-        $concepto = inferirConcepto($detalle);
-
-        $debito  = limpiarMonedaInforme($hoja->getCell("G{$fila}")->getValue());
-        $credito = limpiarMonedaInforme($hoja->getCell("H{$fila}")->getValue());
-
-        $codigoInmueble = (int) trim((string) $hoja->getCell("J{$fila}")->getValue());
-        $anio = (int) trim((string) $hoja->getCell("K{$fila}")->getValue());
-        if ($anio <= 0) {
-            $anio = (int) date('Y');
-        }
-
-        // Saltar si el codigo de inmueble no coincide con el extraido
-        if ($codigoInmueble !== $noContratoArchivo) {
-            $omitidas++;
-            continue;
-        }
-
-        $esGiro = ($concepto === 'Giro Renta') ? 1 : 0;
-
+        $esGiro = ($f['concepto'] === 'Giro Renta') ? 1 : 0;
         $stmtInsert->bind_param(
             'ssssssddiis',
-            $nit,
-            $nombreTercero,
-            $fecha,
-            $mes,
-            $concepto,
-            $detalle,
-            $debito,
-            $credito,
-            $codigoInmueble,
-            $anio,
-            $esGiro
+            $f['nit'], $f['nombre'], $f['fecha'], $f['mes'], $f['concepto'], $f['detalle'],
+            $f['debito'], $f['credito'], $f['codigo'], $f['anio'], $esGiro
         );
-
         if ($stmtInsert->execute()) {
             $insertados++;
+            $porPropiedad[$key]['insertados'] = ($porPropiedad[$key]['insertados'] ?? 0) + 1;
         } else {
-            $errores[] = "Fila {$fila}: " . $stmtInsert->error;
+            $errores[] = "Contrato #{$f['codigo']} ({$f['detalle']}): " . $stmtInsert->error;
         }
     }
-
     $stmtInsert->close();
+
+    // ── Construir resumen de propiedades ──
+    $propiedadesResumen = [];
+    foreach ($propiedadesValidas as $key => $info) {
+        [$ced, $ctr] = explode('|', $key);
+        $propiedadesResumen[] = [
+            'cedula'      => $ced,
+            'contrato'    => $ctr,
+            'propietario' => $info['propietario'],
+            'direccion'   => $info['direccion'],
+            'insertados'  => $porPropiedad[$key]['insertados'] ?? 0,
+        ];
+    }
+
+    // Avisar de propiedades invalidas
+    foreach ($paresInvalidos as $key => $p) {
+        $errores[] = "CC{$p['cedula']} / Contrato #{$p['contrato']} no existen en la BD, omitidos.";
+        logInforme("WARN: CC{$p['cedula']} / Contrato #{$p['contrato']} no existen en BD");
+    }
+
     $spreadsheet->disconnectWorksheets();
     unset($spreadsheet);
 
     $totalTime = round(microtime(true) - $startTime, 2);
 
-    logInforme("RESULTADO: Insertados={$insertados} Borrados={$borradosPrevios} Omitidas={$omitidas} Errores=" . count($errores) . " Tiempo={$totalTime}s");
+    logInforme("RESULTADO: Insertados={$insertados} Borrados={$totalBorrados} Omitidas={$omitidas} Propiedades=" . count($propiedadesValidas) . " Errores=" . count($errores) . " Tiempo={$totalTime}s");
     logInforme('========== FIN IMPORTACION INFORME ==========' . PHP_EOL);
 
     ob_end_clean();
     echo json_encode([
-        'success'       => true,
-        'insertados'    => $insertados,
-        'borradosPrevios' => $borradosPrevios,
-        'omitidas'      => $omitidas,
-        'errores'       => $errores,
-        'tiempo'        => $totalTime,
-        'cedula'        => $cedulaArchivo,
-        'contrato'      => $noContratoArchivo,
-        'propietario'   => $nombrePropietario,
-        'direccion'     => $datosPropiedad['direccion'],
+        'success'         => true,
+        'insertados'      => $insertados,
+        'borradosPrevios' => $totalBorrados,
+        'omitidas'        => $omitidas,
+        'errores'         => $errores,
+        'tiempo'          => $totalTime,
+        'numPropiedades'  => count($propiedadesValidas),
+        'propiedades'     => $propiedadesResumen,
     ]);
 
 } catch (Throwable $e) {
