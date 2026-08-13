@@ -159,7 +159,7 @@ function procesarArchivoExcel($filePath, $fileName, $conn, $mesesMap): array
             'codigo' => $codigoInm, 'anio' => $anio,
         ];
         $paresPropiedad["{$nit}|{$codigoInm}"] = ['cedula' => $nit, 'contrato' => $codigoInm];
-        $combosBorrar["{$codigoInm}|{$mes}|{$anio}"] = true;
+        $combosBorrar["{$nit}|{$codigoInm}|{$mes}|{$anio}"] = true;
     }
 
     if (empty($filasDatos)) {
@@ -195,12 +195,12 @@ function procesarArchivoExcel($filePath, $fileName, $conn, $mesesMap): array
     }
 
     // Borrar previos por combo
-    $sqlDel = "DELETE FROM cartera_propietario WHERE codigo_inmueble = ? AND mes = ? AND anio = ?";
+    $sqlDel = "DELETE FROM cartera_propietario WHERE nit_propietario = ? AND codigo_inmueble = ? AND mes = ? AND anio = ?";
     $stmtDel = $conn->prepare($sqlDel);
     $borrados = 0;
     foreach ($combosBorrar as $key => $_) {
-        [$cod, $mesD, $anioD] = explode('|', $key);
-        $stmtDel->bind_param('isi', $cod, $mesD, $anioD);
+        [$nitD, $cod, $mesD, $anioD] = explode('|', $key);
+        $stmtDel->bind_param('sisi', $nitD, $cod, $mesD, $anioD);
         $stmtDel->execute();
         $borrados += $stmtDel->affected_rows;
     }

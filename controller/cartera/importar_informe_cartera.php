@@ -193,7 +193,7 @@ try {
             'codigo' => $codigoInmueble, 'anio' => $anio,
         ];
         $paresPropiedad["{$nit}|{$codigoInmueble}"] = ['cedula' => $nit, 'contrato' => $codigoInmueble];
-        $combosBorrar["{$codigoInmueble}|{$mes}|{$anio}"] = true;
+        $combosBorrar["{$nit}|{$codigoInmueble}|{$mes}|{$anio}"] = true;
     }
 
     if (empty($filasDatos)) {
@@ -231,16 +231,16 @@ try {
         exit;
     }
 
-    // ── Borrar movimientos previos por cada combo (contrato, mes, año) ──
-    $sqlDelete = "DELETE FROM cartera_propietario WHERE codigo_inmueble = ? AND mes = ? AND anio = ?";
+    // ── Borrar movimientos previos por cada combo (nit, contrato, mes, año) ──
+    $sqlDelete = "DELETE FROM cartera_propietario WHERE nit_propietario = ? AND codigo_inmueble = ? AND mes = ? AND anio = ?";
     $stmtDelete = $conn->prepare($sqlDelete);
     if (!$stmtDelete) {
         throw new RuntimeException('Error preparando borrado: ' . $conn->error);
     }
     $totalBorrados = 0;
     foreach ($combosBorrar as $key => $_) {
-        [$codigo, $mesD, $anioD] = explode('|', $key);
-        $stmtDelete->bind_param('isi', $codigo, $mesD, $anioD);
+        [$nitD, $codigo, $mesD, $anioD] = explode('|', $key);
+        $stmtDelete->bind_param('sisi', $nitD, $codigo, $mesD, $anioD);
         $stmtDelete->execute();
         $totalBorrados += $stmtDelete->affected_rows;
     }

@@ -175,7 +175,25 @@ try {
         $aseguradora        = trim((string) $hoja->getCell("M{$fila}")->getValue());
         $noSolicitud        = trim((string) $hoja->getCell("N{$fila}")->getValue());
         $multipleRaw        = strtolower(trim((string) $hoja->getCell("O{$fila}")->getValue()));
-        $multiple           = ($multipleRaw === 'si' || $multipleRaw === 'sí') ? 'Si' : 'No';
+        $multiple           = in_array($multipleRaw, ['si', 'sí', 's']) ? 'Si' : 'No';
+
+        // Validación: un contrato solo puede tener varios dueños si es "multiple".
+        if ($multiple === 'No') {
+            $sqlChequeo = "SELECT id FROM contratos_somos_propiedad
+                           WHERE no_contrato = ? AND cedula_propietario <> ? LIMIT 1";
+            $stmtChequeo = $conn->prepare($sqlChequeo);
+            $stmtChequeo->bind_param('is', $noContrato, $cedulaPropietario);
+            $stmtChequeo->execute();
+            $resChequeo = $stmtChequeo->get_result();
+            $existeOtroDueno = $resChequeo->fetch_assoc();
+            $resChequeo->free();
+            $stmtChequeo->close();
+            if ($existeOtroDueno) {
+                $errores[] = "Fila {$fila} (contrato #{$noContrato}): el contrato ya tiene otro propietario y no esta marcado como 'Si' (multiple). Fila omitida.";
+                logImport("WARN: Fila {$fila} contrato #{$noContrato} multiple=No con otro dueño existente");
+                continue;
+            }
+        }
 
         $stmt->bind_param(
             'issdddddsssssss',

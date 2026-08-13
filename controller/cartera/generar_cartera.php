@@ -77,10 +77,10 @@ while ($inm = $resInm->fetch_assoc()) {
 
     if ($valorCanon <= 0) continue;
 
-    // Verificar si ya existe cartera para este inmueble en este mes/año
-    $sqlCheck = "SELECT COUNT(*) as total FROM cartera_propietario WHERE codigo_inmueble = ? AND mes = ? AND anio = ?";
+    // Verificar si ya existe cartera para este propietario + inmueble en este mes/año
+    $sqlCheck = "SELECT COUNT(*) as total FROM cartera_propietario WHERE nit_propietario = ? AND codigo_inmueble = ? AND mes = ? AND anio = ?";
     $stmtCheck = $conn->prepare($sqlCheck);
-    $stmtCheck->bind_param("isi", $codigoInm, $mes, $anio);
+    $stmtCheck->bind_param("sisi", $nitProp, $codigoInm, $mes, $anio);
     $stmtCheck->execute();
     $resCheck = $stmtCheck->get_result()->fetch_assoc();
     

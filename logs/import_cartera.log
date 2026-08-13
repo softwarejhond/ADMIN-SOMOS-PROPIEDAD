@@ -16,3 +16,95 @@
 [2026-07-29 17:03:26] Finalizado en 20.88s | Insertados=681 Actualizados=1 Usuarios=0 Omitidas=0 Errores=0 | MemPeak=13.44MB
 [2026-07-29 17:03:26] ========== FIN IMPORTACION ==========
 
+[2026-08-13 17:10:50] ========== INICIO IMPORTACION ==========
+[2026-08-13 17:10:50] Usuario: 1047996089
+[2026-08-13 17:10:50] Archivo: plantilla_contratos_v2 (2).xls
+[2026-08-13 17:10:50] Lectura del archivo iniciada. Mem: 0.5MB
+[2026-08-13 17:10:51] Archivo cargado. Filas totales: 683. Mem: 7.56MB
+[2026-08-13 17:10:53] Progreso: 10% (fila 68/683) - Ins:66 Act:0 Usr:0 - 3.3s
+[2026-08-13 17:10:56] Progreso: 19.9% (fila 136/683) - Ins:134 Act:0 Usr:0 - 5.6s
+[2026-08-13 17:10:58] Progreso: 29.9% (fila 204/683) - Ins:202 Act:0 Usr:0 - 7.6s
+[2026-08-13 17:11:00] Progreso: 39.8% (fila 272/683) - Ins:270 Act:0 Usr:0 - 9.6s
+[2026-08-13 17:11:02] Progreso: 49.8% (fila 340/683) - Ins:338 Act:0 Usr:0 - 11.7s
+[2026-08-13 17:11:04] Progreso: 59.7% (fila 408/683) - Ins:406 Act:0 Usr:0 - 13.7s
+[2026-08-13 17:11:05] Progreso: 69.7% (fila 476/683) - Ins:474 Act:0 Usr:0 - 14.7s
+[2026-08-13 17:11:07] Progreso: 79.6% (fila 544/683) - Ins:542 Act:0 Usr:0 - 16.5s
+[2026-08-13 17:11:09] Progreso: 89.6% (fila 612/683) - Ins:610 Act:0 Usr:0 - 18.5s
+[2026-08-13 17:11:10] WARN: Fila 671 contrato #5489 multiple=No con otro dueño existente
+[2026-08-13 17:11:10] Progreso: 99.6% (fila 680/683) - Ins:677 Act:0 Usr:0 - 20s
+[2026-08-13 17:11:10] Finalizado en 20.11s | Insertados=681 Actualizados=0 Usuarios=0 Omitidas=0 Errores=1 | MemPeak=7.88MB
+[2026-08-13 17:11:10] ========== FIN IMPORTACION ==========
+
+[2026-08-13 17:31:53] ========== INICIO IMPORTACION ==========
+[2026-08-13 17:31:53] Usuario: 1047996089
+[2026-08-13 17:31:53] Archivo: plantilla_contratos_v2 (2).xls
+[2026-08-13 17:31:53] Lectura del archivo iniciada. Mem: 0.42MB
+[2026-08-13 17:31:54] Archivo cargado. Filas totales: 683. Mem: 6.87MB
+[2026-08-13 17:31:56] Progreso: 10% (fila 68/683) - Ins:66 Act:0 Usr:0 - 3.2s
+[2026-08-13 17:31:58] Progreso: 19.9% (fila 136/683) - Ins:134 Act:0 Usr:0 - 5.5s
+[2026-08-13 17:32:00] Progreso: 29.9% (fila 204/683) - Ins:202 Act:0 Usr:0 - 7.6s
+[2026-08-13 17:32:02] Progreso: 39.8% (fila 272/683) - Ins:270 Act:0 Usr:0 - 9.5s
+[2026-08-13 17:32:04] Progreso: 49.8% (fila 340/683) - Ins:338 Act:0 Usr:0 - 11.6s
+[2026-08-13 17:32:06] Progreso: 59.7% (fila 408/683) - Ins:406 Act:0 Usr:0 - 13.6s
+[2026-08-13 17:32:07] Progreso: 69.7% (fila 476/683) - Ins:474 Act:0 Usr:0 - 14.6s
+[2026-08-13 17:32:09] Progreso: 79.6% (fila 544/683) - Ins:542 Act:0 Usr:0 - 16.4s
+[2026-08-13 17:32:11] Progreso: 89.6% (fila 612/683) - Ins:610 Act:0 Usr:0 - 18.5s
+[2026-08-13 17:32:13] WARN: Fila 671 contrato #5489 multiple=No con otro dueño existente
+[2026-08-13 17:32:13] Progreso: 99.6% (fila 680/683) - Ins:677 Act:0 Usr:0 - 20s
+[2026-08-13 17:32:13] Finalizado en 20.09s | Insertados=681 Actualizados=0 Usuarios=0 Omitidas=0 Errores=1 | MemPeak=7.19MB
+[2026-08-13 17:32:13] ========== FIN IMPORTACION ==========
+
+[2026-08-13 17:57:23] ========== INICIO IMPORTACION ==========
+[2026-08-13 17:57:23] Usuario: 1047996089
+[2026-08-13 17:57:23] Archivo: plantilla_contratos_v2 (2).xls
+[2026-08-13 17:57:24] Lectura del archivo iniciada. Mem: 0.42MB
+[2026-08-13 17:57:25] Archivo cargado. Filas totales: 683. Mem: 6.76MB
+[2026-08-13 17:57:27] Progreso: 10% (fila 68/683) - Ins:0 Act:66 Usr:0 - 3.3s
+[2026-08-13 17:57:29] Progreso: 19.9% (fila 136/683) - Ins:0 Act:134 Usr:0 - 5.5s
+[2026-08-13 17:57:31] Progreso: 29.9% (fila 204/683) - Ins:0 Act:202 Usr:0 - 7.6s
+[2026-08-13 17:57:33] Progreso: 39.8% (fila 272/683) - Ins:0 Act:270 Usr:0 - 9.6s
+[2026-08-13 17:57:35] Progreso: 49.8% (fila 340/683) - Ins:0 Act:338 Usr:0 - 11.6s
+[2026-08-13 17:57:37] Progreso: 59.7% (fila 408/683) - Ins:0 Act:406 Usr:0 - 13.6s
+[2026-08-13 17:57:38] Progreso: 69.7% (fila 476/683) - Ins:0 Act:474 Usr:0 - 14.7s
+[2026-08-13 17:57:40] Progreso: 79.6% (fila 544/683) - Ins:0 Act:542 Usr:0 - 16.5s
+[2026-08-13 17:57:42] Progreso: 89.6% (fila 612/683) - Ins:0 Act:610 Usr:0 - 18.5s
+[2026-08-13 17:57:44] Progreso: 99.6% (fila 680/683) - Ins:1 Act:677 Usr:0 - 20s
+[2026-08-13 17:57:44] Finalizado en 20.12s | Insertados=1 Actualizados=681 Usuarios=0 Omitidas=0 Errores=0 | MemPeak=7.08MB
+[2026-08-13 17:57:44] ========== FIN IMPORTACION ==========
+
+[2026-08-13 18:07:02] ========== INICIO IMPORTACION ==========
+[2026-08-13 18:07:02] Usuario: 1047996089
+[2026-08-13 18:07:02] Archivo: plantilla_contratos_v2 (2).xls
+[2026-08-13 18:07:02] Lectura del archivo iniciada. Mem: 0.42MB
+[2026-08-13 18:07:03] Archivo cargado. Filas totales: 683. Mem: 6.76MB
+[2026-08-13 18:07:05] Progreso: 10% (fila 68/683) - Ins:0 Act:66 Usr:0 - 3.1s
+[2026-08-13 18:07:08] Progreso: 19.9% (fila 136/683) - Ins:3 Act:131 Usr:0 - 5.3s
+[2026-08-13 18:07:10] Progreso: 29.9% (fila 204/683) - Ins:3 Act:199 Usr:0 - 7.3s
+[2026-08-13 18:07:11] Progreso: 39.8% (fila 272/683) - Ins:3 Act:267 Usr:0 - 9.3s
+[2026-08-13 18:07:14] Progreso: 49.8% (fila 340/683) - Ins:3 Act:335 Usr:0 - 11.3s
+[2026-08-13 18:07:15] Progreso: 59.7% (fila 408/683) - Ins:3 Act:403 Usr:0 - 13.2s
+[2026-08-13 18:07:16] Progreso: 69.7% (fila 476/683) - Ins:3 Act:471 Usr:0 - 14.2s
+[2026-08-13 18:07:18] Progreso: 79.6% (fila 544/683) - Ins:3 Act:539 Usr:0 - 16s
+[2026-08-13 18:07:20] Progreso: 89.6% (fila 612/683) - Ins:3 Act:607 Usr:0 - 18s
+[2026-08-13 18:07:22] Progreso: 99.6% (fila 680/683) - Ins:3 Act:675 Usr:0 - 19.5s
+[2026-08-13 18:07:22] Finalizado en 19.57s | Insertados=3 Actualizados=679 Usuarios=0 Omitidas=0 Errores=0 | MemPeak=7.08MB
+[2026-08-13 18:07:22] ========== FIN IMPORTACION ==========
+
+[2026-08-13 18:07:48] ========== INICIO IMPORTACION ==========
+[2026-08-13 18:07:48] Usuario: 1047996089
+[2026-08-13 18:07:48] Archivo: plantilla_contratos_v2 (2).xls
+[2026-08-13 18:07:49] Lectura del archivo iniciada. Mem: 0.42MB
+[2026-08-13 18:07:49] Archivo cargado. Filas totales: 683. Mem: 6.76MB
+[2026-08-13 18:07:52] Progreso: 10% (fila 68/683) - Ins:66 Act:0 Usr:0 - 3.2s
+[2026-08-13 18:07:54] Progreso: 19.9% (fila 136/683) - Ins:134 Act:0 Usr:0 - 5.5s
+[2026-08-13 18:07:56] Progreso: 29.9% (fila 204/683) - Ins:202 Act:0 Usr:0 - 7.6s
+[2026-08-13 18:07:58] Progreso: 39.8% (fila 272/683) - Ins:270 Act:0 Usr:0 - 9.5s
+[2026-08-13 18:08:00] Progreso: 49.8% (fila 340/683) - Ins:338 Act:0 Usr:0 - 11.6s
+[2026-08-13 18:08:02] Progreso: 59.7% (fila 408/683) - Ins:406 Act:0 Usr:0 - 13.8s
+[2026-08-13 18:08:03] Progreso: 69.7% (fila 476/683) - Ins:474 Act:0 Usr:0 - 14.9s
+[2026-08-13 18:08:05] Progreso: 79.6% (fila 544/683) - Ins:542 Act:0 Usr:0 - 16.7s
+[2026-08-13 18:08:07] Progreso: 89.6% (fila 612/683) - Ins:610 Act:0 Usr:0 - 18.7s
+[2026-08-13 18:08:09] Progreso: 99.6% (fila 680/683) - Ins:678 Act:0 Usr:0 - 20.2s
+[2026-08-13 18:08:09] Finalizado en 20.29s | Insertados=682 Actualizados=0 Usuarios=0 Omitidas=0 Errores=0 | MemPeak=7.08MB
+[2026-08-13 18:08:09] ========== FIN IMPORTACION ==========
+

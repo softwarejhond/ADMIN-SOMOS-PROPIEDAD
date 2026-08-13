@@ -71,3 +71,85 @@
 [2026-08-12 19:25:39] RESULTADO: Archivos=17 OK=13 Error=4 Ins=66 Borr=0 Errores=0 Tiempo=1.15s
 [2026-08-12 19:25:39] ========== FIN IMPORTACION MASIVA ==========
 
+[2026-08-13 17:58:29] ========== INICIO IMPORTACION MASIVA ==========
+[2026-08-13 17:58:29] Usuario: 1047996089
+[2026-08-13 17:58:29] Archivo ZIP: PAGOS 12 AGO 2026 (2).zip
+[2026-08-13 17:58:29] Archivos Excel encontrados: 17
+[2026-08-13 17:58:29] Procesando: CC 8344084 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 8349960 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 15345100 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 70559764 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 43813589 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 31169187 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=7 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 15345553 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 98552774 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 98527722 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 1034993082 20260812.xls
+[2026-08-13 17:58:30]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 17:58:30] Procesando: CC 2582315 20260812.xls
+[2026-08-13 17:58:30]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 17:58:30] Procesando: CC 98542420 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 43166406 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 17:58:30] Procesando: CC 42821769 20260812.xls
+[2026-08-13 17:58:30]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 17:58:30] Procesando: CC 70726703 20260812.xls
+[2026-08-13 17:58:30]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 17:58:30] Procesando: CC 98568598 20260812.xls
+[2026-08-13 17:58:30]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 17:58:30] Procesando: CC 71783913 20260812.xls
+[2026-08-13 17:58:30]   OK: Ins=5 Borr=0 Props=1
+[2026-08-13 17:58:30] RESULTADO: Archivos=17 OK=12 Error=5 Ins=52 Borr=0 Errores=1 Tiempo=0.86s
+[2026-08-13 17:58:30] ========== FIN IMPORTACION MASIVA ==========
+
+[2026-08-13 18:08:46] ========== INICIO IMPORTACION MASIVA ==========
+[2026-08-13 18:08:46] Usuario: 1047996089
+[2026-08-13 18:08:46] Archivo ZIP: PAGOS 12 AGO 2026 (2).zip
+[2026-08-13 18:08:46] Archivos Excel encontrados: 17
+[2026-08-13 18:08:46] Procesando: CC 8344084 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 8349960 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 15345100 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 70559764 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 43813589 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 31169187 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=7 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 15345553 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 98552774 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 98527722 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 1034993082 20260812.xls
+[2026-08-13 18:08:47]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 18:08:47] Procesando: CC 2582315 20260812.xls
+[2026-08-13 18:08:47]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 18:08:47] Procesando: CC 98542420 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 43166406 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=4 Borr=0 Props=1
+[2026-08-13 18:08:47] Procesando: CC 42821769 20260812.xls
+[2026-08-13 18:08:47]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 18:08:47] Procesando: CC 70726703 20260812.xls
+[2026-08-13 18:08:47]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 18:08:47] Procesando: CC 98568598 20260812.xls
+[2026-08-13 18:08:47]   ERROR: Ninguna propiedad del archivo existe en la BD
+[2026-08-13 18:08:47] Procesando: CC 71783913 20260812.xls
+[2026-08-13 18:08:47]   OK: Ins=5 Borr=0 Props=1
+[2026-08-13 18:08:47] RESULTADO: Archivos=17 OK=12 Error=5 Ins=52 Borr=0 Errores=1 Tiempo=0.85s
+[2026-08-13 18:08:47] ========== FIN IMPORTACION MASIVA ==========
+

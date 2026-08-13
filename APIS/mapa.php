@@ -1,7 +1,7 @@
 <?php
 require('conexion.php');
 
-$sql    = "SELECT direccion, ciudad FROM contratos_somos_propiedad ORDER BY no_contrato DESC LIMIT 40";
+$sql    = "SELECT DISTINCT direccion, ciudad FROM contratos_somos_propiedad ORDER BY no_contrato DESC LIMIT 40";
 $result = $conn->query($sql);
 
 $addresses = [];

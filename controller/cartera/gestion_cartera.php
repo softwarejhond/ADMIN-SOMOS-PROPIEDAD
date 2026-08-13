@@ -16,9 +16,9 @@ $movimientosAgrupados = [];
 $totalesGenerales = ['debito' => 0, 'credito' => 0];
 
 if ($hayFiltroActivo) {
-    $whereCartera = "c.nit_propietario = ?";
-    $params = [$filtroPropietario];
-    $types = "s";
+    $whereCartera = "(c.nit_propietario = ? OR c.codigo_inmueble IN (SELECT no_contrato FROM contratos_somos_propiedad WHERE cedula_propietario = ? AND multiple = 'Si'))";
+    $params = [$filtroPropietario, $filtroPropietario];
+    $types = "ss";
 
     if (!empty($filtroMes)) {
         $whereCartera .= " AND c.mes = ?";
@@ -31,10 +31,11 @@ if ($hayFiltroActivo) {
         $types .= "i";
     }
 
-    $sqlMovimientos = "SELECT c.*, csp.direccion, csp.ciudad AS tipoInmueble 
-                       FROM cartera_propietario c 
-                       LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato 
-                       WHERE $whereCartera 
+    $sqlMovimientos = "SELECT c.*,
+                              (SELECT csp.direccion FROM contratos_somos_propiedad csp WHERE csp.no_contrato = c.codigo_inmueble LIMIT 1) AS direccion,
+                              (SELECT csp.ciudad FROM contratos_somos_propiedad csp WHERE csp.no_contrato = c.codigo_inmueble LIMIT 1) AS tipoInmueble
+                       FROM cartera_propietario c
+                       WHERE $whereCartera
                        ORDER BY c.nit_propietario, c.codigo_inmueble, c.es_giro ASC, c.id ASC";
 
     $stmtMov = $conn->prepare($sqlMovimientos);

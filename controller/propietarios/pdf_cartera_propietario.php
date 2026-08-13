@@ -18,10 +18,10 @@ $filtroMes      = $_GET['mes']          ?? '';
 $filtroAnio     = $_GET['anio']         ?? '';
 $filtroCodInm   = $_GET['cod_inmueble'] ?? '';
 
-// Construir WHERE dinámico
-$where  = "c.nit_propietario = ?";
-$params = [$doc_propietario];
-$types  = "s";
+// Construir WHERE dinámico (incluye copropiedades multiple)
+$where  = "(c.nit_propietario = ? OR c.codigo_inmueble IN (SELECT no_contrato FROM contratos_somos_propiedad WHERE cedula_propietario = ? AND multiple = 'Si'))";
+$params = [$doc_propietario, $doc_propietario];
+$types  = "ss";
 
 if (!empty($filtroMes)) {
     $where   .= " AND c.mes = ?";
@@ -39,9 +39,9 @@ if (!empty($filtroCodInm) && $filtroCodInm !== 'todos') {
     $types   .= "s";
 }
 
-$sql  = "SELECT c.*, csp.direccion
+$sql  = "SELECT c.*,
+                (SELECT csp.direccion FROM contratos_somos_propiedad csp WHERE csp.no_contrato = c.codigo_inmueble LIMIT 1) AS direccion
          FROM cartera_propietario c
-         LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato
          WHERE $where
          ORDER BY c.codigo_inmueble, c.es_giro ASC, c.id ASC";
 
@@ -288,7 +288,7 @@ $html = '<!DOCTYPE html>
 <div class="info-bar">
     <strong>NIT / CC:</strong> ' . htmlspecialchars($doc_propietario) . ' &nbsp;&nbsp;
     <strong>Nombre:</strong> ' . htmlspecialchars($nombreTercero) . ' &nbsp;&nbsp;
-    <strong>Cuenta:</strong> 28150501
+    
 </div>
 
 ' . (empty($carteraAgrupada) ? '<p style="text-align:center;color:#666;margin-top:30px;">No hay movimientos para el período seleccionado.</p>' : '

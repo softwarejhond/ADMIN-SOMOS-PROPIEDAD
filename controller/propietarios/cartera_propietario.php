@@ -9,13 +9,13 @@ $filtroAnioProp     = $_GET['anio_cartera']     ?? date('Y');
 $filtroInmuebleProp = $_GET['inmueble_cartera'] ?? '';
 
 // Consulta de propiedades disponibles para este propietario (para el selector de filtro)
-$sqlInmuebles = "SELECT DISTINCT c.codigo_inmueble, csp.direccion
+$sqlInmuebles = "SELECT DISTINCT c.codigo_inmueble,
+                        (SELECT csp.direccion FROM contratos_somos_propiedad csp WHERE csp.no_contrato = c.codigo_inmueble LIMIT 1) AS direccion
                  FROM cartera_propietario c
-                 LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato
-                 WHERE c.nit_propietario = ?
+                 WHERE c.nit_propietario = ? OR c.codigo_inmueble IN (SELECT no_contrato FROM contratos_somos_propiedad WHERE cedula_propietario = ? AND multiple = 'Si')
                  ORDER BY c.codigo_inmueble ASC";
 $stmtInmuebles = $conn->prepare($sqlInmuebles);
-$stmtInmuebles->bind_param("s", $doc_propietario);
+$stmtInmuebles->bind_param("ss", $doc_propietario, $doc_propietario);
 $stmtInmuebles->execute();
 $resInmuebles = $stmtInmuebles->get_result();
 $inmueblesList = [];
@@ -23,10 +23,10 @@ while ($row = $resInmuebles->fetch_assoc()) {
     $inmueblesList[] = $row;
 }
 
-// Obtener movimientos del propietario
-$whereProp = "c.nit_propietario = ?";
-$paramsProp = [$doc_propietario];
-$typesProp = "s";
+// Obtener movimientos del propietario (incluye copropiedades multiple)
+$whereProp = "(c.nit_propietario = ? OR c.codigo_inmueble IN (SELECT no_contrato FROM contratos_somos_propiedad WHERE cedula_propietario = ? AND multiple = 'Si'))";
+$paramsProp = [$doc_propietario, $doc_propietario];
+$typesProp = "ss";
 
 if (!empty($filtroMesProp)) {
     $whereProp .= " AND c.mes = ?";
@@ -44,10 +44,11 @@ if (!empty($filtroInmuebleProp)) {
     $typesProp .= "s";
 }
 
-$sqlCarteraProp = "SELECT c.*, csp.direccion, csp.ciudad AS tipoInmueble 
-                   FROM cartera_propietario c 
-                   LEFT JOIN contratos_somos_propiedad csp ON c.codigo_inmueble = csp.no_contrato 
-                   WHERE $whereProp 
+$sqlCarteraProp = "SELECT c.*,
+                          (SELECT csp.direccion FROM contratos_somos_propiedad csp WHERE csp.no_contrato = c.codigo_inmueble LIMIT 1) AS direccion,
+                          (SELECT csp.ciudad FROM contratos_somos_propiedad csp WHERE csp.no_contrato = c.codigo_inmueble LIMIT 1) AS tipoInmueble
+                   FROM cartera_propietario c
+                   WHERE $whereProp
                    ORDER BY c.codigo_inmueble, c.es_giro ASC, c.id ASC";
 $stmtCarteraProp = $conn->prepare($sqlCarteraProp);
 $stmtCarteraProp->bind_param($typesProp, ...$paramsProp);
@@ -153,7 +154,7 @@ $mesesProp = [
                     <!-- Encabezado cuenta -->
                     <div class="px-3 py-2 bg-light border-bottom w-100">
                         <small class="text-muted fw-semibold">
-                            <i class="bi bi-bank"></i> Cuenta: 28150501 (Total Agrupación) &mdash; 
+                             
                             <?= htmlspecialchars($doc_propietario) ?> - <?= htmlspecialchars($nombreTercero) ?>
                         </small>
                     </div>

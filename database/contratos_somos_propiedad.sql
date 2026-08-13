@@ -6,6 +6,7 @@
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS `contratos_somos_propiedad` (
+  `id`                  INT            NOT NULL AUTO_INCREMENT,
   `no_contrato`         INT            NOT NULL,
   `direccion`           VARCHAR(200)   NOT NULL,
   `ciudad`              VARCHAR(60)    NOT NULL,
@@ -21,7 +22,9 @@ CREATE TABLE IF NOT EXISTS `contratos_somos_propiedad` (
   `aseguradora`         VARCHAR(80)    NOT NULL,
   `no_solicitud`        VARCHAR(20)    NOT NULL,
   `multiple`            ENUM('Si','No') NOT NULL DEFAULT 'No',
-  PRIMARY KEY (`no_contrato`),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_contrato_cedula` (`no_contrato`, `cedula_propietario`),
+  INDEX `idx_no_contrato`  (`no_contrato`),
   INDEX `idx_cedula_prop`  (`cedula_propietario`),
   INDEX `idx_cedula_arrend` (`cedula_arrendatario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
